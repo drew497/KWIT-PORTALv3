@@ -1,0 +1,3490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KWIT — Agent AI Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1714;--ink-90:#252119;--ink-80:#2e2a26;--ink-60:#4a443d;--ink-40:#7a7068;--ink-20:#b8b0a6;--ink-10:#d6cfc8;--ink-05:#ece8e3;--parchment:#f5f0ea;--cream:#faf8f5;--white:#ffffff;--red:#c41e3a;--red-dark:#9e1730;--red-light:#e8394f;--red-muted:#f7e2e5;--red-faint:#fdf1f3;--gold:#c49a3c;--gold-muted:#f5eedc;--green:#2d6a4f;--green-muted:#d8efe6;--amber:#b87333;--sidebar-w:240px;--topbar-h:56px;--shadow-sm:0 1px 3px rgba(26,23,20,.07),0 1px 2px rgba(26,23,20,.05);--shadow-md:0 4px 16px rgba(26,23,20,.10);--shadow-lg:0 12px 40px rgba(26,23,20,.14);--radius:10px;--radius-sm:6px;--radius-lg:14px;--tr:.22s cubic-bezier(.4,0,.2,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:"DM Sans",sans-serif;background:var(--cream);color:var(--ink);font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden;}
+.portal{display:flex;min-height:100vh;}
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--ink);position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:200;border-right:1px solid rgba(255,255,255,.04);}
+.sb-brand{padding:20px 22px 16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px;}
+.sb-mark{width:30px;height:30px;background:var(--red);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:"Playfair Display",serif;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}
+.sb-name{font-family:"Playfair Display",serif;font-size:17px;font-weight:700;color:#fff;letter-spacing:.03em;}
+.sb-name em{font-style:normal;color:rgba(255,255,255,.3);font-size:11px;font-family:"DM Sans",sans-serif;display:block;letter-spacing:.06em;font-weight:400;margin-top:1px;}
+.sb-section{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:20px 22px 8px;}
+.sb-nav{flex:1;overflow-y:auto;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 22px;font-size:13px;font-weight:500;color:rgba(255,255,255,.45);cursor:pointer;transition:all var(--tr);position:relative;}
+.nav-item:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.04);}
+.nav-item.active{color:#fff;background:rgba(196,30,58,.15);}
+.nav-item.active::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;background:var(--red);border-radius:0 2px 2px 0;}
+.nav-item.locked{opacity:.4;cursor:not-allowed;}
+.nav-item.locked:hover{color:rgba(255,255,255,.45);background:transparent;}
+.ni{font-size:15px;width:18px;text-align:center;flex-shrink:0;color:var(--red-light);}
+.nb{margin-left:auto;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:100px;}
+.nb-green{background:var(--green);color:#fff;}
+.nb-gold{background:var(--gold);color:#fff;}
+.sb-footer{padding:16px 22px;border-top:1px solid rgba(255,255,255,.06);}
+.agent-chip{display:flex;align-items:center;gap:10px;}
+.agent-av{width:30px;height:30px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.agent-n{font-size:12px;font-weight:600;color:rgba(255,255,255,.75);line-height:1.3;}
+.agent-r{font-size:11px;color:var(--green);}
+.agent-r.pending{color:var(--amber);}
+/* MAIN */
+.portal-main{margin-left:0;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+/* TOPBAR */
+.topbar{height:var(--topbar-h);background:#fff;border-bottom:1px solid var(--ink-05);display:flex;align-items:center;padding:0 32px;gap:12px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);}
+.tb-crumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-40);}
+.tb-crumb .sep{color:var(--ink-20);}
+.tb-crumb strong{color:var(--ink);font-weight:600;}
+.tb-pill{display:flex;align-items:center;gap:7px;border-radius:100px;padding:4px 12px 4px 8px;font-size:11px;font-weight:600;margin-left:8px;cursor:pointer;transition:all var(--tr);}
+.tb-pill.has-profile{background:var(--green-muted);border:1px solid #b0dbc8;color:var(--green);}
+.tb-pill.no-profile{background:var(--gold-muted);border:1px solid #e0cc9a;color:#7a5c1e;}
+.tb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.tb-dot.g{background:var(--green);}
+.tb-dot.a{background:var(--gold);}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-btn{height:32px;padding:0 14px;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;gap:6px;border:none;}
+.tb-ghost{background:transparent;color:var(--ink-40);border:1px solid var(--ink-10);}
+.tb-ghost:hover{color:var(--ink);border-color:var(--ink-20);}
+.tb-red{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(196,30,58,.2);}
+.tb-red:hover{background:var(--red-light);}
+/* VIEWS */
+.view{display:none;flex:1;flex-direction:column;}
+.view.active{display:flex;animation:fadeUp .28s ease forwards;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* DASHBOARD */
+#view-dashboard{background:var(--cream);}
+.dash-hero{background:var(--ink);padding:36px 40px 28px;position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.06);}
+.dash-hero::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 50% 120% at 100% 50%,rgba(196,30,58,.12) 0%,transparent 60%);pointer-events:none;}
+.dh-inner{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;position:relative;z-index:1;}
+.dh-ey{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red-light);margin-bottom:10px;}
+.dh-title{font-family:"Playfair Display",serif;font-size:clamp(26px,3.2vw,38px);font-weight:700;color:#fff;line-height:1.12;margin-bottom:10px;letter-spacing:-.01em;}
+.dh-sub{font-size:13px;color:rgba(255,255,255,.45);max-width:480px;line-height:1.65;}
+.dh-stats{display:flex;gap:28px;flex-wrap:wrap;}
+.dh-stat-val{font-family:"DM Mono",monospace;font-size:26px;font-weight:500;color:var(--red-light);display:block;line-height:1;}
+.dh-stat-lbl{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-top:4px;}
+/* Banner */
+/* Profile strip */
+.profile-strip{margin:16px 40px 0;background:var(--ink-90);border:1px solid rgba(255,255,255,.06);border-radius:0;padding:12px 24px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+.profile-strip.hidden{display:none;}
+.ps-badge{display:flex;align-items:center;gap:7px;background:rgba(45,106,79,.25);border:1px solid rgba(45,106,79,.4);border-radius:100px;padding:4px 12px 4px 8px;font-size:11px;font-weight:700;color:#5cc898;flex-shrink:0;}
+.ps-dot{width:6px;height:6px;border-radius:50%;background:#5cc898;}
+.ps-fields{display:flex;gap:24px;flex-wrap:wrap;flex:1;}
+.ps-field{font-size:12px;}
+.ps-key{color:rgba(255,255,255,.35);font-weight:500;margin-right:4px;}
+.ps-val{color:rgba(255,255,255,.75);font-weight:500;}
+.ps-actions{display:flex;gap:8px;flex-shrink:0;}
+.ps-btn{height:30px;padding:0 12px;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all var(--tr);border:none;display:flex;align-items:center;gap:5px;}
+.ps-ghost{background:transparent;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.12);}
+.ps-ghost:hover{color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.25);}
+/* Dash body */
+.dash-body{padding:28px 40px 60px;}
+.dash-section-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;}
+.dash-section-title{font-family:"Playfair Display",serif;font-size:20px;font-weight:700;color:var(--ink);}
+.dash-section-sub{font-size:12px;color:var(--ink-40);margin-top:2px;line-height:1.5;}
+.dash-two-col{display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start;}
+/* Tool cards */
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin-bottom:36px;}
+.tool-card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);overflow:hidden;position:relative;transition:all var(--tr);display:flex;flex-direction:column;}
+.tool-card:hover:not(.tool-locked){box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.tool-card.tool-locked{opacity:.55;cursor:not-allowed;}
+.tool-card.tool-rec{border:2px solid var(--red);box-shadow:0 4px 24px rgba(196,30,58,.12),var(--shadow-sm);background:var(--red-faint);}
+.tc-top{padding:20px 20px 14px;flex:1;}
+.tc-tag-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.tc-tag{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:100px;}
+.tc-tag-rec{background:var(--red);color:#fff;border:1px solid var(--red);}
+.tc-tag-avail{background:var(--green-muted);color:var(--green);border:1px solid #b0dbc8;}
+.tc-tag-soon{background:var(--parchment);color:var(--ink-40);border:1px solid var(--ink-05);}
+.tc-tag-locked{background:var(--parchment);color:var(--ink-40);border:1px solid var(--ink-05);}
+.tc-icon{font-size:22px;margin-bottom:10px;display:block;}
+.tc-name{font-family:"Playfair Display",serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:5px;line-height:1.25;}
+.tc-desc{font-size:13px;color:var(--ink-60);line-height:1.6;}
+.tc-match{margin-top:12px;background:var(--gold-muted);border-radius:var(--radius-sm);padding:8px 12px;}
+.tc-match-lbl{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#8a6520;margin-bottom:3px;}
+.tc-match-reason{font-size:11px;color:#6b4f10;line-height:1.45;}
+.tc-bottom{padding:14px 22px;border-top:1px solid var(--ink-05);display:flex;align-items:center;justify-content:space-between;}
+.tc-time{font-size:11px;color:var(--ink-40);}
+.tc-launch{height:28px;padding:0 14px;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all var(--tr);border:none;display:flex;align-items:center;gap:5px;}
+.tc-red{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(196,30,58,.2);}
+.tc-red:hover{background:var(--red-light);}
+.tc-ghost-btn{background:transparent;color:var(--ink-40);border:1px solid var(--ink-10);}
+.tc-ghost-btn:hover{color:var(--ink);border-color:var(--ink-20);}
+.tc-lock{background:var(--parchment);color:var(--ink-40);border:1px solid var(--ink-05);cursor:not-allowed;}
+/* Profile recap */
+.profile-recap{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);overflow:hidden;}
+.pr-hero{background:var(--ink-90);padding:18px 22px;position:relative;overflow:hidden;}
+.pr-hero::after{content:"";position:absolute;top:-30px;right:-30px;width:130px;height:130px;background:radial-gradient(circle,rgba(196,30,58,.16) 0%,transparent 70%);pointer-events:none;}
+.pr-hero-ey{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red-light);margin-bottom:8px;position:relative;z-index:1;}
+.pr-hero-name{font-family:"Playfair Display",serif;font-size:19px;font-weight:700;color:#fff;position:relative;z-index:1;margin-bottom:3px;}
+.pr-hero-sub{font-size:11px;color:rgba(255,255,255,.4);position:relative;z-index:1;}
+.pr-body{padding:16px 26px;}
+.pr-row{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--ink-05);gap:8px;}
+.pr-row:last-child{border-bottom:none;}
+.pr-k{color:var(--ink-40);}
+.pr-v{color:var(--ink);font-weight:600;text-align:right;max-width:180px;}
+.pr-actions{padding:14px 26px;border-top:1px solid var(--ink-05);display:flex;gap:8px;}
+.pr-btn{flex:1;padding:9px;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all var(--tr);border:none;text-align:center;}
+.pr-red{background:var(--red);color:#fff;}
+.pr-red:hover{background:var(--red-light);}
+.pr-ghost{background:transparent;color:var(--ink-60);border:1px solid var(--ink-10);}
+.pr-ghost:hover{color:var(--ink);border-color:var(--ink-20);}
+/* IFRAME VIEWS */
+.tool-frame-view{background:var(--cream);flex:1;display:flex;flex-direction:column;padding:0;width:100%;}
+.tool-iframe{width:100%;height:100%;border:none;display:block;flex:1;}
+/* MY AI PROFILE PAGE */
+#view-profile-page{background:var(--cream);padding:40px 40px 60px;}
+.pp-tag{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);background:var(--red-faint);border:1px solid var(--red-muted);padding:4px 12px;border-radius:100px;margin-bottom:14px;}
+.pp-tag::before{content:"";font-size:6px;}
+.pp-title{font-family:"Playfair Display",serif;font-size:28px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.pp-sub{font-size:15px;color:var(--ink-40);max-width:520px;line-height:1.65;margin-bottom:32px;}
+.pp-two-col{display:grid;grid-template-columns:1fr 290px;gap:24px;align-items:start;}
+.pmc{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);overflow:hidden;}
+.pmc-hero{background:var(--ink);padding:26px 30px;position:relative;overflow:hidden;}
+.pmc-hero::after{content:"";position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(196,30,58,.16) 0%,transparent 70%);pointer-events:none;}
+.pmc-hero-ey{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red-light);margin-bottom:8px;position:relative;z-index:1;}
+.pmc-hero-name{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:#fff;position:relative;z-index:1;margin-bottom:4px;}
+.pmc-hero-sub{font-size:12px;color:rgba(255,255,255,.4);position:relative;z-index:1;}
+.pmc-sec{padding:18px 30px;border-bottom:1px solid var(--ink-05);}
+.pmc-sec:last-child{border-bottom:none;}
+.pmc-sec-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.pmc-sec-lbl::after{content:"";flex:1;height:1px;background:var(--red-muted);}
+.pmc-row{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid var(--ink-05);gap:16px;}
+.pmc-row:last-child{border-bottom:none;}
+.pmc-k{color:var(--ink-40);font-weight:500;flex-shrink:0;min-width:140px;}
+.pmc-v{color:var(--ink);font-weight:500;text-align:right;}
+.pmc-v.long{text-align:left;color:var(--ink-60);font-size:12px;line-height:1.55;}
+.pmc-acts{padding:18px 30px;border-top:1px solid var(--ink-05);display:flex;gap:10px;flex-wrap:wrap;}
+.pmc-btn{padding:11px 18px;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all var(--tr);border:none;}
+.pmc-red{background:var(--red);color:#fff;}
+.pmc-red:hover{background:var(--red-light);}
+.pmc-ghost{background:transparent;color:var(--ink-60);border:1px solid var(--ink-10);}
+.pmc-ghost:hover{color:var(--ink);border-color:var(--ink-20);}
+/* Profile page sidebar */
+.pp-sidebar{display:flex;flex-direction:column;gap:16px;}
+.pps{background:#fff;border-radius:var(--radius);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);padding:18px 20px;}
+.pps-dark{background:var(--ink-90);border-color:rgba(255,255,255,.05);}
+.pps-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-40);margin-bottom:12px;}
+.pps-dark .pps-lbl{color:rgba(255,255,255,.3);}
+.opp-list{list-style:none;}
+.opp-item{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:1px solid var(--ink-05);font-size:13px;color:var(--ink-60);}
+.opp-item:last-child{border-bottom:none;}
+.opp-num{font-family:"DM Mono",monospace;font-size:10px;font-weight:500;color:var(--red);background:var(--red-faint);border-radius:4px;padding:2px 6px;flex-shrink:0;}
+.pps-btn{width:100%;padding:10px 14px;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all var(--tr);border:none;display:flex;align-items:center;gap:8px;text-align:left;margin-bottom:8px;}
+.pps-btn:last-child{margin-bottom:0;}
+.pps-red{background:var(--red);color:#fff;}
+.pps-red:hover{background:var(--red-light);}
+.pps-muted{background:var(--cream);color:var(--ink-60);border:1px solid var(--ink-05);}
+.pps-muted:hover{color:var(--ink);border-color:var(--ink-10);background:var(--parchment);}
+.pps-inst{font-size:12px;color:rgba(255,255,255,.45);line-height:1.65;}
+.pps-inst strong{color:rgba(255,255,255,.8);}
+/* No-profile card */
+.no-profile-card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);padding:56px 48px;text-align:center;}
+.npc-icon{font-size:40px;margin-bottom:20px;}
+.npc-title{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:10px;}
+.npc-sub{font-size:14px;color:var(--ink-60);max-width:440px;margin:0 auto 28px;line-height:1.65;}
+.npc-btn{background:var(--red);color:#fff;border:none;padding:14px 32px;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all var(--tr);box-shadow:0 3px 14px rgba(196,30,58,.25);}
+.npc-btn:hover{background:var(--red-light);}
+/* ── TODAY'S BEST NEXT MOVE ── */
+.bnm-section{padding:24px 40px 0;}
+.bnm-section.no-profile-mode .bnm-card{border-color:rgba(196,30,58,.5);box-shadow:0 0 0 1px rgba(196,30,58,.12);}
+.bnm-section.no-profile-mode .bnm-card::before{width:6px;}
+.bnm-section.no-profile-mode{padding-top:0;}
+.bnm-card{background:var(--ink);border-radius:var(--radius-lg);padding:36px 40px;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center;position:relative;overflow:hidden;border:2px solid rgba(196,30,58,.35);}
+.bnm-card::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 100% at 100% 50%,rgba(196,30,58,.16) 0%,transparent 60%);pointer-events:none;}
+.bnm-inner{position:relative;z-index:1;}
+.bnm-ey{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red-light);margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.bnm-title{font-family:"Playfair Display",serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.15;letter-spacing:-.01em;}
+.bnm-desc{font-size:14px;color:rgba(255,255,255,.55);line-height:1.6;max-width:520px;}
+.bnm-actions{position:relative;z-index:1;display:flex;flex-direction:column;gap:8px;flex-shrink:0;}
+.bnm-btn{padding:13px 24px;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all var(--tr);white-space:nowrap;}
+.bnm-red{background:var(--red);color:#fff;}
+.bnm-red:hover{background:var(--red-light);}
+.bnm-ghost{background:rgba(255,255,255,.08);color:rgba(255,255,255,.65);border:1px solid rgba(255,255,255,.12);}
+.bnm-ghost:hover{background:rgba(255,255,255,.14);color:#fff;}
+.bnm-urgency{font-size:10px;font-weight:600;color:var(--amber);margin-top:8px;line-height:1.5;letter-spacing:.02em;}
+
+/* ── AI STARTER PATH STEPS ── */
+.sp-section{margin-bottom:32px;}
+.sp-steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+.sp-step{background:transparent;border-radius:var(--radius-sm);border:1px solid var(--ink-10);padding:14px 14px 12px;position:relative;overflow:hidden;transition:all var(--tr);}
+.sp-step:hover{box-shadow:var(--shadow-md);}
+.sp-step.done{border-color:#b0dbc8;}
+.sp-step::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--ink-05);}
+.sp-step.done::before{background:var(--green);}
+.sp-step-num{font-family:"DM Mono",monospace;font-size:10px;font-weight:600;color:var(--ink-40);letter-spacing:.06em;margin-bottom:7px;}
+.sp-step.done .sp-step-num{color:var(--green);}
+.sp-step-title{font-size:12px;font-weight:600;color:var(--ink-60);margin-bottom:4px;line-height:1.3;}
+.sp-step.done .sp-step-title{color:var(--green);}
+.sp-step-desc{font-size:11px;color:var(--ink-60);line-height:1.5;margin-bottom:10px;}
+.sp-step-cta{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--red);cursor:pointer;}
+.sp-step.done .sp-step-cta{color:var(--green);}
+
+/* ── MODULE GRID (More Tools section) ── */
+.mod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-bottom:0;}
+.mod-card{background:var(--parchment);border-radius:var(--radius);border:1px solid var(--ink-05);overflow:hidden;transition:all var(--tr);display:flex;flex-direction:column;}
+.mod-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.mod-card.mod-featured{border:1.5px solid var(--gold);background:var(--gold-muted);}
+.mod-top{padding:18px 20px 14px;flex:1;}
+.mod-tag-row{margin-bottom:10px;}
+.mod-tag{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border-radius:100px;}
+.mod-tag-next{background:var(--gold-muted);color:#7a5c1e;border:1px solid #e0cc9a;}
+.mod-tag-coming{background:var(--parchment);color:var(--ink-40);border:1px solid var(--ink-05);}
+.mod-icon{font-size:20px;margin-bottom:8px;display:block;}
+.mod-name{font-size:13px;font-weight:600;color:var(--ink-60);margin-bottom:4px;line-height:1.25;}
+.mod-desc{font-size:11px;color:var(--ink-40);line-height:1.55;}
+.mod-outputs{list-style:none;margin-top:10px;}
+.mod-outputs li{font-size:11px;color:var(--ink-60);padding:4px 0;border-bottom:1px solid var(--ink-05);display:flex;align-items:flex-start;gap:6px;line-height:1.4;}
+.mod-outputs li:last-child{border-bottom:none;}
+.mod-outputs li::before{content:"→";color:var(--red);font-size:10px;flex-shrink:0;margin-top:2px;}
+.mod-bottom{padding:12px 20px;border-top:1px solid var(--ink-05);display:flex;align-items:center;justify-content:space-between;}
+.mod-meta{font-size:11px;color:var(--ink-40);}
+.mod-btn{height:27px;padding:0 12px;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:11px;font-weight:700;cursor:pointer;border:none;transition:all var(--tr);}
+.mod-btn-red:hover{background:var(--red-light);}
+.mod-btn-ghost{background:transparent;color:var(--ink-40);border:1px solid var(--ink-10);}
+.mod-btn-ghost:hover{color:var(--ink);border-color:var(--ink-20);}
+.mod-btn-gold{background:var(--gold-muted);color:#6b4f10;border:1px solid #e0cc9a;}
+.mod-btn-gold:hover{background:#ede1b8;}
+
+/* ── LEAD STAGE COACH ── */
+.lsc-card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:20px;}
+.lsc-header{padding:16px 20px;border-bottom:1px solid var(--ink-05);}
+.lsc-title{font-family:"Playfair Display",serif;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.lsc-sub{font-size:11px;color:var(--ink-40);line-height:1.5;}
+.lsc-stages{display:grid;grid-template-columns:repeat(3,1fr);}
+.lsc-stage{padding:13px 14px;border-right:1px solid var(--ink-05);border-bottom:1px solid var(--ink-05);cursor:pointer;transition:all var(--tr);}
+.lsc-stage:nth-child(3n){border-right:none;}
+.lsc-stage:nth-last-child(-n+3){border-bottom:none;}
+.lsc-stage:hover{background:var(--red-faint);}
+.lsc-stage-icon{font-size:18px;margin-bottom:5px;display:block;}
+.lsc-stage-name{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.lsc-stage-hint{font-size:10px;color:var(--ink-40);line-height:1.35;}
+.lsc-result{padding:18px 22px;background:var(--ink-90);border-top:2px solid var(--red);display:none;}
+.lsc-result.show{display:block;}
+.lsc-result-label{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red-light);margin-bottom:7px;}
+.lsc-result-move{font-family:"Playfair Display",serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:6px;}
+.lsc-result-why{font-size:12px;color:rgba(255,255,255,.55);line-height:1.55;margin-bottom:12px;}
+.lsc-result-btn{background:var(--red);color:#fff;border:none;padding:8px 16px;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all var(--tr);}
+.lsc-result-btn:hover{background:var(--red-light);}
+
+/* ── INTEGRATIONS ── */
+.int-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.int-card{background:transparent;border-radius:var(--radius-sm);border:1px solid var(--ink-10);padding:14px 14px 12px;transition:all var(--tr);}
+.int-card:hover{box-shadow:var(--shadow-md);}
+.int-card.int-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
+.int-icon{font-size:20px;}
+.int-status{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:100px;}
+.int-status-rec{background:var(--green-muted);color:var(--green);border:1px solid #b0dbc8;}
+.int-status-later{background:var(--parchment);color:var(--ink-40);border:1px solid var(--ink-05);}
+.int-name{font-size:12px;font-weight:600;color:var(--ink-60);margin-bottom:3px;}
+.int-desc{font-size:11px;color:var(--ink-40);line-height:1.5;margin-bottom:6px;}
+.int-unlock{font-size:10px;color:var(--ink-40);font-style:italic;}
+.int-card.int-rec .int-unlock{color:var(--green);}
+
+/* ── EXPLAIN THIS ── */
+.et-body{padding:24px 40px 60px;display:grid;grid-template-columns:1fr 260px;gap:20px;align-items:start;}
+.et-main{display:flex;flex-direction:column;gap:14px;}
+.et-input-card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);overflow:hidden;}
+.et-input-body{padding:22px 24px;}
+.et-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px;}
+.et-type-btn{border:1.5px solid var(--ink-05);border-radius:var(--radius-sm);padding:10px 10px;cursor:pointer;background:var(--cream);transition:all var(--tr);text-align:left;}
+.et-type-btn:hover,.et-type-btn.selected{border-color:var(--red);background:var(--red-faint);}
+.et-type-icon{font-size:16px;display:block;margin-bottom:4px;}
+.et-type-label{font-size:11px;font-weight:700;color:var(--ink);display:block;}
+.et-textarea{width:100%;border:1.5px solid var(--ink-05);border-radius:var(--radius-sm);padding:12px 14px;font-family:"DM Sans",sans-serif;font-size:13px;color:var(--ink);background:var(--cream);outline:none;resize:vertical;min-height:100px;line-height:1.65;transition:border-color var(--tr),box-shadow var(--tr),background var(--tr);}
+.et-textarea::placeholder{color:var(--ink-20);font-style:italic;}
+.et-textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-faint);background:#fff;}
+.et-hint{font-size:11px;color:var(--ink-40);margin-top:7px;font-style:italic;}
+.et-submit-bar{padding-top:16px;border-top:1px solid var(--ink-05);margin-top:16px;display:flex;align-items:center;gap:14px;}
+.et-submit-btn{background:var(--red);color:#fff;border:none;padding:12px 24px;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all var(--tr);}
+.et-submit-btn:hover{background:var(--red-light);}
+.et-result-card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);overflow:hidden;display:none;}
+.et-result-card.show{display:block;animation:fadeUp .28s ease forwards;}
+.et-result-hero{background:var(--ink);padding:18px 22px;position:relative;overflow:hidden;}
+.et-result-hero::after{content:"";position:absolute;top:-20px;right:-20px;width:90px;height:90px;background:radial-gradient(circle,rgba(196,30,58,.2) 0%,transparent 70%);pointer-events:none;}
+.et-result-ey{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red-light);margin-bottom:5px;position:relative;z-index:1;}
+.et-result-heading{font-family:"Playfair Display",serif;font-size:15px;font-weight:700;color:#fff;position:relative;z-index:1;}
+.et-result-body{padding:18px 22px;display:flex;flex-direction:column;gap:14px;}
+.et-result-sec-label{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:5px;}
+.et-result-text{font-size:13px;color:var(--ink-80);line-height:1.75;}
+.et-result-divider{height:1px;background:var(--ink-05);}
+.et-result-action{background:var(--red-faint);border-radius:var(--radius-sm);padding:11px 14px;}
+.et-result-action-label{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red-dark);margin-bottom:4px;}
+.et-result-action-text{font-size:13px;color:var(--ink);font-weight:500;line-height:1.5;}
+.et-sidebar{display:flex;flex-direction:column;gap:12px;}
+.et-example-card{background:#fff;border-radius:var(--radius);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);padding:14px 16px;}
+.et-ex-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-40);margin-bottom:10px;}
+.et-ex-list{list-style:none;}
+.et-ex-item{font-size:12px;color:var(--ink-60);padding:7px 0;border-bottom:1px solid var(--ink-05);cursor:pointer;transition:color var(--tr);line-height:1.45;}
+.et-ex-item:last-child{border-bottom:none;}
+.et-ex-item:hover{color:var(--red);}
+.et-disclaimer{background:var(--parchment);border-radius:var(--radius-sm);padding:10px 13px;}
+.et-disclaimer-text{font-size:11px;color:var(--ink-60);line-height:1.55;}
+.et-disclaimer-text strong{color:var(--ink);}
+
+/* ── QUICK ACTIONS ── */
+.qa-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;}
+.qa-card{background:#fff;border-radius:var(--radius);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);padding:14px 14px 12px;cursor:pointer;transition:all var(--tr);display:flex;flex-direction:column;gap:7px;position:relative;overflow:hidden;}
+.qa-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.qa-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--red);opacity:0;transition:opacity var(--tr);}
+.qa-card:hover::before{opacity:1;}
+.qa-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.qa-icon{font-size:18px;flex-shrink:0;}
+.qa-tag{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--red-dark);background:var(--red-faint);border:1px solid var(--red-muted);padding:2px 7px;border-radius:100px;white-space:nowrap;}
+.qa-title{font-size:13px;font-weight:600;color:var(--ink);line-height:1.3;}
+.qa-desc{font-size:11px;color:var(--ink-60);line-height:1.45;}
+.qa-footer{display:flex;align-items:center;justify-content:space-between;margin-top:2px;}
+.qa-time{font-size:10px;color:var(--ink-40);}
+.qa-go{font-size:10px;font-weight:700;color:var(--red);}
+
+/* ── TEMPLATE LIBRARY ── */
+.tl-empty{background:#fff;border:1px dashed var(--ink-10);border-radius:var(--radius);padding:32px;text-align:center;color:var(--ink-40);font-size:13px;line-height:1.6;}
+.tl-list{display:flex;flex-direction:column;gap:10px;}
+.tl-item{background:#fff;border-radius:var(--radius);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);padding:16px 20px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;}
+.tl-item:hover{box-shadow:var(--shadow-md);}
+.tl-item-left{}
+.tl-item-name{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.tl-item-preview{font-size:12px;color:var(--ink-60);line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:500px;}
+.tl-item-meta{font-size:11px;color:var(--ink-40);margin-top:5px;}
+.tl-item-meta span{margin-right:12px;}
+.tl-item-actions{display:flex;gap:6px;flex-shrink:0;}
+.tl-btn{height:28px;padding:0 10px;border-radius:var(--radius-sm);font-family:"DM Sans",sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all var(--tr);border:none;display:flex;align-items:center;gap:4px;}
+.tl-copy{background:var(--cream);color:var(--ink-60);border:1px solid var(--ink-05);}
+.tl-copy:hover{color:var(--ink);border-color:var(--ink-10);}
+.tl-del{background:transparent;color:var(--ink-20);border:1px solid var(--ink-05);}
+.tl-del:hover{color:var(--red);border-color:var(--red-muted);background:var(--red-faint);}
+
+/* ── EXTRA TOOL CARD VARIANTS ── */
+.tc-tag-next{background:var(--gold-muted);color:#7a5c1e;border:1px solid #e0cc9a;}
+.tc-gold{background:var(--gold-muted);color:#6b4f10;border:1px solid #e0cc9a;}
+.tc-gold:hover{background:#ede1b8;}
+
+/* ── SECTION DIVIDER ── */
+.dash-section-divider{height:1px;background:var(--ink-05);margin:20px 0 28px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:#fff;border-radius:var(--radius);padding:13px 18px;display:flex;align-items:center;gap:12px;font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);z-index:9999;transform:translateY(80px);opacity:0;transition:all .32s cubic-bezier(.34,1.56,.64,1);min-width:270px;max-width:360px;border-left:3px solid var(--green);}
+.toast.show{transform:translateY(0);opacity:1;}
+.t-icon{font-size:16px;flex-shrink:0;}
+.t-title{font-weight:700;font-size:13px;margin-bottom:1px;}
+.t-sub{font-size:11px;color:rgba(255,255,255,.5);}
+
+
+/* ── HIERARCHY PERSONALITY LAYER ──────────────────────────── */
+
+/* Live pulse on BNM eyebrow dot */
+@keyframes pulse-dot {
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:.6;transform:scale(1.3);}
+}
+.bnm-live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red-light);animation:pulse-dot 2.4s ease-in-out infinite;flex-shrink:0;}
+
+/* Tool card recommended — name in red */
+.tool-card.tool-rec .tc-name{color:var(--red-dark);}
+
+/* Tool card top border accent on hover */
+.tool-card::before{content:"";position:absolute;top:0;left:0;right:0;height:0;background:var(--red);transition:height .2s ease;}
+.tool-card:hover:not(.tool-locked)::before{height:3px;}
+
+/* Tier labels for sections */
+.tier-primary-label{
+  font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red);margin-bottom:6px;display:block;
+}
+
+/* QA card — hover red top bar */
+.qa-card::before{height:0;transition:height .18s ease;}
+.qa-card:hover::before{height:3px;opacity:1;}
+
+/* Subtle section separation — secondary sections get a left rule */
+
+/* Integration card recommended border */
+.int-card.int-rec{border-color:var(--green);border-width:1.5px;}
+.int-card.int-rec .int-name{color:var(--green);}
+
+/* LSC stage hover — clearer affordance */
+.lsc-stage:hover .lsc-stage-name{color:var(--red);}
+.lsc-stage:hover .lsc-stage-hint{color:var(--red-dark);}
+
+/* Profile strip dark styling */
+
+/* Tool card recommended icon treatment */
+.tool-card.tool-rec .tc-icon{font-size:26px;}
+
+/* BNM card — add subtle left border accent */
+.bnm-card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:linear-gradient(to bottom,var(--red),var(--red-dark));
+  z-index:2;
+}
+
+
+/* ============================================================
+   STATEFUL SYSTEM — NEW COMPONENT STYLES
+   Leads, Feedback, Cadence, Template Intelligence, Settings
+   ============================================================ */
+
+/* ── Active Leads Section (dashboard) ─────────────────────── */
+.leads-empty{font-size:13px;color:var(--ink-40);padding:16px 0;}
+.lead-list{display:flex;flex-direction:column;gap:8px;}
+.lead-card{background:#fff;border-radius:var(--radius);border:1px solid var(--ink-05);padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;}
+.lead-card.state-follow-up-due{border-left:3px solid var(--red);background:var(--red-faint);}
+.lead-card.state-awaiting{border-left:3px solid var(--gold);}
+.lead-card.state-replied{border-left:3px solid var(--green);opacity:.75;}
+.lead-card-left{}
+.lead-label{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+.lead-meta{font-size:11px;color:var(--ink-40);display:flex;gap:8px;flex-wrap:wrap;}
+.lead-state-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:100px;}
+.lsb-due{background:var(--red-muted);color:var(--red-dark);}
+.lsb-await{background:var(--gold-muted);color:#7a5c1e;}
+.lsb-replied{background:var(--green-muted);color:var(--green);}
+.lsb-sent{background:var(--parchment);color:var(--ink-40);}
+.lsb-gen{background:var(--parchment);color:var(--ink-40);}
+.lead-card-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+.lead-btn{height:26px;padding:0 12px;border-radius:var(--radius-sm);font-size:11px;font-weight:700;cursor:pointer;border:none;white-space:nowrap;transition:all var(--tr);}
+.lb-red{background:var(--red);color:#fff;}
+.lb-red:hover{background:var(--red-light);}
+.lb-ghost{background:transparent;color:var(--ink-40);border:1px solid var(--ink-10);}
+.lb-ghost:hover{color:var(--ink);border-color:var(--ink-20);}
+.lb-green{background:var(--green-muted);color:var(--green);border:1px solid #b0dbc8;}
+.lb-green:hover{background:#c6e8d8;}
+
+/* ── Log Lead Modal / Inline Panel ────────────────────────── */
+.log-panel{background:var(--ink-90);border-radius:var(--radius-lg);padding:20px 24px;margin:16px 40px 0;}
+.log-panel-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;}
+.log-row{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.log-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;}
+.log-input{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;color:#fff;font-family:"DM Sans",sans-serif;width:100%;}
+.log-input::placeholder{color:rgba(255,255,255,.3);}
+.log-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.log-pill{padding:5px 12px;border-radius:100px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);background:transparent;transition:all .15s;}
+.log-pill:hover{border-color:rgba(255,255,255,.4);color:#fff;}
+.log-pill.active{background:var(--red);border-color:var(--red);color:#fff;}
+.log-pill.active-green{background:var(--green);border-color:var(--green);color:#fff;}
+.log-pill.active-gold{background:var(--gold);border-color:var(--gold);color:#fff;}
+.log-btns{display:flex;gap:8px;margin-top:4px;}
+.log-save-btn{background:var(--red);color:#fff;border:none;padding:9px 20px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;}
+.log-save-btn:hover{background:var(--red-light);}
+.log-cancel-btn{background:transparent;color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.1);padding:9px 16px;border-radius:var(--radius-sm);font-size:12px;cursor:pointer;}
+
+/* ── Leads View ─────────────────────────────────────────────── */
+.leads-view-header{padding:32px 40px 16px;}
+.leads-view-title{font-family:"Playfair Display",serif;font-size:24px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.leads-view-sub{font-size:13px;color:var(--ink-40);}
+.leads-view-body{padding:0 40px 40px;}
+.leads-tabs{display:flex;gap:6px;margin-bottom:16px;}
+.lt-tab{font-size:12px;font-weight:600;padding:5px 14px;border-radius:100px;border:1px solid var(--ink-10);cursor:pointer;background:transparent;color:var(--ink-40);transition:all .15s;}
+.lt-tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.leads-full-list{display:flex;flex-direction:column;gap:10px;}
+.lead-full-card{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);overflow:hidden;}
+.lfc-head{padding:14px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--ink-05);cursor:pointer;}
+.lfc-head:hover{background:var(--cream);}
+.lfc-label{font-size:14px;font-weight:700;color:var(--ink);flex:1;}
+.lfc-body{padding:16px 20px;display:none;}
+.lfc-body.open{display:block;}
+.lfc-meta-row{display:flex;gap:16px;margin-bottom:14px;flex-wrap:wrap;}
+.lfc-meta-item{font-size:12px;color:var(--ink-60);}
+.lfc-meta-key{color:var(--ink-40);margin-right:4px;}
+.cadence-steps{margin-top:12px;}
+.cs-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-40);margin-bottom:8px;}
+.cs-list{display:flex;flex-direction:column;gap:6px;}
+.cs-step{display:grid;grid-template-columns:52px 1fr auto;gap:8px;align-items:center;padding:8px 12px;border-radius:var(--radius-sm);background:var(--cream);border:1px solid var(--ink-05);}
+.cs-step.done{opacity:.55;background:transparent;}
+.cs-step.active-step{background:var(--red-faint);border-color:var(--red-muted);}
+.cs-day{font-size:10px;font-weight:700;color:var(--ink-40);font-family:"DM Mono",monospace;}
+.cs-action{font-size:12px;color:var(--ink);line-height:1.4;}
+.cs-step.done .cs-action{text-decoration:line-through;color:var(--ink-40);}
+.cs-btns{display:flex;gap:4px;}
+.cs-btn{height:22px;padding:0 8px;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;border:none;white-space:nowrap;}
+.cs-done-btn{background:var(--green-muted);color:var(--green);}
+.cs-skip-btn{background:var(--parchment);color:var(--ink-40);}
+.cs-write-btn{background:var(--red);color:#fff;}
+.cs-done-btn:hover{background:#b8deca;}
+.cs-write-btn:hover{background:var(--red-light);}
+
+/* ── Feedback Panel ─────────────────────────────────────────── */
+.fb-panel{background:var(--ink-90);border-radius:var(--radius-lg);padding:20px 24px;}
+.fb-ey{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red-light);margin-bottom:8px;}
+.fb-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:14px;}
+.fb-question{margin-bottom:12px;}
+.fb-q-label{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:6px;}
+.fb-options{display:flex;gap:6px;flex-wrap:wrap;}
+.fb-opt{padding:6px 14px;border-radius:100px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);background:transparent;transition:all .15s;}
+.fb-opt:hover{border-color:rgba(255,255,255,.5);color:#fff;}
+.fb-opt.sel{border-color:var(--red-light);background:rgba(196,30,58,.3);color:#fff;}
+.fb-actions{margin-top:14px;display:flex;gap:8px;}
+.fb-submit{background:var(--red);color:#fff;border:none;padding:8px 18px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;}
+.fb-skip{background:transparent;color:rgba(255,255,255,.3);border:none;font-size:12px;cursor:pointer;padding:8px;}
+
+/* ── Feedback View ──────────────────────────────────────────── */
+.fb-stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px;}
+.fb-stat{background:var(--ink-90);border-radius:var(--radius);padding:16px 20px;text-align:center;}
+.fb-stat-num{font-family:"Playfair Display",serif;font-size:28px;font-weight:700;color:#fff;line-height:1;}
+.fb-stat-label{font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;}
+.fb-stat-sub{font-size:10px;color:rgba(255,255,255,.25);margin-top:2px;}
+.fb-log-list{display:flex;flex-direction:column;gap:8px;}
+.fb-log-item{background:#fff;border-radius:var(--radius);border:1px solid var(--ink-05);padding:12px 16px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;}
+.fb-log-situation{font-size:12px;font-weight:600;color:var(--ink);}
+.fb-log-meta{font-size:11px;color:var(--ink-40);margin-top:2px;}
+.fb-log-outcome{font-size:11px;font-weight:600;text-align:right;}
+.fb-outcome-yes{color:var(--green);}
+.fb-outcome-no{color:var(--ink-40);}
+.fb-outcome-soon{color:var(--amber);}
+
+/* ── Template Intelligence (enhanced TL) ────────────────────── */
+.tl-score-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;margin-left:6px;}
+.tsb-high{background:var(--green-muted);color:var(--green);}
+.tsb-med{background:var(--gold-muted);color:#7a5c1e;}
+.tsb-low{background:var(--parchment);color:var(--ink-40);}
+.tl-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+.tl-tag{font-size:10px;padding:1px 7px;border-radius:100px;background:var(--parchment);color:var(--ink-40);border:1px solid var(--ink-10);}
+.tl-perf-row{display:flex;gap:12px;margin-top:6px;}
+.tl-perf{font-size:11px;color:var(--ink-40);}
+.tl-perf strong{color:var(--ink);font-weight:600;}
+.tl-use-btn{background:var(--ink);color:#fff;border:none;height:26px;padding:0 12px;border-radius:var(--radius-sm);font-size:11px;font-weight:700;cursor:pointer;margin-right:4px;}
+.tl-use-btn:hover{background:var(--ink-80);}
+
+/* ── Settings View ──────────────────────────────────────────── */
+.settings-section{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--ink-05);padding:22px 26px;margin-bottom:16px;}
+.settings-section-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.settings-section-sub{font-size:12px;color:var(--ink-40);margin-bottom:14px;line-height:1.5;}
+.settings-textarea{width:100%;min-height:80px;border:1px solid var(--ink-10);border-radius:var(--radius-sm);padding:10px 12px;font-size:13px;color:var(--ink);font-family:"DM Sans",sans-serif;resize:vertical;background:var(--cream);}
+.settings-textarea:focus{outline:none;border-color:var(--red);}
+.settings-save-btn{background:var(--ink);color:#fff;border:none;padding:9px 20px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;cursor:pointer;margin-top:10px;}
+.settings-save-btn:hover{background:var(--ink-80);}
+.settings-saved{font-size:11px;color:var(--green);margin-left:10px;display:none;}
+
+/* ── Intelligence stats in BNM ──────────────────────────────── */
+.bnm-intel{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;}
+.bnm-intel-item{font-size:11px;color:rgba(255,255,255,.4);}
+.bnm-intel-item strong{color:rgba(255,255,255,.75);}
+
+
+
+/* ── EMBEDDED MODE (running inside portal iframe) ──────────── */
+body.embedded .sidebar,
+body.embedded .topbar { display:none !important; }
+body.embedded { --sidebar-w: 0px; }
+body.embedded .portal-main {
+  margin-left:0 !important;
+  height:100%;
+  overflow-y:auto;
+}
+body.embedded .view.active {
+  overflow-y:auto;
+}
+body.embedded .dash-hero {
+  padding:24px 28px 20px;
+}
+body.embedded .bnm-section,
+body.embedded .dash-body{
+  padding-left:24px;
+  padding-right:24px;
+}
+body.embedded .quick-actions { padding-left:24px; padding-right:24px; }
+body.embedded .profile-strip { margin-left:24px; margin-right:24px; }
+body.embedded .tool-frame-view { height:100vh; }
+
+
+/* ── PRIORITY 5: Visual Hierarchy Refinements ──────────────── */
+
+/* BNM card — stronger separation, larger title */
+.bnm-title{font-family:"Playfair Display",serif;font-size:clamp(20px,2.4vw,28px);font-weight:700;color:#fff;line-height:1.22;margin-bottom:10px;}
+.bnm-desc{font-size:13px;color:rgba(255,255,255,.65);line-height:1.65;max-width:560px;}
+
+/* Tool card #1 (recommended) — stronger visual priority */
+.tool-card.tool-rec{border:2px solid var(--red);box-shadow:0 6px 32px rgba(196,30,58,.16),var(--shadow-sm);background:var(--red-faint);}
+.tool-card.tool-rec .tc-name{font-size:18px;}
+.tool-card.tool-rec .tc-time{font-weight:700;color:var(--red-dark);}
+
+/* Tool card match reason — cleaner */
+.tc-match{margin-top:10px;padding:8px 10px;background:rgba(196,30,58,.06);border-left:2px solid var(--red);border-radius:0 var(--radius-sm) var(--radius-sm) 0;}
+.tc-match-lbl{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--red-dark);margin-bottom:3px;}
+.tc-match-reason{font-size:11px;color:var(--ink-60);line-height:1.5;}
+
+/* Starter steps — tighter, more scannable */
+.sp-step-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.3;}
+.sp-step-num{font-family:"DM Mono",monospace;font-size:9px;font-weight:700;color:var(--ink-40);letter-spacing:.1em;margin-bottom:6px;text-transform:uppercase;}
+.sp-step.done .sp-step-num{color:var(--green);}
+.sp-step-cta{margin-top:8px;font-size:11px;font-weight:700;color:var(--red);cursor:pointer;display:inline-flex;align-items:center;gap:3px;}
+.sp-step.done .sp-step-cta{color:var(--green);}
+
+/* Integration card — recommended state more prominent */
+.int-card.int-rec{background:var(--green-muted);border-color:#b0dbc8;border-width:1.5px;}
+.int-card.int-rec .int-name{color:var(--green);}
+.int-status-rec{background:var(--green);color:#fff;padding:2px 8px;border-radius:100px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;}
+.int-status-later{background:var(--parchment);color:var(--ink-40);padding:2px 8px;border-radius:100px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;}
+
+/* Quick actions section label — more confident */
+.qa-section-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-40);margin-bottom:12px;}
+
+/* Dashboard hero — crisper when profile active */
+.dh-ey{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--red-light);margin-bottom:10px;}
+
+/* Log lead panel — tighter */
+.log-panel{background:var(--ink-90);border-radius:var(--radius-lg);padding:20px 24px;}
+.log-panel-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:14px;letter-spacing:-.01em;}
+
+@media(max-width:960px){
+  .sidebar{display:none;}
+  .portal-main{margin-left:0;}
+  .dash-hero{padding:28px 20px;}
+  .dh-inner{grid-template-columns:1fr;}
+  .dh-stats{display:none;}
+  .profile-banner,.profile-strip{margin:16px 20px 0;}
+  .dash-body{padding:20px 20px 40px;}
+  .dash-two-col,.pp-two-col{grid-template-columns:1fr;}
+  .pp-sidebar,.profile-recap{display:none;}
+  #view-profile-page{padding:24px 20px 40px;}
+}
+
+/* ── REFINEMENT PASS 2: Visual restraint + hierarchy ─────── */
+
+/* Modules section — quiet, not competing */
+.mod-card { opacity:.75; transition:opacity .15s; }
+.mod-card:hover { opacity:1; }
+.mod-featured { opacity:.85; }
+
+/* Integration cards — very quiet */
+.int-grid { opacity:.7; }
+.int-grid:hover { opacity:1; transition:opacity .2s; }
+.int-card { border-color:var(--ink-05); }
+.int-card.int-rec { opacity:1; }
+
+/* Tool grid — #1 card dominates clearly */
+.tool-card.tool-rec { 
+  box-shadow:0 8px 40px rgba(196,30,58,.18), 0 2px 8px rgba(0,0,0,.08);
+  border-width:2px;
+}
+.tool-card.tool-rec .tc-name { font-size:19px; color:var(--red-dark); }
+.tool-card:not(.tool-rec):not(.tool-locked) { opacity:.92; }
+
+/* Starter steps — quiet */
+.sp-section { opacity:.8; }
+.sp-section:hover { opacity:1; transition:opacity .2s; }
+.sp-step { border-color:var(--ink-05); }
+
+/* Leads dash section — elevated */
+#leads-dash-section .dash-section-title { 
+  font-size:13px; 
+  font-weight:700; 
+  letter-spacing:.04em; 
+  text-transform:uppercase; 
+  color:var(--ink-40); 
+}
+
+/* Quick actions — medium emphasis */
+#quick-actions { border-top:1px solid var(--ink-05); margin-top:8px; }
+
+/* Dash body section spacing — more breathing room */
+.dash-section-divider { margin:40px 0; height:1px; background:var(--ink-05); }
+
+/* Tools section header — less weight */
+.dash-section-title { font-size:17px; }
+
+/* Integrations + modules section header — very low weight */
+.int-section-header .dash-section-title,
+.mod-section-header .dash-section-title { color:var(--ink-30, #c8c3bb); }
+
+/* BNM card breathing room */
+.bnm-section { padding:32px 40px 0; }
+
+/* Profile strip — subtle */
+.profile-strip { opacity:.9; }
+
+/* Red only for true priority */
+.tc-tag-avail { background:transparent; color:var(--ink-40); border-color:var(--ink-10); }
+.tc-tag-next  { background:transparent; color:var(--ink-30,#c0bbb4); border-color:var(--ink-05); font-weight:600; }
+.tc-tag-soon  { background:transparent; color:var(--ink-20,#d8d4ce); border-color:var(--ink-05); }
+</style>
+</head>
+<body>
+<script>
+/* Synchronous iframe detection — must run before CSS paints */
+(function(){
+  try {
+    var isEmbedded = window.self !== window.top 
+      || window.frameElement !== null
+      || window.location.search.indexOf('embedded=1') !== -1;
+    if (isEmbedded) {
+      document.body.className = (document.body.className + ' embedded').trim();
+    }
+  } catch(e) {
+    document.body.className = (document.body.className + ' embedded').trim();
+  }
+})();
+</script>
+<div id="toast" class="toast"><div class="t-icon" id="t-icon">checkmark</div><div><div class="t-title" id="t-title"></div><div class="t-sub" id="t-sub"></div></div></div>
+<div class="portal">
+
+<main class="portal-main">
+  <div class="topbar">
+    <div class="tb-crumb"><span>KWIT</span><span class="sep">&#x203A;</span><strong id="tb-pg">Dashboard</strong></div>
+    <div class="tb-pill no-profile" id="tb-pill" onclick="pillClick()"><div class="tb-dot a" id="tb-dot"></div><span id="tb-pill-txt">Profile not set up &#x2014; click to start</span></div>
+    <div class="tb-right">
+      <button class="tb-btn tb-ghost" onclick="nav('profile-page')">My Profile</button>
+      <button class="tb-btn tb-red" id="tb-cta" onclick="ctaClick()">Run Diagnostic &#x2192;</button>
+    </div>
+  </div>
+  <!-- DASHBOARD -->
+  <div id="view-dashboard" class="view active">
+    <div class="dash-hero">
+      <div class="dh-inner">
+        <div>
+          <div class="dh-ey" id="dh-ey">KWIT &#x2014; Agent AI Platform</div>
+          <div class="dh-title" id="dh-title">Welcome to KWIT.</div>
+          <div class="dh-sub" id="dh-sub">Your AI workflows for follow-up, listings, and client communication. Run the diagnostic to personalize everything.</div>
+        </div>
+        <div class="dh-stats" id="dh-stats" style="display:none"></div>
+      </div>
+    </div>
+
+    <div class="profile-strip hidden" id="profile-strip">
+      <div class="ps-badge"><div class="ps-dot"></div>Profile active</div>
+      <div class="ps-fields" id="ps-fields"></div>
+      <div class="ps-actions">
+        <button class="ps-btn ps-ghost" onclick="nav('profile-page')">View Profile</button>
+        <button class="ps-btn ps-ghost" onclick="showLogLeadPanel()">+ Log lead</button>
+        <button class="ps-btn ps-ghost" onclick="launch('diagnostic')">&#x21BB; Retake</button>
+      </div>
+    </div>
+
+
+    <!-- TODAY'S BEST NEXT MOVE -->
+    <div class="bnm-section" id="bnm-section" style="padding-top:24px;">
+      <div class="bnm-card" id="bnm-card">
+        <div class="bnm-inner">
+          <div class="bnm-ey" id="bnm-ey"><span class="bnm-live-dot" id="bnm-live-dot"></span><span id="bnm-ey-text"> Best Next Move &nbsp;&#x2014;&nbsp; </span><span id="bnm-date" style="font-weight:400;opacity:.7;"></span><span id="bnm-streak" style="font-weight:400;opacity:.5;display:none;"></span></div>
+          <div class="bnm-title" id="bnm-title">Run the diagnostic. Get your ranked action plan.</div>
+          <div class="bnm-desc" id="bnm-desc">Six minutes. Your voice, your market, your top opportunities — ranked and ready.</div>
+          <div class="bnm-urgency" id="bnm-urgency" style="display:none;"></div>
+          <div class="bnm-intel" id="bnm-intel-bar"></div>
+        </div>
+        <div class="bnm-actions" id="bnm-actions">
+          <button class="bnm-btn bnm-red" onclick="launch('diagnostic')">Start Diagnostic &#x2192;</button>
+          <button class="bnm-btn bnm-ghost" onclick="nav('starter')">How it works</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOG LEAD PANEL (shown when user clicks Log Lead) -->
+    <div id="log-lead-panel" style="display:none;">
+      <div class="log-panel">
+        <div class="log-panel-title">Log a lead interaction</div>
+        <div class="log-row">
+          <div class="log-label">Label (e.g. "Mike — Oak St showing")</div>
+          <input class="log-input" id="ll-label" type="text" placeholder="Short label for this lead" maxlength="60">
+        </div>
+        <div class="log-row">
+          <div class="log-label">Lead type</div>
+          <div class="log-pills" id="ll-type-pills">
+            <button class="log-pill" onclick="pillSel(this,'ll-type')">Buyer lead</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-type')">Seller lead</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-type')">Past client</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-type')">Cold / inactive</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-type')">Referral source</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-type')">Open house lead</button>
+          </div>
+        </div>
+        <div class="log-row">
+          <div class="log-label">Situation</div>
+          <div class="log-pills" id="ll-sit-pills">
+            <button class="log-pill" onclick="pillSel(this,'ll-sit')">First contact</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-sit')">After showing</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-sit')">No response</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-sit')">Re-engagement</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-sit')">Open house follow-up</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-sit')">Past client touch</button>
+          </div>
+        </div>
+        <div class="log-row">
+          <div class="log-label">Status</div>
+          <div class="log-pills" id="ll-state-pills">
+            <button class="log-pill active" onclick="pillSel(this,'ll-state')">Generated</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-state')">Sent</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-state')">Awaiting reply</button>
+            <button class="log-pill" onclick="pillSel(this,'ll-state')">Follow-up due</button>
+          </div>
+        </div>
+        <div class="log-btns">
+          <button class="log-save-btn" onclick="saveLoggedLead()">Save lead</button>
+          <button class="log-cancel-btn" onclick="hideLogLeadPanel()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVE LEADS DASHBOARD SECTION (shown when leads exist) -->
+    <div id="leads-dash-section" class="hidden" style="padding:24px 40px 0;">
+      <div class="dash-section-header" style="margin-bottom:12px;">
+        <div>
+          <div class="dash-section-title" style="font-size:14px;letter-spacing:0;">Active leads <span id="leads-dash-count" style="font-size:12px;font-weight:500;color:var(--ink-40);"></span></div>
+        </div>
+        <button class="ps-btn ps-ghost" onclick="nav('leads')" style="font-size:11px;">View all →</button>
+      </div>
+      <div id="leads-dash-list" class="lead-list"></div>
+    </div>
+
+    <!-- QUICK ACTIONS — one-click task launchers (shown when profile exists) -->
+    <div id="quick-actions" class="hidden" style="padding:20px 40px 0;">
+      <div class="dash-section-header" style="margin-bottom:14px;">
+        <div>
+          <div class="dash-section-title" style="font-size:14px;">Pick a situation. Write the message.</div>
+          <div class="dash-section-sub">Paste what happened. Get a message in your voice in 60 seconds.</div>
+        </div>
+      </div>
+      <div class="qa-grid" id="qa-grid"></div>
+    </div>
+
+    <div class="dash-body">      <!-- TOOLS + PROFILE RECAP -->
+      <div class="dash-two-col">
+        <div>
+          <div class="dash-section-header">
+            <div><div class="dash-section-title" style="font-size:18px;letter-spacing:-.01em;">Your tools.</div><div class="dash-section-sub" id="tools-sub">Run the diagnostic. Then start with the top-ranked workflow.</div></div>
+          </div>
+          <div class="tools-grid" id="tools-grid"></div>
+
+
+      <div class="dash-section-divider"></div>
+<!-- AI STARTER PATH (always visible) -->
+      <div class="sp-section" style="margin-bottom:32px;" id="starter-section-dash">
+        <div class="dash-section-header" style="margin-bottom:14px;">
+          <div><div class="dash-section-title" style="font-size:13px;font-family:'DM Sans',sans-serif;font-weight:600;letter-spacing:0;color:var(--ink-60);">Getting started</div><div class="dash-section-sub" id="sp-sub">Each step takes under two minutes. Start at step one.</div></div>
+          <a href="#" onclick="nav('starter');return false;" style="font-size:12px;font-weight:600;color:var(--red);text-decoration:none;">View full guide &#x2192;</a>
+        </div>
+        <div class="sp-steps" id="sp-steps-dash"></div>
+      </div>
+
+      <div class="dash-section-divider"></div>
+
+                <!-- CAPABILITY MODULES -->
+          <div class="dash-section-header" style="margin-top:8px;">
+            <div><div class="dash-section-title" style="font-size:12px;font-family:'DM Sans',sans-serif;font-weight:600;color:var(--ink-30,#c0bbb4);letter-spacing:0;">In development</div></div>
+          </div>
+          <div class="mod-grid" id="mod-grid"></div>
+        </div>
+
+        <div>
+          <!-- PROFILE RECAP -->
+          <div id="recap-col" style="display:none;margin-bottom:20px;">
+            <div class="dash-section-header"><div class="dash-section-title">Your Profile</div></div>
+            <div class="profile-recap" id="profile-recap"></div>
+          </div>
+
+          <!-- LEAD STAGE COACH -->
+          <div class="dash-section-header" style="margin-bottom:14px;margin-top:4px;">
+            <div><div class="dash-section-title" style="font-size:16px;">What is the next move?</div><div class="dash-section-sub">Pick the situation. Get the right next move and the message to send.</div></div>
+          </div>
+          <div class="lsc-card" id="lsc-card">
+            <div class="lsc-header">
+              <div>
+                <div class="lsc-title">What is happening with this lead?</div>
+                <div class="lsc-sub">Pick the situation. Get the move. Write the message.</div>
+              </div>
+            </div>
+            <div class="lsc-stages">
+              <div class="lsc-stage" onclick="lscPick('new')"><span class="lsc-stage-icon">&#x2728;</span><div class="lsc-stage-name">New Lead</div><div class="lsc-stage-hint">First contact, just came in</div></div>
+              <div class="lsc-stage" onclick="lscPick('ghost')"><span class="lsc-stage-icon">&#x1f47b;</span><div class="lsc-stage-name">Ghosting</div><div class="lsc-stage-hint">Was responsive, now quiet</div></div>
+              <div class="lsc-stage" onclick="lscPick('showing')"><span class="lsc-stage-icon">&#x1f3e0;</span><div class="lsc-stage-name">After Showing</div><div class="lsc-stage-hint">Saw homes, no decision yet</div></div>
+              <div class="lsc-stage" onclick="lscPick('warm')"><span class="lsc-stage-icon">&#x1f525;</span><div class="lsc-stage-name">Warm, Inactive</div><div class="lsc-stage-hint">Interested but not moving</div></div>
+              <div class="lsc-stage" onclick="lscPick('past')"><span class="lsc-stage-icon">&#x1f91d;</span><div class="lsc-stage-name">Past Client</div><div class="lsc-stage-hint">Already closed with you</div></div>
+              <div class="lsc-stage" onclick="lscPick('referral')"><span class="lsc-stage-icon">&#x1f504;</span><div class="lsc-stage-name">Referral Source</div><div class="lsc-stage-hint">Someone who sends you business</div></div>
+            </div>
+            <div class="lsc-result" id="lsc-result">
+              <div class="lsc-result-label">Do this now</div>
+              <div class="lsc-result-move" id="lsc-move"></div>
+              <div class="lsc-result-why" id="lsc-why"></div>
+              <button class="lsc-result-btn" id="lsc-btn" onclick="">Open This Workflow &#x2192;</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="dash-section-divider" style="margin-top:32px;"></div>
+
+      <!-- INTEGRATIONS -->
+      <div class="dash-section-header" style="margin-bottom:14px;">
+        <div><div class="dash-section-title" style="font-size:12px;font-family:'DM Sans',sans-serif;font-weight:600;color:var(--ink-30,#c0bbb4);letter-spacing:0;">Connections</div><div class="dash-section-sub" id="int-sub"><span style="font-size:11px;">Run your diagnostic for a personalized recommendation.</span></div></div>
+      </div>
+      <div class="int-grid" id="int-grid"></div>
+
+    </div>
+  </div>
+
+  <!-- VIEW: ACTIVE LEADS -->
+  <div id="view-leads" class="view">
+    <div class="leads-view-header">
+      <div class="leads-view-title">Active Leads</div>
+      <div class="leads-view-sub">Leads you are actively following up with. Sorted by urgency.</div>
+    </div>
+    <div class="leads-view-body">
+      <div class="leads-tabs">
+        <button class="lt-tab active" onclick="filterLeads('all',this)">All</button>
+        <button class="lt-tab" onclick="filterLeads('follow_up_due',this)">Due Now</button>
+        <button class="lt-tab" onclick="filterLeads('awaiting_reply',this)">Awaiting Reply</button>
+        <button class="lt-tab" onclick="filterLeads('replied',this)">Replied</button>
+      </div>
+      <div id="leads-full-list" class="leads-full-list"></div>
+    </div>
+  </div>
+
+  <!-- VIEW: FEEDBACK & OUTCOMES -->
+  <div id="view-feedback" class="view">
+    <div class="leads-view-header">
+      <div class="leads-view-title">Outcomes</div>
+      <div class="leads-view-sub">Reply rates and message performance. The more you log, the smarter KWIT gets.</div>
+    </div>
+    <div class="leads-view-body">
+      <div id="feedback-stats-grid" class="fb-stats-grid"></div>
+      <div class="dash-section-title" style="font-size:14px;font-family:'DM Sans',sans-serif;font-weight:600;margin-bottom:12px;">Recent outcomes</div>
+      <div id="feedback-log-list" class="fb-log-list"></div>
+    </div>
+  </div>
+
+  <!-- VIEW: SETTINGS -->
+  <div id="view-settings" class="view">
+    <div class="leads-view-header">
+      <div class="leads-view-title">Settings</div>
+      <div class="leads-view-sub">Persistent instructions that shape every message KWIT writes for you.</div>
+    </div>
+    <div class="leads-view-body">
+      <div class="settings-section">
+        <div class="settings-section-title">Always do</div>
+        <div class="settings-section-sub">Things you want included in every message. Example: "Always mention our 48-hour response guarantee when writing to buyer leads."</div>
+        <textarea class="settings-textarea" id="si-always" placeholder="One rule per line. Leave blank to skip."></textarea>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Never do</div>
+        <div class="settings-section-sub">Things to always avoid. Example: "Never use exclamation marks in email. Never use the word 'excited'."</div>
+        <textarea class="settings-textarea" id="si-never" placeholder="One rule per line. Leave blank to skip."></textarea>
+      </div>
+      <div class="settings-section">
+        <div class="settings-section-title">Extra context about your business</div>
+        <div class="settings-section-sub">Anything the system should always know. Example: "I specialize in off-market deals in South Austin and always have pocket listings available."</div>
+        <textarea class="settings-textarea" id="si-context" placeholder="Free text. 300 characters max."></textarea>
+      </div>
+      <div style="display:flex;align-items:center;">
+        <button class="settings-save-btn" onclick="saveUserInstructions()">Save instructions</button>
+        <span class="settings-saved" id="settings-saved-msg">✓ Saved</span>
+      </div>
+      <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--ink-05);">
+        <div class="settings-section-title" style="margin-bottom:6px;">Export your data</div>
+        <div style="font-size:12px;color:var(--ink-40);margin-bottom:12px;">Download all your templates, leads, and feedback as a JSON backup file.</div>
+        <button class="settings-save-btn" style="background:var(--ink-60);" onclick="exportAll()">Download backup (.json)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIAGNOSTIC IFRAME -->
+  <div id="view-diagnostic" class="view tool-frame-view">
+    <iframe id="ifr-diagnostic" class="tool-iframe" src="" title="Business Diagnostic"></iframe>
+  </div>
+  <!-- FOLLOW-UP IFRAME -->
+  <div id="view-followup" class="view tool-frame-view">
+    <iframe id="ifr-followup" class="tool-iframe" src="" title="Follow-Up System"></iframe>
+  </div>
+  <!-- MY AI PROFILE -->
+  <div id="view-profile-page" class="view">
+    <div style="padding:40px 40px 60px;background:var(--cream);">
+      <div class="pp-tag">Agent AI Profile</div>
+      <h1 class="pp-title" id="pp-title">My AI Profile</h1>
+      <p class="pp-sub">Your market, voice, goals, and time drains &#x2014; captured once, loaded into every message you generate. Change your business, retake the diagnostic.</p>
+      <div id="no-prof"><div class="no-profile-card"><div class="npc-icon">&#x25c8;</div><div class="npc-title">You have not run your diagnostic yet.</div><div class="npc-sub">The Business Diagnostic builds your AI profile in 6&#x2013;8 minutes. Complete it once. Every tool uses it forever.</div><button class="npc-btn" onclick="launch('diagnostic')">Start Business Diagnostic &#x2192;</button></div></div>
+      <div id="has-prof" style="display:none">
+        <div class="pp-two-col">
+          <div class="pmc" id="pmc"></div>
+          <div class="pp-sidebar" id="pp-sidebar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- VIEW: TEMPLATE LIBRARY -->
+  <div id="view-templates" class="view">
+    <div style="padding:40px 40px 60px;background:var(--cream);">
+      <div class="pp-tag">Saved Templates</div>
+      <h1 class="pp-title">My Template Library</h1>
+      <p class="pp-sub" style="margin-bottom:28px;">Messages you have already written and saved. Each one is ready to copy, personalize, and send. The more you save, the faster every situation becomes.</p>
+      <div id="tl-container"></div>
+    </div>
+  </div>
+
+
+  <!-- ── VIEW: AI STARTER PATH ─────────────────────────────────── -->
+  <div id="view-starter" class="view">
+    <div style="padding:40px 40px 60px;background:var(--cream);">
+      <div class="pp-tag">Beginner Guide</div>
+      <h1 class="pp-title">AI Starter Path</h1>
+      <p class="pp-sub">Everything a real estate agent needs to know before using AI &#x2014; and nothing they don&#x2019;t. Five practical steps, no tech jargon.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;" id="starter-steps-full"></div>
+
+      <div style="background:var(--ink);border-radius:var(--radius-lg);padding:32px 36px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 100% at 100% 50%,rgba(196,30,58,.14) 0%,transparent 60%);pointer-events:none;"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red-light);margin-bottom:8px;">Ready to find your starting point?</div>
+          <div style="font-family:Playfair Display,serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:6px;">Run the Business Diagnostic.</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.4);line-height:1.55;">6&#x2013;8 minutes. Tells you exactly where AI helps first in <em>your</em> specific business. Creates a reusable profile every tool uses automatically.</div>
+        </div>
+        <div style="position:relative;z-index:1;flex-shrink:0;">
+          <button style="background:var(--red);color:#fff;border:none;padding:14px 24px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 3px 14px rgba(196,30,58,.3);" onclick="launch('diagnostic')">Start Diagnostic &#x2192;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── VIEW: EXPLAIN THIS ─────────────────────────────────────── -->
+  <div id="view-explain" class="view">
+    <div style="background:var(--ink);padding:32px 40px 28px;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 120% at 100% 50%,rgba(196,30,58,.12) 0%,transparent 60%);pointer-events:none;"></div>
+      <div style="position:relative;z-index:1;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red-light);margin-bottom:8px;">KWIT &#x2014; Knowledge &amp; Decision Support</div>
+        <div style="font-family:Playfair Display,serif;font-size:26px;font-weight:700;color:#fff;margin-bottom:6px;">Explain This</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.4);max-width:520px;line-height:1.65;">Plain-English explanations for anything confusing in a deal &#x2014; clauses, inspections, appraisals, client emails. Not legal advice. Just clarity.</div>
+      </div>
+    </div>
+    <div class="et-body">
+      <div class="et-main">
+        <div class="et-input-card">
+          <div class="et-input-body" style="padding-top:20px;">
+            <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-40);margin-bottom:12px;">What are you looking at?</div>
+            <div class="et-type-grid" id="et-type-grid">
+              <div class="et-type-btn" data-type="clause" onclick="etSelectType(this)"><span class="et-type-icon">&#x1f4dc;</span><span class="et-type-label">A contract clause</span></div>
+              <div class="et-type-btn" data-type="inspection" onclick="etSelectType(this)"><span class="et-type-icon">&#x1f50d;</span><span class="et-type-label">An inspection finding</span></div>
+              <div class="et-type-btn" data-type="email" onclick="etSelectType(this)"><span class="et-type-icon">&#x2709;</span><span class="et-type-label">Something a client said</span></div>
+              <div class="et-type-btn" data-type="appraisal" onclick="etSelectType(this)"><span class="et-type-icon">&#x1f4b0;</span><span class="et-type-label">An appraisal problem</span></div>
+              <div class="et-type-btn" data-type="situation" onclick="etSelectType(this)"><span class="et-type-icon">&#x2753;</span><span class="et-type-label">A situation I'm not sure about</span></div>
+              <div class="et-type-btn" data-type="other" onclick="etSelectType(this)"><span class="et-type-icon">&#x1f4ac;</span><span class="et-type-label">Something else</span></div>
+            </div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-40);margin-bottom:10px;">Paste or type what you need explained</div>
+            <textarea class="et-textarea" id="et-input" placeholder="Paste the clause, inspection note, email, or situation here. Be as specific as you can &#x2014; the more detail, the more useful the explanation."></textarea>
+            <div class="et-hint">Not legal advice &#x2014; this is for understanding, not professional guidance.</div>
+            <div class="et-submit-bar">
+              <button class="et-submit-btn" onclick="etExplain()">Get the explanation &#x2192;</button>
+              <div style="font-size:12px;color:var(--ink-40);line-height:1.5;">Gets plain-English meaning,<br>why it matters, and next steps.</div>
+            </div>
+          </div>
+        </div>
+        <div class="et-result-card" id="et-result">
+          <div class="et-result-hero">
+            <div class="et-result-ey">Here's what this means</div>
+            <div class="et-result-heading" id="et-result-heading">What this means</div>
+          </div>
+          <div class="et-result-body">
+            <div>
+              <div class="et-result-sec-label">What this means</div>
+              <div class="et-result-text" id="et-plain"></div>
+            </div>
+            <div class="et-result-divider"></div>
+            <div>
+              <div class="et-result-sec-label">Why it matters right now</div>
+              <div class="et-result-text" id="et-matters"></div>
+            </div>
+            <div class="et-result-divider"></div>
+            <div class="et-result-action">
+              <div class="et-result-action-label">One thing to do next</div>
+              <div class="et-result-action-text" id="et-next"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="et-sidebar">
+        <div class="et-example-card">
+          <div class="et-ex-label">Not sure what to paste? Start here.</div>
+          <ul class="et-ex-list">
+            <li class="et-ex-item" onclick="etLoadExample('clause')">Explain the appraisal contingency clause</li>
+            <li class="et-ex-item" onclick="etLoadExample('inspection')">What does &#x201c;evidence of past moisture intrusion&#x201d; mean?</li>
+            <li class="et-ex-item" onclick="etLoadExample('email')">Client email: &#x201c;We want to wait and see what rates do&#x201d;</li>
+            <li class="et-ex-item" onclick="etLoadExample('appraisal')">Appraisal came in $18,000 under purchase price</li>
+            <li class="et-ex-item" onclick="etLoadExample('situation')">Buyer is backing out 3 days before closing</li>
+          </ul>
+        </div>
+        <div class="et-disclaimer">
+          <div class="et-disclaimer-text"><strong>Not legal advice.</strong> KWIT explains real estate concepts in plain English to help you understand and communicate clearly. For legal questions, always consult your broker or attorney.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+<script>
+/* ============================================================
+   KWIT PLATFORM HUB — v1
+   Single file. All state via localStorage.
+   Connects Business Diagnostic + Follow-Up System.
+   Profile flows from diagnostic into every tool automatically.
+   ============================================================ */
+
+const PROFILE_KEY  = 'kwit_agent_profile';
+const TEMPLATE_KEY = 'kwit_templates';
+
+/* ── TEMPLATE LIBRARY ────────────────────────────────────────────────────────
+   Saves and reads agent-created message templates from localStorage.
+   ─────────────────────────────────────────────────────────────────────────── */
+function getTemplates() {
+  try { return JSON.parse(localStorage.getItem(TEMPLATE_KEY)) || []; } catch(e) { return []; }
+}
+function saveTemplate(tpl) {
+  const list = getTemplates();
+  /* Prevent exact duplicates */
+  const isDupe = list.some(t => t.name === tpl.name && t.text === tpl.text);
+  if (isDupe) return false;
+  list.unshift({ ...tpl, savedAt: new Date().toISOString() });
+  /* Keep max 50 templates */
+  if (list.length > 50) list.pop();
+  try { localStorage.setItem(TEMPLATE_KEY, JSON.stringify(list)); return true; } catch(e) { return false; }
+}
+function deleteTemplate(idx) {
+  const list = getTemplates();
+  list.splice(idx, 1);
+  try { localStorage.setItem(TEMPLATE_KEY, JSON.stringify(list)); return true; } catch(e) { return false; }
+}
+
+/* File paths — update if files are in a subfolder */
+const PATHS = {
+  diagnostic: 'kwit-agent-profile-v3.html',
+  followup:   'kwit-followup-system.html',
+};
+
+const OPP_META = {
+  followup:  { title:'Follow-Up System',            icon:'&#x2726;', desc:'Paste what happened. Get a message back in your voice — three versions, with a follow-up plan if they don\'t reply.',     time:'4&#x2013;6 hrs/wk', tool:'followup'  },
+  listing:   { title:'Listing Description Writer',   icon:'&#x25fb;', desc:'Your notes in. Four finished pieces out: MLS copy, brochure, social caption, email blast. All at once.', time:'2&#x2013;3 hrs/wk', tool:null, next:true },
+  social:    { title:'Social Content Batch',          icon:'&#x25c8;', desc:'20 minutes. A full week of posts — listings, market updates, client stories — in your voice.',       time:'3&#x2013;4 hrs/wk', tool:null        },
+  sphere:    { title:'Sphere Nurture System',         icon:'&#x25c7;', desc:'Every past client gets a quarterly check-in. Every referral source stays active. Runs without you remembering to do it.',    time:'2&#x2013;4 hrs/wk', tool:null        },
+  email:     { title:'Outreach &amp; Email Templates', icon:'&#x2709;', desc:'Starting points for every outreach situation. Your voice loaded in. Edit one line. Send.',    time:'2&#x2013;3 hrs/wk', tool:null        },
+  roleplay:  { title:'Conversation Roleplay Lab',     icon:'&#x25b7;', desc:'Run the hard conversation before it counts. Pricing reductions, inspection pushback, cold feet. Find the right line here first.',                         time:'1&#x2013;2 hrs/wk', tool:null        },
+  crm:       { title:'CRM Cleanup &amp; Notes AI',    icon:'&#x2299;', desc:'Drop in your call notes. Get a clean contact record, a follow-up task, and a flag if this contact has gone quiet.',          time:'2&#x2013;3 hrs/wk', tool:null        },
+  marketing: { title:'Campaign Builder',              icon:'&#x1f4e2;', desc:'Address in. Full just-listed campaign out — flyer, social, door-knocking script, email to your list. Under 10 minutes.',                         time:'3&#x2013;4 hrs/wk', tool:null        },
+};
+
+/* ---- STORAGE ---- */
+function getProfile() {
+  try { return JSON.parse(localStorage.getItem(PROFILE_KEY)); } catch(e) { return null; }
+}
+function saveProfile(p) {
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); return true; } catch(e) { return false; }
+}
+function clearProfile() {
+  if (!confirm('Clear your AI profile? You will need to retake the diagnostic.')) return;
+  localStorage.removeItem(PROFILE_KEY);
+  boot();
+  toast('Profile cleared', 'Run the diagnostic to rebuild it.', 'var(--amber)', '&#x21BB;');
+}
+
+/* ---- NAVIGATION ---- */
+const PAGE_TITLES = { dashboard:'Dashboard', diagnostic:'Business Diagnostic', followup:'Follow-Up System', 'profile-page':'My AI Profile', templates:'My Templates', starter:'AI Starter Path', explain:'Explain This', leads:'Active Leads', feedback:'Outcomes', settings:'Settings' };
+function nav(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item:not(.locked)').forEach(n => n.classList.remove('active'));
+  const v = document.getElementById('view-' + id);
+  if (v) v.classList.add('active');
+  const n = document.getElementById('nav-' + id) || document.getElementById('ni-' + id);
+  if (n) n.classList.add('active');
+  const titles = Object.assign({ starter:'AI Starter Path', explain:'Explain This', templates:'My Templates' }, PAGE_TITLES);
+  document.getElementById('tb-pg').textContent = titles[id] || id;
+  window.scrollTo(0,0);
+  /* Per-view render hooks */
+  if (id === 'profile-page') renderProfilePage();
+  if (id === 'templates')    renderTemplateLibrary();
+  if (id === 'starter')      renderStarterPage();
+  if (id === 'explain') {
+    const first = document.querySelector('.et-type-btn');
+    if (first && !document.querySelector('.et-type-btn.selected')) etSelectType(first);
+  }
+  /* Stateful system view hooks */
+  if (id === 'leads')    { _leadFilter = 'all'; renderLeadsView(); }
+  if (id === 'feedback') renderFeedbackView();
+  if (id === 'settings') loadUserInstructionsUI();
+}
+
+/* ---- LAUNCH TOOL ---- */
+function launch(toolId) {
+  if (toolId === 'diagnostic') { loadIframe('diagnostic', null); nav('diagnostic'); return; }
+  if (toolId === 'followup')   { loadIframe('followup', getProfile()); nav('followup'); return; }
+  toast('Coming soon', 'This tool is being built.', 'var(--gold)', '&#x2299;');
+}
+
+function loadIframe(toolId, profile) {
+  const ifr = document.getElementById('ifr-' + toolId);
+  if (!ifr) return;
+  const src = PATHS[toolId];
+  if (!src) return;
+  if (ifr.getAttribute('data-loaded') === src) {
+    /* Already loaded — just inject fresh profile */
+    if (profile) setTimeout(() => injectProfile(ifr, profile), 200);
+    return;
+  }
+  ifr.setAttribute('data-loaded', src);
+  ifr.src = src + (src.indexOf('?') >= 0 ? '&' : '?') + 'embedded=1';
+  if (profile) {
+    ifr.addEventListener('load', function h() {
+      ifr.removeEventListener('load', h);
+      setTimeout(() => injectProfile(ifr, profile), 300);
+    });
+  }
+}
+
+/* ---- PROFILE INJECTION INTO CHILD IFRAMES ---- */
+function injectProfile(ifr, storedProfile) {
+  const ap = buildAP(storedProfile);
+  /* Try direct JS injection (same origin) */
+  try {
+    const w = ifr.contentWindow;
+    if (w && w.agentProfile !== undefined) {
+      w.agentProfile = ap;
+      refreshFollowUpUI(w, ap, storedProfile);
+    }
+  } catch(e) { /* cross-origin — use postMessage */ }
+  /* Always also postMessage as fallback */
+  try { ifr.contentWindow.postMessage({ type:'KWIT_PROFILE', profile: ap }, '*'); } catch(e){}
+}
+
+function refreshFollowUpUI(w, ap, p) {
+  /* Update sidebar profile rows in the follow-up tool */
+  try {
+    const rows = [
+      ['Tone', ap.tone],
+      ['Formality', ap.formality],
+      ['Market', ap.market],
+      ['Focus', ap.focus.join(' & ')],
+      ['Avoids', ap.avoidPhrases.slice(0,3).join(', ')],
+    ];
+    const prvs = w.document.querySelectorAll('.prv');
+    prvs.forEach((el, i) => { if (rows[i]) el.textContent = rows[i][1]; });
+    /* Update profile active badge name */
+    const pill = w.document.querySelector('.tb-pill span, .tb-profile-pill span');
+    if (pill) pill.textContent = 'Profile active \u2014 ' + ap.name;
+    /* Update result sidebar profile card */
+    const spls = w.document.querySelectorAll('.spl');
+    if (spls.length >= 4) {
+      spls[0].innerHTML = '<strong>Tone:</strong> ' + ap.tone;
+      spls[1].innerHTML = '<strong>Register:</strong> ' + ap.formality;
+      spls[2].innerHTML = '<strong>Voice:</strong> ' + (p.brand_vibe || 'Neighborhood specialist');
+      spls[3].innerHTML = '<strong>Avoids:</strong> ' + ap.avoidPhrases.slice(0,4).join(', ');
+    }
+  } catch(e){}
+}
+
+function buildAP(p) {
+  const arr = v => Array.isArray(v) ? v : (v ? [v] : []);
+  return {
+    name:         p.name || '',
+    firstName:    (p.name||'').split(' ')[0] || '',
+    market:       p.market || '',
+    experience:   p.years || '',
+    focus:        arr(p.focus),
+    tone:         arr(p.tone).join(', ') || 'Warm & personal',
+    formality:    arr(p.formality).join(', ') || 'Balanced',
+    brandVibe:    p.brand_vibe || '',
+    avoidPhrases: (p.avoid_phrases||'').split(',').map(s=>s.trim()).filter(Boolean),
+    selfDescribe: p.self_describe || '',
+    topOpps:      p.topOpportunities || [],
+  };
+}
+
+/* ---- LISTEN FOR PROFILE SAVED FROM DIAGNOSTIC ---- */
+window.addEventListener('message', function(e) {
+  if (!e.data || typeof e.data !== 'object') return;
+  if (e.data.type === 'KWIT_SAVE_PROFILE') {
+    const p = e.data.profile;
+    if (p && p.name) {
+      saveProfile(p);
+      boot();
+      toast('AI profile activated across KWIT', (p.name.split(' ')[0]) + "'s profile is live. All tools are loaded.", 'var(--green)', '&#x2713;');
+    }
+  }
+  if (e.data.type === 'KWIT_SAVE_TEMPLATE') {
+    /* Follow-up tool is saving a template to the library */
+    const tpl = e.data.template;
+    if (tpl && tpl.name && tpl.text) {
+      const enriched = enrichTemplate(tpl);
+      const ok = saveTemplate(enriched);
+      updateTemplateBadge();
+      /* Notify the child */
+      try { e.source.postMessage({ type: 'KWIT_TEMPLATE_SAVED', ok, count: getTemplates().length }, '*'); } catch(x) {}
+    }
+    return;
+  }
+
+  if (e.data.type === 'KWIT_GET_TEMPLATES') {
+    /* Follow-up tool is requesting the template list */
+    try { e.source.postMessage({ type: 'KWIT_TEMPLATES', templates: getTemplates() }, '*'); } catch(x) {}
+    return;
+  }
+
+  if (e.data.type === 'KWIT_NAV') {
+    /* Child iframe is requesting a platform navigation */
+    const viewId = e.data.view;
+    if (viewId === 'followup')      { launch('followup'); }
+    else if (viewId === 'diagnostic'){ launch('diagnostic'); }
+    else                             { nav(viewId); }
+    return;
+  }
+
+  if (e.data.type === 'KWIT_REQUEST_PROFILE') {
+    const p = getProfile();
+    if (p && e.source) {
+      try { e.source.postMessage({ type:'KWIT_PROFILE', profile: buildAP(p) }, '*'); } catch(x){}
+    }
+  }
+});
+
+/* ---- PATCH DIAGNOSTIC IFRAME ON LOAD ---- */
+document.getElementById('ifr-diagnostic').addEventListener('load', function() {
+  try {
+    const w = this.contentWindow;
+    if (!w || !w.state) return;
+    w.saveToKWIT = function() {
+      if (!w.state || !w.state.answers || !w.state.answers.name) {
+        w.showToast('No profile to save', 'Complete the assessment first.', 'var(--amber)', '&#x26a0;'); return;
+      }
+      if (w.state.saved) {
+        w.showToast('Profile already active', 'All KWIT tools are using your profile.', 'var(--ink-40)'); return;
+      }
+      w.state.saved = true;
+      const ans = w.state.answers;
+      const topOpps = w.scoreOpportunities ? w.scoreOpportunities() : [];
+      const profile = Object.assign({}, ans, {
+        topOpportunities: topOpps.map((o,i) => ({ id:o.id, title:o.title, rank:i+1, timeSaved:o.timeSaved })),
+        matchReasons: topOpps.reduce((acc,o) => { if (w.getMatchReason) acc[o.id] = w.getMatchReason(o); return acc; }, {}),
+        savedAt: new Date().toISOString(),
+      });
+      window.parent.postMessage({ type:'KWIT_SAVE_PROFILE', profile }, '*');
+      /* Update diagnostic UI */
+      const hbtn = w.document.getElementById('hbtn-save');
+      if (hbtn) { hbtn.textContent = '\u2713 Profile Active in KWIT'; hbtn.classList.add('saved'); }
+      const rab = w.document.getElementById('rab-save-btn');
+      if (rab) { rab.textContent = '\u2713 Active'; rab.style.background='var(--green-muted)'; rab.style.color='var(--green)'; }
+      const role = w.document.querySelector('.agent-info-role');
+      if (role) role.textContent = 'AI profile active \u2014 all tools connected';
+      w.showToast('Your AI profile is now active across KWIT', 'All tools will use your voice, goals, and business context automatically.', 'var(--green)');
+    };
+  } catch(e) { /* cross-origin — postMessage path handles it */ }
+});
+
+/* ---- RENDER DASHBOARD ---- */
+function renderDashboard() {
+  const p = getProfile();
+  if (p) renderWithProfile(p);
+  else   renderWithoutProfile();
+}
+
+function renderWithoutProfile() {
+  document.getElementById('dh-title').textContent = 'Run the diagnostic first.';
+  document.getElementById('dh-sub').textContent   = 'Six minutes. Then every tool knows your voice, your market, and where to start.';
+  const _dhEyNo = document.getElementById('dh-ey');
+  if (_dhEyNo) _dhEyNo.textContent = 'KWIT \u2014 AGENT AI PLATFORM';
+  document.getElementById('dh-stats').style.display = 'none';
+  document.getElementById('profile-strip').classList.add('hidden');
+  document.getElementById('tools-sub').textContent = 'Complete your Business Diagnostic to unlock personalized recommendations.';
+  document.getElementById('recap-col').style.display = 'none';
+  renderQuickActions(null);
+  document.getElementById('sb-av').textContent = '?';
+  document.getElementById('sb-name').textContent = 'Agent';
+  document.getElementById('sb-role').textContent = 'Profile not set up';
+  document.getElementById('sb-role').className = 'agent-r pending';
+  document.getElementById('tb-pill').className = 'tb-pill no-profile';
+  document.getElementById('tb-dot').className = 'tb-dot a';
+  document.getElementById('tb-pill-txt').textContent = 'Profile not set up \u2014 click to start';
+  document.getElementById('tb-cta').textContent = 'Run Diagnostic \u2192';
+  document.getElementById('nb-fu').style.display = 'none';
+  const qa = document.getElementById('quick-actions'); if(qa) qa.classList.add('hidden');
+  renderToolGrid(null);
+  renderBestNextMove(null);
+  renderIntegrations(null);
+  renderModuleGrid();
+  renderStarterDash(null);
+}
+
+function renderWithProfile(p) {
+  const fn = (p.name||'').split(' ')[0] || 'Agent';
+  const arr = v => Array.isArray(v)?v:(v?[v]:[]);
+  const topOpps = p.topOpportunities || [];
+  document.getElementById('dh-title').textContent = 'Welcome back, ' + fn + '.';
+  document.getElementById('dh-sub').textContent   = 'Follow up faster. Write better. Keep more leads alive.';
+  const _dhEy = document.getElementById('dh-ey');
+  if (_dhEy) _dhEy.textContent = fn.toUpperCase() + ' \u2014 AI PROFILE ACTIVE';
+  const statsEl = document.getElementById('dh-stats');
+  statsEl.style.display = 'flex';
+  statsEl.innerHTML = `<div><span class="dh-stat-val">${topOpps.length||5}</span><div class="dh-stat-lbl">Leverage Areas</div></div><div><span class="dh-stat-val">${arr(p.time_drains).length}</span><div class="dh-stat-lbl">Time Drains</div></div><div><span class="dh-stat-val">${arr(p.lead_leakage).length}</span><div class="dh-stat-lbl">Leakage Points</div></div>`;
+  document.getElementById('profile-strip').classList.remove('hidden');
+  document.getElementById('ps-fields').innerHTML =
+    `<div class="ps-field"><span class="ps-key">Market</span><span class="ps-val">${esc(p.market||'')}</span></div>`+
+    `<div class="ps-field"><span class="ps-key">Focus</span><span class="ps-val">${esc(arr(p.focus).join(' & '))}</span></div>`+
+    `<div class="ps-field"><span class="ps-key">Tone</span><span class="ps-val">${esc(arr(p.tone).join(', '))}</span></div>`+
+    `<div class="ps-field"><span class="ps-key">Goal</span><span class="ps-val">${esc(p.primary_goal||'')}</span></div>`;
+  document.getElementById('tools-sub').textContent = fn + "'s top tools, ranked by diagnostic. Start at the top.";
+  document.getElementById('sb-av').textContent = fn.charAt(0).toUpperCase();
+  document.getElementById('sb-name').textContent = p.name||'Agent';
+  document.getElementById('sb-role').textContent = 'AI profile active';
+  document.getElementById('sb-role').className = 'agent-r';
+  document.getElementById('tb-pill').className = 'tb-pill has-profile';
+  document.getElementById('tb-dot').className = 'tb-dot g';
+  document.getElementById('tb-pill-txt').textContent = fn + "'s profile active";
+  document.getElementById('tb-cta').textContent = 'Open First Workflow \u2192';
+  document.getElementById('nb-fu').style.display = '';
+  document.getElementById('recap-col').style.display = '';
+  renderToolGrid(p);
+  renderProfileRecap(p);
+  renderQuickActions(p);
+  renderBestNextMove(p);
+  renderIntegrations(p);
+  renderModuleGrid();
+  renderStarterDash(p);
+}
+
+function renderToolGrid(p) {
+  const grid = document.getElementById('tools-grid');
+  const topIds = p ? (p.topOpportunities||[]).map(o=>o.id||o) : [];
+  const allIds = ['followup','listing','social','sphere','email','roleplay','crm','marketing'];
+  const ordered = topIds.length ? [...new Set([...topIds,...allIds])].slice(0,6) : allIds.slice(0,6);
+  const hasP = !!p;
+  grid.innerHTML = ordered.map((id, idx) => {
+    const m = OPP_META[id]; if (!m) return '';
+    const isBuilt = !!m.tool;
+    const topIdx  = topIds.indexOf(id);
+    const isFirst = idx === 0 && hasP;
+    const isRec   = topIdx >= 0 && topIdx < 3 && hasP;
+    /* Generate match reason from profile data */
+    let mr = p && p.matchReasons && p.matchReasons[id] ? p.matchReasons[id] : null;
+    if (!mr && p && isRec) {
+      const drains   = (p.time_drains||[]);
+      const leakage  = (p.lead_leakage||[]);
+      const weakness = Array.isArray(p.weakness) ? p.weakness : (p.weakness ? [p.weakness] : []);
+      const goal     = p.primary_goal || '';
+      if (id === 'followup') {
+        if (weakness.some(w => /follow.?up/i.test(w)))    mr = 'Consistent follow-up is your named bottleneck. This is the direct fix.';
+        else if (drains.includes('Lead follow-up'))        mr = 'Lead follow-up is one of your biggest weekly time drains.';
+        else if (leakage.some(l => /initial|first/i.test(l))) mr = 'You flagged lead leakage after initial contact. Speed of response is the fix.';
+        else                                               mr = 'Your top AI leverage area based on your diagnostic results.';
+      } else if (id === 'listing') {
+        if (drains.includes('Listing prep'))               mr = 'Listing prep is one of your biggest weekly time drains.';
+        else                                               mr = 'High-value for listing agents — four deliverables from one input.';
+      } else if (id === 'social') {
+        if (drains.includes('Social media'))               mr = 'Social media is one of your flagged time drains.';
+        else                                               mr = 'Batch a week of content in one session.';
+      } else if (id === 'sphere') {
+        if (leakage.some(l => /past client|referral/i.test(l))) mr = 'Past clients and referrals are your flagged leakage point.';
+        else                                               mr = 'Matches your goal: staying top of mind with your sphere.';
+      } else if (id === 'roleplay') {
+        if (weakness.some(w => /pricing|objection|negotiat/i.test(w))) mr = 'Objection handling is in your diagnostic — practice here first.';
+        else                                               mr = 'Builds the skills your diagnostic flagged as growth areas.';
+      }
+    }
+    let tag = '';
+    if (!hasP)      tag = '<span class="tc-tag tc-tag-locked">Run diagnostic first</span>';
+    else if(isFirst)tag = '<span class="tc-tag tc-tag-rec">&#x2605; Start Here</span>';
+    else if(isRec)  tag = '<span class="tc-tag tc-tag-rec">Recommended</span>';
+    else if(isBuilt)tag = '<span class="tc-tag tc-tag-avail">Available</span>';
+    else if(m.next)  tag = '<span class="tc-tag tc-tag-next">Building Now</span>';
+    else            tag = '<span class="tc-tag tc-tag-soon">Coming Soon</span>';
+    const matchHtml = mr ? `<div class="tc-match"><div class="tc-match-lbl">Why matched</div><div class="tc-match-reason">${esc(mr)}</div></div>` : '';
+    let btn = '';
+    if (!hasP)       btn = `<button class="tc-launch tc-lock" onclick="launch('diagnostic')">&#x1f512; Run diagnostic first</button>`;
+    else if (isBuilt)btn = `<button class="tc-launch ${isRec||isFirst?'tc-red':'tc-ghost-btn'}" onclick="launch('${m.tool}')">&#x25b7; Open Workflow</button>`;
+    else if(m.next)  btn = `<button class="tc-launch tc-gold" onclick="toast('Notify me','We\'ll let you know when ${m.title} launches.','var(--gold)','&#x25fb;')">Notify Me When Ready</button>`;
+    else             btn = `<button class="tc-launch tc-ghost-btn" onclick="toast('Coming soon','This tool is being built. Check back soon.','var(--gold)','&#x2299;')">Coming soon</button>`;
+    return `<div class="tool-card ${isFirst?'tool-rec':''} ${!hasP?'tool-locked':''}">
+      <div class="tc-top"><div class="tc-tag-row">${tag}</div><span class="tc-icon">${m.icon}</span><div class="tc-name">${m.title}</div><div class="tc-desc">${m.desc}</div>${matchHtml}</div>
+      <div class="tc-bottom"><div class="tc-time">&#x23f1; ${m.time} recoverable</div>${btn}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderProfileRecap(p) {
+  const arr = v => Array.isArray(v)?v:(v?[v]:[]);
+  document.getElementById('profile-recap').innerHTML = `
+    <div class="pr-hero"><div class="pr-hero-ey">Agent AI Profile &#x2014; Active</div><div class="pr-hero-name">${esc(p.name||'Agent')}</div><div class="pr-hero-sub">${esc(p.market||'')} &#x00b7; ${esc(arr(p.focus).join(' & '))}</div></div>
+    <div class="pr-body">
+      <div class="pr-row"><span class="pr-k">Experience</span><span class="pr-v">${esc(p.years||'&#x2014;')}</span></div>
+      <div class="pr-row"><span class="pr-k">GCI Target</span><span class="pr-v">${esc(p.gci_target||'&#x2014;')}</span></div>
+      <div class="pr-row"><span class="pr-k">#1 Goal</span><span class="pr-v">${esc(p.primary_goal||'&#x2014;')}</span></div>
+      <div class="pr-row"><span class="pr-k">Tone</span><span class="pr-v">${esc(arr(p.tone).join(', ')||'&#x2014;')}</span></div>
+      <div class="pr-row"><span class="pr-k">Bottleneck</span><span class="pr-v">${esc(arr(p.weakness).join(', ')||'&#x2014;')}</span></div>
+    </div>
+    <div class="pr-actions">
+      <button class="pr-btn pr-red" onclick="nav('profile-page')">View Profile</button>
+      <button class="pr-btn pr-ghost" onclick="dlTxt()">&#x2193; .txt</button>
+    </div>`;
+}
+
+/* ---- PROFILE PAGE ---- */
+function renderProfilePage() {
+  const p = getProfile();
+  document.getElementById('no-prof').style.display  = p ? 'none' : '';
+  document.getElementById('has-prof').style.display = p ? '' : 'none';
+  if (!p) return;
+  const arr = v => Array.isArray(v)?v:(v?[v]:[]);
+  const fn = (p.name||'').split(' ')[0]||'Agent';
+  document.getElementById('pp-title').textContent = fn + "'s AI Profile";
+  const topOpps = p.topOpportunities || [];
+  document.getElementById('pmc').innerHTML = `
+    <div class="pmc-hero"><div class="pmc-hero-ey">KWIT Agent AI Profile &#x2014; Active</div><div class="pmc-hero-name">${esc(p.name||'Agent')}</div><div class="pmc-hero-sub">${esc(p.market||'')} &#x00b7; ${esc(arr(p.focus).join(' & '))}</div></div>
+    <div class="pmc-sec"><div class="pmc-sec-lbl">Business Overview</div>
+      <div class="pmc-row"><span class="pmc-k">Market</span><span class="pmc-v">${esc(p.market||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">Experience</span><span class="pmc-v">${esc(p.years||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">Business Focus</span><span class="pmc-v">${esc(arr(p.focus).join(', ')||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">How You Operate</span><span class="pmc-v">${esc(arr(p.structure).join(', ')||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">GCI Target</span><span class="pmc-v">${esc(p.gci_target||'&#x2014;')}</span></div>
+    </div>
+    <div class="pmc-sec"><div class="pmc-sec-lbl">Goals &amp; Priorities</div>
+      <div class="pmc-row"><span class="pmc-k">#1 Goal This Year</span><span class="pmc-v">${esc(p.primary_goal||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">Want More Of</span><span class="pmc-v">${esc(arr(p.want_more).join(', ')||'&#x2014;')}</span></div>
+    </div>
+    <div class="pmc-sec"><div class="pmc-sec-lbl">Time &amp; Lead Leakage</div>
+      <div class="pmc-row"><span class="pmc-k">Biggest Time Drains</span><span class="pmc-v long">${esc(arr(p.time_drains).join(', ')||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">Lead Leakage Points</span><span class="pmc-v long">${esc(arr(p.lead_leakage).join(', ')||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">Procrastinated</span><span class="pmc-v long">${esc(p.procrastinate||'&#x2014;')}</span></div>
+    </div>
+    <div class="pmc-sec"><div class="pmc-sec-lbl">Strengths &amp; Bottlenecks</div>
+      <div class="pmc-row"><span class="pmc-k">Strongest Skill</span><span class="pmc-v">${esc(arr(p.strength).join(', ')||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">Primary Bottleneck</span><span class="pmc-v">${esc(arr(p.weakness).join(', ')||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">Energy Drains</span><span class="pmc-v long">${esc(p.energy_drain||'&#x2014;')}</span></div>
+    </div>
+    <div class="pmc-sec"><div class="pmc-sec-lbl">Brand Voice &amp; Communication</div>
+      <div class="pmc-row"><span class="pmc-k">Tone</span><span class="pmc-v">${esc(arr(p.tone).join(', ')||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">Register</span><span class="pmc-v">${esc(arr(p.formality).join(', ')||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">Brand Words</span><span class="pmc-v">${esc(p.brand_vibe||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">Avoid Phrases</span><span class="pmc-v long">${esc(p.avoid_phrases||'&#x2014;')}</span></div>
+      <div class="pmc-row"><span class="pmc-k">Self Description</span><span class="pmc-v long">${esc(p.self_describe||'&#x2014;')}</span></div>
+    </div>
+    <div class="pmc-acts">
+      <button class="pmc-btn pmc-red" onclick="dlTxt()">&#x2193; Download .txt Profile</button>
+      <button class="pmc-btn pmc-ghost" onclick="launch('diagnostic')">&#x21BB; Retake Diagnostic</button>
+      <button class="pmc-btn pmc-ghost" onclick="clearProfile()">&#x2715; Clear Profile</button>
+    </div>`;
+
+  document.getElementById('pp-sidebar').innerHTML = `
+    <div class="pps">
+      <div class="pps-lbl">Top AI Leverage Areas</div>
+      <ul class="opp-list">
+        ${topOpps.slice(0,5).map((o,i) => {
+          const meta = OPP_META[o.id||o];
+          return meta ? `<li class="opp-item"><span class="opp-num">0${i+1}</span>${meta.title}</li>` : '';
+        }).join('') || '<li class="opp-item">Run diagnostic to see your ranked opportunities.</li>'}
+      </ul>
+    </div>
+    <div class="pps">
+      <div class="pps-lbl">Jump Into a Tool</div>
+      <button class="pps-btn pps-red" onclick="launch('followup')">&#x25b7; Follow-Up System</button>
+      <button class="pps-btn pps-muted" onclick="toast('Coming soon','Listing Descriptions launching next.','var(--gold)','&#x2299;')">&#x25fb; Listing Descriptions</button>
+      <button class="pps-btn pps-muted" onclick="toast('Coming soon','Social Content tool launching soon.','var(--gold)','&#x2299;')">&#x25c8; Social Content</button>
+    </div>
+    <div class="pps pps-dark">
+      <div class="pps-lbl">Quick AI Context Block</div>
+      <div class="pps-inst">Paste this into any AI conversation to set your context:<br><br><strong>"I'm a real estate agent in ${esc(p.market||'[market]')}. My tone is ${esc(arr(p.tone).join(', ')||'warm & personal')}. ${esc(p.self_describe||'')} Avoid: ${esc(p.avoid_phrases||'corporate jargon')}."</strong><br><br>Or download your full .txt profile for a pre-formatted version.</div>
+    </div>`;
+}
+
+/* ---- DOWNLOAD .TXT ---- */
+function dlTxt() {
+  const p = getProfile();
+  if (!p) { toast('No profile found', 'Run the diagnostic first.', 'var(--amber)', '&#x26a0;'); return; }
+  const arr = v => Array.isArray(v)?v:(v?[v]:[]);
+  const now = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const topOpps = (p.topOpportunities||[]).slice(0,5);
+  const txt = [
+    '================================================================',
+    '  KWIT AGENT AI PROFILE',
+    '  ' + (p.name||'Agent') + ' \u2014 ' + (p.market||'Market not specified'),
+    '  Generated: ' + now,
+    '================================================================',
+    '',
+    'AGENT OVERVIEW',
+    '\u2500'.repeat(16),
+    'Name:              ' + (p.name||'\u2014'),
+    'Market:            ' + (p.market||'\u2014'),
+    'Experience:        ' + (p.years||'\u2014'),
+    'Business Focus:    ' + (arr(p.focus).join(', ')||'\u2014'),
+    'Team Structure:    ' + (arr(p.structure).join(', ')||'\u2014'),
+    'GCI Target:        ' + (p.gci_target||'\u2014'),
+    'Transactions/Year: ' + (p.transactions_last||'\u2014'),
+    '',
+    'PRODUCTION GOALS',
+    '\u2500'.repeat(16),
+    'Primary Goal:      ' + (p.primary_goal||'\u2014'),
+    'Want More Of:      ' + (arr(p.want_more).join(', ')||'\u2014'),
+    '',
+    'TIME DRAINS & LEAD LEAKAGE',
+    '\u2500'.repeat(26),
+    'Time Drains:       ' + (arr(p.time_drains).join(', ')||'\u2014'),
+    'Lead Leakage:      ' + (arr(p.lead_leakage).join(', ')||'\u2014'),
+    'Procrastinated:    ' + (p.procrastinate||'\u2014'),
+    '',
+    'STRENGTHS & BOTTLENECKS',
+    '\u2500'.repeat(23),
+    'Strongest Skill:   ' + (arr(p.strength).join(', ')||'\u2014'),
+    'Primary Bottleneck:' + (arr(p.weakness).join(', ')||'\u2014'),
+    'Energy Drains:     ' + (p.energy_drain||'\u2014'),
+    'Momentum Breakers: ' + (p.lose_momentum||'\u2014'),
+    '',
+    'AI READINESS',
+    '\u2500'.repeat(12),
+    'Comfort Level:     ' + (p.ai_comfort||'\u2014') + ' / 5',
+    'Tools Used Before: ' + (arr(p.ai_used).join(', ')||'None'),
+    'Biggest Hesitation:' + (p.ai_hesitation||'\u2014'),
+    'First Win Needed:  ' + (p.ai_first_win||'\u2014'),
+    '',
+    '================================================================',
+    'BRAND VOICE & COMMUNICATION PROFILE',
+    '(Paste this block into any AI tool to set your context)',
+    '================================================================',
+    '',
+    'I am a real estate agent named ' + (p.name||'[name]') + ' based in ' + (p.market||'[market]') + '.',
+    '',
+    'My communication tone is ' + (arr(p.tone).join(', ').toLowerCase()||'warm and personal') + '.',
+    'My register: ' + (arr(p.formality).join(', ').toLowerCase()||'balanced') + '.',
+    'My brand words: ' + (p.brand_vibe||'[add yours]') + '.',
+    'Avoid these phrases: ' + (p.avoid_phrases||'[add yours]') + '.',
+    '',
+    'When writing for me:',
+    '- Always write in first person',
+    '- Sound like a real person, not a corporate template',
+    '- Match my voice \u2014 not a generic AI voice',
+    '- Keep sentences tight. Avoid filler.',
+    '',
+    'How I introduce myself to clients:',
+    '"' + (p.self_describe||'[add your intro]') + '"',
+    '',
+    '================================================================',
+    'TOP AI LEVERAGE AREAS (Ranked for This Business)',
+    '================================================================',
+    topOpps.length
+      ? topOpps.map((o,i) => {
+          const meta = OPP_META[o.id||o];
+          return meta ? (i+1) + '. ' + meta.title + '\n   \u2192 Est. time saved: ' + meta.time + '/week' : '';
+        }).filter(Boolean).join('\n\n')
+      : 'Run the Business Diagnostic to generate your ranked opportunities.',
+    '',
+    '================================================================',
+    'KWIT Agent AI Platform',
+    'This profile is reusable. Paste the brand voice block into',
+    'any AI tool as your starting context. Re-run the diagnostic',
+    'anytime your business changes.',
+    '================================================================',
+  ].join('\n');
+
+  const blob = new Blob([txt], {type:'text/plain'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = 'kwit-ai-profile-' + (p.name||'agent').toLowerCase().replace(/\s+/g,'-') + '.txt';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  toast('Profile downloaded', 'Paste the brand voice block into any AI tool to set your context.', 'var(--green)', '&#x2193;');
+}
+
+/* ---- TOPBAR HANDLERS ---- */
+function pillClick() { getProfile() ? nav('profile-page') : launch('diagnostic'); }
+function ctaClick()  { getProfile() ? launch('followup')  : launch('diagnostic'); }
+
+/* ---- TOAST ---- */
+function toast(title, sub, border, icon) {
+  const el = document.getElementById('toast');
+  el.style.borderLeftColor = border||'var(--green)';
+  document.getElementById('t-icon').innerHTML  = icon||'&#x2713;';
+  document.getElementById('t-title').textContent = title||'';
+  document.getElementById('t-sub').textContent   = sub||'';
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 4200);
+}
+
+/* ---- ESCAPE ---- */
+function esc(s) {
+  if (s==null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ---- BOOT ---- */
+function boot() {
+  /* Detect embedded mode (running inside portal iframe) */
+  try {
+    const isInIframe = (window.self !== window.top) || (window.frameElement !== null);
+    if (isInIframe) {
+      document.body.classList.add('embedded');
+    }
+  } catch(e) {
+    /* Any security error means cross-origin iframe — assume embedded */
+    document.body.classList.add('embedded');
+  }
+  migrateTemplates();
+  renderDashboard();
+  updateTemplateBadge();
+  updateLeadsBadge();
+  renderLeadsDash();
+  renderBNMIntelBar(getBNMIntelSignals());
+}
+
+/* ============================================================
+   QUICK ACTIONS — pre-configured one-click task launchers
+   Each action opens the follow-up tool with fields pre-selected
+   based on the situation, passing preselect config to the iframe.
+   ============================================================ */
+
+/* Config: each action maps to a set of pre-selected inp fields */
+const QUICK_ACTIONS = [
+  {
+    icon: '🔄',
+    tag:  'Most Common',
+    title:'Follow Up on a Cold Lead',
+    desc: 'No response. Write the message that gets them back.',
+    time: '45 sec',
+    preselect: { leadType:'Cold / inactive lead', situation:'No response', goal:'Reopen conversation', channel:'Text', toneShift:'Softer' },
+  },
+  {
+    icon: '🏡',
+    tag:  'After Showings',
+    title:"Post-Showing Check-In",
+    desc: 'They saw homes. Get their reaction before the feeling fades.',
+    time: '45 sec',
+    preselect: { leadType:'Buyer lead', situation:'After showing', goal:'Get a reply', channel:'Text', toneShift:'Keep my usual tone' },
+  },
+  {
+    icon: '🚪',
+    tag:  'Open House',
+    title:'Open House Follow-Up',
+    desc: 'You met them Sunday. Send while you\'re still fresh in their mind.',
+    time: '45 sec',
+    preselect: { leadType:'Open house lead', situation:'Open house follow-up', goal:'Get a reply', channel:'Text', toneShift:'Keep my usual tone' },
+  },
+  {
+    icon: '🤝',
+    tag:  'Past Clients',
+    title:'Check In With a Past Client',
+    desc: "Stay warm without sounding transactional.",
+    time: '45 sec',
+    preselect: { leadType:'Past client', situation:'Past client touchpoint', goal:'Stay top of mind', channel:'Email', toneShift:'Softer' },
+  },
+  {
+    icon: '📋',
+    tag:  'Seller Leads',
+    title:'First Contact — Seller Lead',
+    desc: 'First message to a new seller lead. Warm but specific. One clear ask at the end.',
+    time: '45 sec',
+    preselect: { leadType:'Seller lead', situation:'First contact', goal:'Book a call', channel:'Email', toneShift:'Keep my usual tone' },
+  },
+  {
+    icon: '🔁',
+    tag:  'Referrals',
+    title:'Referral Source Touch-In',
+    desc: 'A personal check-in with a referral source. No ask. Just staying on their radar.',
+    time: '45 sec',
+    preselect: { leadType:'Referral source', situation:'Referral check-in', goal:'Stay top of mind', channel:'Text', toneShift:'Softer' },
+  },
+];
+
+function renderQuickActions(profile) {
+  const section = document.getElementById('quick-actions');
+  const grid    = document.getElementById('qa-grid');
+  if (!section || !grid) return;
+
+  if (!profile) { section.classList.add('hidden'); return; }
+  section.classList.remove('hidden');
+
+  /* Optionally surface the most relevant action first based on profile */
+  const drains = (profile.time_drains || []);
+  const weakness = (profile.weakness || []);
+  let sorted = [...QUICK_ACTIONS];
+  /* Boost cold/no-response if follow-up is a weakness */
+  if (weakness.includes('Consistent follow-up') || drains.includes('Lead follow-up')) {
+    const idx = sorted.findIndex(a => a.preselect.situation === 'No response');
+    if (idx > 0) { const [item] = sorted.splice(idx, 1); sorted.unshift(item); }
+  }
+
+  /* Store sorted order so launchQuickAction uses correct indices */
+  _qaOrder = sorted;
+
+  grid.innerHTML = sorted.slice(0, 6).map((qa, i) => `
+    <div class="qa-card" onclick="launchQuickAction(${i})">
+      <div class="qa-top">
+        <span class="qa-icon">${qa.icon}</span>
+        <span class="qa-tag">${esc(qa.tag)}</span>
+      </div>
+      <div class="qa-title">${esc(qa.title)}</div>
+      <div class="qa-desc">${esc(qa.desc)}</div>
+      <div class="qa-footer">
+        <span class="qa-time">&#x23f1; ${qa.time}</span>
+        <span class="qa-go">Open &#x2192;</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* Store the current quick action order for launchQuickAction() */
+let _qaOrder = QUICK_ACTIONS;
+
+function launchQuickAction(idx) {
+  const profile = getProfile();
+  const qa = _qaOrder[idx] || QUICK_ACTIONS[idx];
+  if (!qa) return;
+
+  /* Load the follow-up tool */
+  loadIframe('followup', profile);
+  nav('followup');
+
+  /* After iframe loads, post the preselect config */
+  const ifr = document.getElementById('ifr-followup');
+  const send = () => {
+    try {
+      ifr.contentWindow.postMessage({
+        type: 'KWIT_PRESELECT',
+        preselect: qa.preselect,
+        profile: profile ? buildAP(profile) : null,
+      }, '*');
+    } catch(e) {}
+  };
+
+  /* If already loaded, send immediately; otherwise wait for load */
+  if (ifr.getAttribute('data-loaded') === PATHS.followup) {
+    setTimeout(send, 200);
+  } else {
+    ifr.addEventListener('load', () => setTimeout(send, 300), { once: true });
+  }
+}
+
+/* ============================================================
+   TEMPLATE LIBRARY — render + manage
+   ============================================================ */
+/* PAGE_TITLES_EXT merged into nav() */
+
+
+
+function copyTemplate(idx) {
+  const t = getTemplates().slice().sort((a,b) => (b.score||0) - (a.score||0))[idx];
+  if (!t) return;
+  const text = t.text || t.name;
+  try { navigator.clipboard.writeText(text); } catch(e) {
+    const ta = Object.assign(document.createElement('textarea'), { value: text });
+    Object.assign(ta.style, { position:'fixed', opacity:'0' });
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  }
+  toast('“' + (t.name||'Template') + '” copied', 'Ready to paste.', 'var(--green)', '&#x2713;');
+}
+
+function deleteTemplateAndRefresh(idx) {
+  /* Resolve sorted index to ID, then delete by ID */
+  const sorted = getTemplates().slice().sort((a,b) => (b.score||0) - (a.score||0));
+  const tpl = sorted[idx];
+  if (!tpl) return;
+  const list = getTemplates().filter(t => t.id !== tpl.id || t.name !== tpl.name || t.text !== tpl.text);
+  try { localStorage.setItem(TEMPLATE_KEY, JSON.stringify(list)); } catch(e) {}
+  renderTemplateLibrary();
+  updateTemplateBadge();
+  toast('Template deleted', '', 'var(--amber)', '&#x2715;');
+}
+
+function updateTemplateBadge() {
+  const count = getTemplates().length;
+  const badge = document.getElementById('nb-tl');
+  if (!badge) return;
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = '';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+/* Override nav() to trigger re-render of template library when navigated to */
+/* merged above */
+
+/* Demo helper — open browser console, type: _demo() */
+window._demo = function() {
+  localStorage.setItem(PROFILE_KEY, JSON.stringify({
+    name:'Sarah Mitchell',market:'Austin, TX',years:'5\u201310 years',
+    focus:['Residential Sellers','Luxury'],structure:['Solo agent'],
+    gci_target:'$200k\u2013$400k',transactions_last:'10\u201320',
+    primary_goal:'More volume',want_more:['Listings','Referrals'],
+    time_drains:['Writing & emails','Social media','Lead follow-up','Listing prep'],
+    lead_leakage:['After initial inquiry','Long-term nurture (6+ months)','Past clients / referral asks'],
+    procrastinate:'Writing property descriptions and following up after showings consistently.',
+    strength:['Building trust fast'],weakness:['Consistent follow-up'],
+    energy_drain:'Writing emails from scratch every time.',
+    lose_momentum:'After a deal falls through.',
+    ai_comfort:2,ai_used:['ChatGPT'],
+    ai_hesitation:"Worried it'll sound fake",
+    ai_first_win:'If it wrote my follow-up emails in my voice.',
+    tone:['Warm & personal'],formality:['Balanced \u2014 reads the room'],
+    brand_vibe:'Trustworthy, responsive, neighborhood expert',
+    avoid_phrases:'Corporate jargon, synergy, leverage (verb)',
+    self_describe:"I'm a neighborhood specialist who helps sellers get top dollar without the stress.",
+    topOpportunities:[
+      {id:'followup', title:'Follow-Up System',        rank:1, timeSaved:'4\u20136 hrs/wk'},
+      {id:'listing',  title:'Listing Description Writer', rank:2, timeSaved:'2\u20133 hrs/wk'},
+      {id:'social',   title:'Social Content Batch Tool',  rank:3, timeSaved:'3\u20134 hrs/wk'},
+      {id:'sphere',   title:'Sphere Nurture System',      rank:4, timeSaved:'2\u20134 hrs/wk'},
+      {id:'email',    title:'Email & Outreach Templates', rank:5, timeSaved:'2\u20133 hrs/wk'},
+    ],
+    matchReasons:{
+      followup:'You named consistent follow-up as your biggest weak spot.',
+      listing:'Listing prep is one of your named weekly time drains.',
+      social:'Social media is one of your biggest weekly time drains.',
+      sphere:'Past clients / referral asks is a named lead leakage point.',
+      email:'Writing from scratch came up in your energy drain answers.',
+    },
+    savedAt:new Date().toISOString(),
+  }));
+  boot();
+  console.log('Demo profile loaded. Refresh optional. Type _demo() again to reload.');
+};
+
+
+/* ============================================================
+   NEW CAPABILITY MODULES — v2 Expansion
+   ============================================================ */
+
+/* ── PAGE TITLE MAP update ──────────────────────────────────── */
+Object.assign(PAGE_TITLES, {
+  starter:  'AI Starter Path',
+  explain:  'Explain This',
+});
+
+/* ── AI STARTER PATH DATA ───────────────────────────────────── */
+const STARTER_STEPS = [
+  {
+    num: '01',
+    title: 'Run the 6-minute diagnostic first',
+    desc: 'Six minutes. KWIT builds your profile — voice, market, goals, time drains. Every tool uses it automatically. Do this first.',
+    cta: 'Run the Diagnostic',
+    ctaFn: "launch('diagnostic')",
+    doneCheck: p => !!p,
+  },
+  {
+    num: '02',
+    title: 'Open the Follow-Up System with a real lead',
+    desc: 'Think of one lead you need to contact. Open Follow-Up. Pick the situation. Paste one sentence. Get a message back in your voice. 60 seconds.',
+    cta: 'Open Follow-Up System',
+    ctaFn: "launch('followup')",
+    doneCheck: p => !!(p && getTemplates().length > 0),
+  },
+  {
+    num: '03',
+    title: 'Save that message as a template',
+    desc: 'A message that works gets saved. Five templates in, most agents save 30+ minutes a week. One click next time.',
+    cta: 'View my templates',
+    ctaFn: "nav('templates')",
+    doneCheck: p => !!(p && getTemplates().length >= 3),
+  },
+  {
+    num: '04',
+    title: 'Log a lead and let KWIT track the follow-up',
+    desc: 'Log a lead. KWIT builds the follow-up cadence and tells you when to send the next message.',
+    cta: 'Log a lead now',
+    ctaFn: "showLogLeadPanel()",
+    doneCheck: p => !!(p && getLeads().length > 0),
+  },
+  {
+    num: '05',
+    title: 'Log what happens when you send it',
+    desc: 'After you send, log the outcome. KWIT learns what works for your leads and surfaces it in the next recommendation.',
+    cta: 'View Outcomes',
+    ctaFn: "nav('feedback')",
+    doneCheck: p => !!(p && getFeedback().length > 0),
+  },
+];
+
+function renderStarterSteps(containerId, profile, compact) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = STARTER_STEPS.map((s, i) => {
+    const done = s.doneCheck(profile);
+    const ctaHtml = s.ctaFn
+      ? `<div class="sp-step-cta" onclick="${s.ctaFn}">${done ? '&#x2713; Done' : s.cta + ' &#x2192;'}</div>`
+      : (done ? '<div class="sp-step-cta">&#x2713; Complete</div>' : '');
+    return `<div class="sp-step${done ? ' done' : ''}">
+      <div class="sp-step-num">Step ${s.num}</div>
+      <div class="sp-step-title">${esc(s.title)}</div>
+      ${!compact ? `<div class="sp-step-desc">${esc(s.desc)}</div>` : ''}
+      ${ctaHtml}
+    </div>`;
+  }).join('');
+}
+
+function renderStarterPage() {
+  const p = getProfile();
+  // Full page version
+  const fullEl = document.getElementById('starter-steps-full');
+  if (fullEl) {
+    fullEl.innerHTML = STARTER_STEPS.map((s, i) => {
+      const done = s.doneCheck(p);
+      const ctaHtml = s.ctaFn
+        ? `<div class="sp-step-cta" onclick="${s.ctaFn}">${done ? '&#x2713; Done' : s.cta + ' &#x2192;'}</div>`
+        : '';
+      return `<div class="sp-step${done ? ' done' : ''}" style="padding:22px 22px 18px;">
+        <div class="sp-step-num">Step ${s.num}</div>
+        <div class="sp-step-title" style="font-size:16px;margin-bottom:8px;">${esc(s.title)}</div>
+        <div class="sp-step-desc" style="font-size:13px;margin-bottom:12px;">${esc(s.desc)}</div>
+        ${ctaHtml}
+      </div>`;
+    }).join('');
+  }
+}
+
+/* ── CAPABILITY MODULES DATA ────────────────────────────────── */
+const MODULES = [
+  {
+    id: 'listing-desc',
+    icon: '&#x25fb;',
+    name: 'Listing Description Writer',
+    tag: 'mod-tag-next',
+    tagText: 'Building Now',
+    featured: true,
+    desc: 'Your notes in — four finished pieces out. MLS copy, brochure headline, a social caption, and an email. All in your voice, all at once.',
+    outputs: ['MLS remarks (250 words)', 'Brochure headline + body', 'Social caption — Instagram or Facebook', 'Email to send to your list'],
+    meta: '2&#x2013;3 hrs/wk saved',
+    btn: 'mod-btn-gold',
+    btnText: 'Notify Me When Ready',
+    btnFn: "toast('You\'re on the list','We\'ll notify you when Listing Descriptions launches.','var(--gold)','&#x25fb;')",
+  },
+  {
+    id: 'open-house-kit',
+    icon: '&#x1f6aa;',
+    name: 'Open House Conversion Kit',
+    tag: 'mod-tag-coming',
+    tagText: 'Coming Soon',
+    featured: false,
+    desc: 'You collected names on Sunday. By Monday morning, know who to call first, what to say to the rest, and have the messages ready to go.',
+    outputs: ['Who is worth calling first', 'Same-day follow-up for every sign-in', 'A check-in message for Day 3 if no reply', 'The two questions that separate browsers from buyers'],
+    meta: 'Connects to Follow-Up System',
+    btn: 'mod-btn-ghost',
+    btnText: 'Coming Soon',
+    btnFn: "toast('Coming soon','Open House Kit launches after Listing Descriptions.','var(--gold)','&#x1f6aa;')",
+  },
+  {
+    id: 'listing-apt-prep',
+    icon: '&#x1f4cb;',
+    name: 'Listing Appointment Prep',
+    tag: 'mod-tag-coming',
+    tagText: 'Coming Soon',
+    featured: false,
+    desc: 'Put in the address and seller situation. Get a prep brief with likely objections, talking points, how to frame the CMA conversation, and a follow-up message for after you leave.',
+    outputs: ['A one-page brief for this specific appointment', 'Talking points for this seller\'s situation', 'The three objections you\'re most likely to get — and what to say', 'A follow-up message to send the next morning'],
+    meta: 'Pairs with Roleplay Lab',
+    btn: 'mod-btn-ghost',
+    btnText: 'Coming Soon',
+    btnFn: "toast('Coming soon','Listing Appointment Prep is on the roadmap.','var(--gold)','&#x1f4cb;')",
+  },
+  {
+    id: 'sphere-nurture',
+    icon: '&#x25c7;',
+    name: 'Sphere Nurture System',
+    tag: 'mod-tag-coming',
+    tagText: 'Coming Soon',
+    featured: false,
+    desc: 'Every past client gets a personal check-in every quarter. Every referral source stays on your radar. You set it up once and it stays consistent.',
+    outputs: ['Quarterly check-ins that feel personal, not automated', 'Monthly touches with your top referral sources', 'Market updates written for their specific neighborhood', 'Timely touches around anniversaries and market shifts'],
+    meta: '2&#x2013;4 hrs/wk saved',
+    btn: 'mod-btn-ghost',
+    btnText: 'Coming Soon',
+    btnFn: "toast('Coming soon','Sphere Nurture System is on the roadmap.','var(--gold)','&#x25c7;')",
+  },
+];
+
+function renderModuleGrid() {
+  const el = document.getElementById('mod-grid');
+  if (!el) return;
+  el.innerHTML = MODULES.map(m => `
+    <div class="mod-card${m.featured ? ' mod-featured' : ''}">
+      <div class="mod-top">
+        <div class="mod-tag-row"><span class="mod-tag ${m.tag}">${m.tagText}</span></div>
+        <span class="mod-icon">${m.icon}</span>
+        <div class="mod-name">${m.name}</div>
+        <div class="mod-desc">${m.desc}</div>
+        <ul class="mod-outputs">${m.outputs.map(o => `<li>${esc(o)}</li>`).join('')}</ul>
+      </div>
+      <div class="mod-bottom">
+        <div class="mod-meta">&#x23f1; ${m.meta}</div>
+        <button class="mod-btn ${m.btn}" onclick="${m.btnFn}">${m.btnText}</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ── LEAD STAGE COACH DATA ──────────────────────────────────── */
+const LSC_DATA = {
+  new: {
+    move: 'Send a warm first-contact message within the hour.',
+    why: 'Speed to lead is the single biggest predictor of conversion. A warm, personal first message sent fast beats any follow-up sequence you run later.',
+    action: "launchQuickAction(4)",
+    actionLabel: 'Write this first-contact message',
+  },
+  ghost: {
+    move: 'Send one low-pressure re-engagement message. No guilt.',
+    why: 'Ghosted leads often just got busy. A message that removes pressure and makes it easy to reply with one word is more likely to work than anything urgent.',
+    action: "launchQuickAction(0)",
+    actionLabel: 'Write a re-engagement message',
+  },
+  showing: {
+    move: 'Check in 2&#x2013;3 days after the showing. Reference what they liked.',
+    why: 'They formed opinions during the showing. Your job is to surface those opinions before they fade or get influenced by another agent.',
+    action: "launchQuickAction(1)",
+    actionLabel: 'Write a post-showing check-in',
+  },
+  warm: {
+    move: 'Send something useful, not a follow-up. A market stat, a relevant update, a price trend for their area.',
+    why: 'Warm but inactive leads are usually waiting for a reason to act. Give them information, not pressure. Stay top of mind without asking anything of them.',
+    action: "launchQuickAction(5)",
+    actionLabel: 'Write a value-add message',
+  },
+  past: {
+    move: 'Check in personally. No agenda. Then offer the referral door.',
+    why: 'Past clients are your highest-leverage asset. A warm check-in with a soft referral opening converts better than any cold prospecting you do.',
+    action: "launchQuickAction(3)",
+    actionLabel: 'Write a past client check-in',
+  },
+  referral: {
+    move: 'Stay on their radar with a personal, non-transactional touchpoint.',
+    why: 'Referral sources stop sending business when every message from you has an agenda. Reach out like a colleague. No ask. Just staying connected.',
+    action: "launchQuickAction(5)",
+    actionLabel: 'Write a referral source touch-in',
+  },
+};
+
+function lscPick(stage) {
+  const data = LSC_DATA[stage];
+  if (!data) return;
+  const result = document.getElementById('lsc-result');
+  document.getElementById('lsc-move').innerHTML = data.move;
+  document.getElementById('lsc-why').innerHTML  = data.why;
+  const btn = document.getElementById('lsc-btn');
+  btn.textContent = data.actionLabel + ' →';
+  btn.onclick = new Function(data.action);
+  result.classList.add('show');
+  result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ── INTEGRATIONS DATA ──────────────────────────────────────── */
+const INTEGRATIONS = [
+  {
+    icon: '&#x2709;', name: 'Email',
+    desc: 'Send directly from KWIT to Gmail or Outlook. Removes the copy-paste step every time you generate a message.',
+    unlock: 'Highest-value first connection for most agents — especially those spending time on follow-up.',
+    recLabel: 'Recommended first — your diagnostic flagged follow-up as your biggest time drain.',
+    condition: d => !!(d && ((d.time_drains||[]).includes('Lead follow-up') || (d.weakness||[]).includes('Consistent follow-up'))),
+  },
+  {
+    icon: '&#x1f4f1;', name: 'CRM',
+    desc: 'Every message you generate gets logged to your CRM automatically. No manual notes. No contacts going dark because they weren\'t entered.',
+    unlock: 'Best once you have 10+ saved templates and are actively tracking leads.',
+    recLabel: 'Recommended — your diagnostic shows lead leakage after initial contact.',
+    condition: d => !!(d && (d.lead_leakage||[]).some(l => l.includes('initial') || l.includes('After'))),
+  },
+  {
+    icon: '&#x1f4c5;', name: 'Calendar',
+    desc: 'When your follow-up includes a call invitation, KWIT checks your availability first. The time you suggest is always actually open.',
+    unlock: 'Useful once you are generating call-booking messages through KWIT.',
+    recLabel: 'Recommended — your diagnostic shows appointment-setting as a priority.',
+    condition: d => !!(d && (d.primary_goal||'').toLowerCase().includes('appoint')),
+  },
+  {
+    icon: '&#x1f58c;', name: 'Canva',
+    desc: 'Your listing copy flows directly into a Canva template. You get a finished graphic without opening a blank file or reformatting anything.',
+    unlock: 'Connects when the Listing Description Writer and Social Content tools launch.',
+    recLabel: 'Recommended — your diagnostic flagged listing prep as a significant time drain.',
+    condition: d => !!(d && (d.time_drains||[]).includes('Listing prep')),
+  },
+  {
+    icon: '&#x1f3a4;', name: 'Voice Notes',
+    desc: 'Leave a voice note in your car after a showing. KWIT transcribes it and turns it into the follow-up message by the time you get home.',
+    unlock: 'Most useful for agents running 2+ showings per week.',
+    recLabel: 'Recommended — high showing volume makes voice-to-message the fastest loop.',
+    condition: d => !!(d && (d.focus||[]).some(f => /buyer/i.test(f))),
+  },
+];
+
+function renderIntegrations(profile) {
+  const el = document.getElementById('int-grid');
+  const subEl = document.getElementById('int-sub');
+  if (!el) return;
+
+  const arr = v => Array.isArray(v)?v:(v?[v]:[]);
+  // Personalize based on profile
+  const intList = INTEGRATIONS.map(i => ({
+    ...i,
+    rec: profile ? i.condition(profile) : false,
+  }));
+  // Sort: recommended first
+  intList.sort((a,b) => (b.rec?1:0) - (a.rec?1:0));
+
+  if (profile && subEl) {
+    const fn = (profile.name||'').split(' ')[0];
+    const topRec = intList.find(i => i.rec);
+    subEl.innerHTML = topRec
+      ? `<span>${esc(fn)}'s diagnostic: <strong>${esc(topRec.name)}</strong> is your highest-value first connection.</span>`
+      : `<span>Each connection removes a manual step from your workflow.</span>`;
+  } else if (subEl) {
+    subEl.innerHTML = '<span>Run your diagnostic to get a personalized integration recommendation.</span>';
+  }
+
+  el.innerHTML = intList.map(i => `
+    <div class="int-card${i.rec ? ' int-rec' : ''}">
+      <div class="int-top">
+        <span class="int-icon">${i.icon}</span>
+        <span class="int-status ${i.rec ? 'int-status-rec' : 'int-status-later'}">${i.rec ? '&#x2605; Connect First' : 'Later'}</span>
+      </div>
+      <div class="int-name">${esc(i.name)}</div>
+      <div class="int-desc">${i.desc}</div>
+      <div class="int-unlock">${i.rec ? '<strong style=\"color:var(--green)\">' + esc(i.recLabel) + '</strong>' : '&#x23f3; ' + esc(i.unlock)}</div>
+    </div>
+  `).join('');
+}
+
+/* ── TODAY'S BEST NEXT MOVE ─────────────────────────────────── */
+
+/* ============================================================
+   TODAY'S BEST NEXT MOVE — Decision Engine v2
+   ============================================================
+   Inputs:
+     profile.time_drains       — what eats their week
+     profile.weakness          — named bottleneck from diagnostic
+     profile.lead_leakage      — where leads fall through
+     profile.topOpportunities  — diagnostic-ranked tools
+     profile.primary_goal      — more volume / more listings / etc.
+     profile.years             — experience level
+     profile.want_more         — listings / referrals / buyers
+     getTemplates()            — count of saved templates (habit proxy)
+     new Date().getDay()       — day of week (0=Sun, 6=Sat)
+     BNM_HISTORY (localStorage) — what was shown last, streak tracking
+   ============================================================ */
+
+const BNM_HISTORY_KEY = 'kwit_bnm_history';
+
+function getBNMHistory() {
+  try { return JSON.parse(localStorage.getItem(BNM_HISTORY_KEY)) || {}; } catch(e) { return {}; }
+}
+function setBNMHistory(h) {
+  try { localStorage.setItem(BNM_HISTORY_KEY, JSON.stringify(h)); } catch(e) {}
+}
+function recordBNMShown(ruleId) {
+  const h = getBNMHistory();
+  const today = new Date().toDateString();
+  if (!h.log) h.log = [];
+  h.log.unshift({ ruleId, date: today });
+  if (h.log.length > 30) h.log.pop(); /* keep 30-day window */
+  h.lastShown = ruleId;
+  h.lastDate  = today;
+  setBNMHistory(h);
+}
+function wasShownToday(ruleId) {
+  const h = getBNMHistory();
+  const today = new Date().toDateString();
+  return h.lastDate === today && h.lastShown === ruleId;
+}
+function timesShownThisWeek(ruleId) {
+  const h = getBNMHistory();
+  if (!h.log) return 0;
+  const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  return h.log.filter(e => e.ruleId === ruleId && new Date(e.date).getTime() > cutoff).length;
+}
+function totalActionsThisWeek() {
+  const h = getBNMHistory();
+  if (!h.log) return 0;
+  const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  return h.log.filter(e => new Date(e.date).getTime() > cutoff).length;
+}
+
+/* ── 10 RECOMMENDATION RULES ──────────────────────────────────
+   Each rule is evaluated in priority order. First match wins.
+   Every rule has: id, condition fn, headline, subtext, btn,
+   btnFn, ghost (optional), ghostFn (optional), urgency signal.
+   ─────────────────────────────────────────────────────────── */
+function buildBNMRules(profile, templates, dow, arr) {
+  const drains    = arr(profile.time_drains);
+  const weakness  = arr(profile.weakness);
+  const leakage   = arr(profile.lead_leakage);
+  const topOpps   = (profile.topOpportunities||[]).map(o=>o.id||o);
+  const goals     = arr(profile.want_more);
+  const goal      = profile.primary_goal || '';
+  const years     = profile.years || '';
+  const fn        = (profile.name||'').split(' ')[0] || 'Agent';
+  const tCount    = templates.length;
+  const weeklyAct = totalActionsThisWeek();
+  const isMon     = dow === 1;
+  const isFri     = dow === 5;
+  const isWeekend = dow === 0 || dow === 6;
+
+  /* Experience bucket */
+  const isNew     = years.includes('1') || years.includes('Less') || years.includes('0–');
+  const isMid     = years.includes('2–') || years.includes('3–') || years.includes('5–');
+
+  return [
+
+    /* ── Rule 01: Brand-new user, no profile action yet ──────── */
+    {
+      id: 'no-profile',
+      condition: () => false, /* handled separately in renderBestNextMove */
+      hl:    'Start here. It takes 6 minutes.',
+      desc:  'Tell KWIT about your business. Every tool gets smarter. Your voice, goals, and time drains get loaded into every workflow automatically.',
+      btn:   'Run your Business Diagnostic →',
+      btnFn: "launch('diagnostic')",
+    },
+
+    /* ── Rule 02a: Lead due today — highest urgency when leads tracked ── */
+    {
+      id: 'lead-due-today',
+      condition: () => {
+        const leads = getLeads();
+        return leads.some(l => l.state === 'follow_up_due' || l.state === 'awaiting_reply');
+      },
+      get hl() {
+        const due = getLeads().filter(l => l.state === 'follow_up_due');
+        const await_ = getLeads().filter(l => l.state === 'awaiting_reply');
+        if (due.length) return due.length === 1 ? 'A follow-up is due today.' : due.length + ' follow-ups are due today.';
+        return await_.length + ' lead' + (await_.length === 1 ? ' is' : 's are') + ' waiting for your next message.';
+      },
+      get desc() {
+        const due = getLeads().filter(l => l.state === 'follow_up_due');
+        const first = due[0] || getLeads().find(l => l.state === 'awaiting_reply');
+        return first ? (esc(first.label) + ' is waiting. Write the next step in their cadence before the reply window closes.') : 'One of your tracked leads needs a message today.';
+      },
+      btn: 'Write this follow-up →',
+      get btnFn() {
+        const first = getLeads().find(l => l.state === 'follow_up_due') || getLeads().find(l => l.state === 'awaiting_reply');
+        return first ? "writeForLead('" + first.id + "')" : "nav('leads')";
+      },
+      ghost: 'View all leads',
+      ghostFn: "nav('leads')",
+      urgency: 'Reply rates drop significantly after 24 hours past the scheduled step.',
+    },
+
+    /* ── Rule 02: First win — zero templates, any day ─────────── */
+    {
+      id: 'first-win',
+      condition: () => tCount === 0,
+      hl:    'Send one follow-up. Right now.',
+      desc:  'You have not saved a template yet. Pick one lead that went quiet, paste what happened, hit Generate, and send the result. That is your first real AI win.',
+      btn:   'Write this follow-up →',
+      btnFn: "launchQuickAction(0)",
+      urgency: 'This is your highest-leverage 5 minutes of the week.',
+    },
+
+    /* ── Rule 03: Follow-up is #1 and it is a high-send day ───── */
+    {
+      id: 'followup-primary',
+      condition: () => (topOpps[0] === 'followup' || weakness.includes('Consistent follow-up'))
+                       && (isMon || dow === 2 || dow === 3)
+                       && tCount > 0,
+      hl:    'Your leads need a message today.',
+      desc:  'Follow-up is your #1 diagnostic leverage point. One message in your voice takes 45 seconds and keeps the conversation alive. ' + (isMon ? 'Monday messages get the highest reply rates.' : ''),
+      btn:   'Open Follow-Up System →',
+      btnFn: "launch('followup')",
+      urgency: weakness.includes('Consistent follow-up')
+               ? 'Consistent follow-up is your named bottleneck — this is the direct fix.'
+               : null,
+    },
+
+    /* ── Rule 04: Lead leakage after initial contact ──────────── */
+    {
+      id: 'first-contact-leakage',
+      condition: () => leakage.includes('After initial inquiry') && !isWeekend,
+      hl:    'New leads go cold in the first 24 hours.',
+      desc:  'Your diagnostic flagged "after initial inquiry" as your biggest lead leakage point. Run a first-contact follow-up for any new lead from this week before they forget you.',
+      btn:   'Write a first-contact message →',
+      btnFn: "launchQuickAction(4)",
+      urgency: 'Leads who get a reply in under an hour are 7× more likely to convert.',
+    },
+
+    /* ── Rule 05: Listing is top opp / listing prep is a drain ── */
+    {
+      id: 'listing-drain',
+      condition: () => (topOpps.slice(0,2).includes('listing') || drains.includes('Listing prep'))
+                       && (dow === 2 || dow === 3 || dow === 4),
+      hl:    'Turn your property notes into copy.',
+      desc:  'Listing prep is one of your biggest weekly time drains. Paste your property notes and get MLS remarks, a social caption, and an email blast version — all in your voice.',
+      btn:   'Notify me when Listing Writer is ready →',
+      btnFn: "toast('You\'re on the list','Listing Descriptions launches next. We\'ll notify you.','var(--gold)','&#x25fb;')",
+      urgency: null,
+    },
+
+    /* ── Rule 06: Past client leakage — Thurs or Fri ─────────── */
+    {
+      id: 'past-client-nurture',
+      condition: () => (leakage.includes('Past clients / referral asks') || goals.includes('Referrals'))
+                       && (isFri || dow === 4),
+      hl:    'Check in with a past client today.',
+      desc:  'Your diagnostic flagged past clients as a referral leakage point. One warm, no-agenda check-in on a Thursday or Friday converts better than any cold outreach you send this week.',
+      btn:   'Write a past client check-in →',
+      btnFn: "launchQuickAction(3)",
+      urgency: 'Past clients and referrals are your highest-margin leads.',
+    },
+
+    /* ── Rule 07: Open house this weekend — prep on Thursday ──── */
+    {
+      id: 'open-house-prep',
+      condition: () => dow === 4 && drains.includes('Lead follow-up'),
+      hl:    'Open house this weekend? Prep your follow-up now.',
+      desc:  'The best time to write open house follow-ups is the day before, not the morning after. Build a template now so Sunday night takes 30 seconds per lead.',
+      btn:   'Build an open house follow-up →',
+      btnFn: "launchQuickAction(2)",
+      urgency: null,
+    },
+
+    /* ── Rule 08: Template habit — fewer than 5 saved ────────── */
+    {
+      id: 'template-building',
+      condition: () => tCount > 0 && tCount < 5,
+      hl:    'Save one more template today.',
+      desc:  'You have ' + tCount + ' saved template' + (tCount === 1 ? '' : 's') + '. At 5, every repeat situation takes 10 seconds instead of 45. Generate any follow-up and save it.',
+      btn:   'Open Follow-Up System →',
+      btnFn: "launch('followup')",
+      ghost:    'View my templates',
+      ghostFn:  "nav('templates')",
+      urgency: null,
+    },
+
+    /* ── Rule 09: Long-term nurture leakage ──────────────────── */
+    {
+      id: 'longterm-nurture',
+      condition: () => leakage.includes('Long-term nurture (6+ months)') && (isMon || isFri),
+      hl:    'Reach out to a lead you have not contacted in 6+ months.',
+      desc:  'Long-term nurture is your flagged leakage point. One re-engagement message, no pressure, sent today — recovers leads that most agents have written off.',
+      btn:   'Write a re-engagement message →',
+      btnFn: "launchQuickAction(0)",
+      urgency: 'Re-engaged cold leads close at a higher rate than most agents expect.',
+    },
+
+    /* ── Rule 10: Referral source — Mon after a quiet week ────── */
+    {
+      id: 'referral-touch',
+      condition: () => goals.includes('Referrals') && isMon && weeklyAct < 2,
+      hl:    'Stay on a referral source’s radar this week.',
+      desc:  'You flagged referrals as a growth goal. One personal, non-transactional touch per month with your top referral sources is worth more than any campaign you can run.',
+      btn:   'Write a referral source message →',
+      btnFn: "launchQuickAction(5)",
+      urgency: null,
+    },
+
+    /* ── Rule 11: Established user, high activity — rotate ────── */
+    {
+      id: 'established-routine',
+      condition: () => tCount >= 5 && weeklyAct >= 3,
+      hl:    'Your follow-up habit is building.',
+      desc:  tCount + ' templates saved. Keep the momentum. Send one more follow-up today — pick the lead most likely to convert this week.',
+      btn:   'Open Follow-Up System →',
+      btnFn: "launch('followup')",
+      urgency: null,
+    },
+
+    /* ── Rule 12: Weekend — lighter action ────────────────────── */
+    {
+      id: 'weekend-prep',
+      condition: () => isWeekend,
+      hl:    'Quick win before the week starts.',
+      desc:  'Five minutes now saves 20 minutes Monday. Review your saved templates, or build one for the scenario you face most often — cold lead, past client, or post-showing.',
+      btn:   'View my templates →',
+      btnFn: "nav('templates')",
+      ghost:    'Build a new template',
+      ghostFn:  "launch('followup')",
+      urgency: null,
+    },
+  ];
+}
+
+/* ── MAIN RENDER FUNCTION ────────────────────────────────────── */
+function renderBestNextMove(profile) {
+  const hnEl  = document.getElementById('bnm-title');
+  const descEl = document.getElementById('bnm-desc');
+  const actsEl = document.getElementById('bnm-actions');
+  if (!hnEl || !actsEl) return;
+
+  /* No-profile state — BNM IS the primary CTA, no banner competing */
+  const _bnmSec = document.getElementById('bnm-section');
+  if (!profile) {
+    if (_bnmSec) _bnmSec.classList.add('no-profile-mode');
+    const eyText = document.getElementById('bnm-ey-text');
+    const liveDot = document.getElementById('bnm-live-dot');
+    const dateEl  = document.getElementById('bnm-date');
+    if (eyText)  eyText.textContent = '\u00a0Before you begin\u00a0\u2014\u00a0';
+    if (liveDot) liveDot.style.display = 'none';
+    if (dateEl)  dateEl.textContent = '6 minutes';
+
+    hnEl.textContent   = 'Run the diagnostic first. It takes 6 minutes.';
+    descEl.textContent = 'Every tool in KWIT gets loaded with your voice, your goals, and where you lose time. Do this once and every message you generate sounds like you.';
+    actsEl.innerHTML   = '<button class="bnm-btn bnm-red" onclick="launch(\'diagnostic\')">Start the Business Diagnostic →</button>';
+    _setBNMUrgency(null);
+    return;
+  }
+
+  /* Returning user — restore eyebrow to live mode */
+  if (_bnmSec) _bnmSec.classList.remove('no-profile-mode');
+  const _eyText = document.getElementById('bnm-ey-text');
+  const _liveDot = document.getElementById('bnm-live-dot');
+  const _dateEl  = document.getElementById('bnm-date');
+  if (_eyText)  _eyText.textContent = '\u00a0Best Next Move\u00a0\u2014\u00a0';
+  if (_liveDot) _liveDot.style.display = '';
+
+  const arr       = v => Array.isArray(v)?v:(v?[v]:[]);
+  const templates = getTemplates();
+  const dow       = new Date().getDay();
+  const rules     = buildBNMRules(profile, templates, dow, arr);
+  const history   = getBNMHistory();
+
+  /* Find the first matching rule, skipping one that was already
+     shown today (unless it is the only match) */
+  let pick = null;
+  let fallback = null;
+  for (const rule of rules) {
+    if (!rule.condition()) continue;
+    if (!fallback) fallback = rule;
+    /* Prefer a rule not shown today */
+    if (history.lastDate === new Date().toDateString() && history.lastShown === rule.id) continue;
+    /* Avoid showing the same rule more than 3x this week unless nothing else matches */
+    if (timesShownThisWeek(rule.id) >= 3) continue;
+    pick = rule;
+    break;
+  }
+  if (!pick) pick = fallback || rules[rules.length - 2]; /* established-routine fallback */
+
+  /* Record what was shown */
+  recordBNMShown(pick.id);
+
+  /* Render */
+  /* Support both plain strings and getters */
+  const pickHl  = typeof pick.hl   === 'function' ? pick.hl()   : pick.hl;
+  const pickDesc = typeof pick.desc === 'function' ? pick.desc() : pick.desc;
+  const pickBtnFn = typeof pick.btnFn === 'function' ? pick.btnFn() : pick.btnFn;
+  hnEl.textContent   = pickHl;
+  descEl.textContent = pickDesc;
+  actsEl.innerHTML   =
+    `<button class="bnm-btn bnm-red" onclick="${pickBtnFn}">${esc(pick.btn)}</button>` +
+    (pick.ghost ? `<button class="bnm-btn bnm-ghost" onclick="${pick.ghostFn}">${esc(pick.ghost)}</button>` : '');
+
+  /* Urgency strip */
+  _setBNMUrgency(pick.urgency || null);
+  /* Render intelligence signals below BNM */
+  renderBNMIntelBar(getBNMIntelSignals());
+}
+
+function _setBNMUrgency(text) {
+  let strip = document.getElementById('bnm-urgency');
+  if (!strip) return;
+  if (text) {
+    strip.textContent = '⚠ ' + text;
+    strip.style.display = '';
+  } else {
+    strip.style.display = 'none';
+  }
+}
+
+
+
+/* ── EXPLAIN THIS LOGIC ─────────────────────────────────────── */
+let etSelectedType = 'clause';
+
+function etSelectType(el) {
+  document.querySelectorAll('.et-type-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  etSelectedType = el.dataset.type;
+  // Update placeholder
+  const placeholders = {
+    clause:     'Paste the contract clause or paragraph you need explained…',
+    inspection: 'Paste the inspection finding or note…',
+    email:      'Paste the client email or message…',
+    appraisal:  'Describe the appraisal issue or paste the relevant section…',
+    situation:  'Describe the deal situation you need guidance on…',
+    other:      'Paste or describe what needs explaining…',
+  };
+  const ta = document.getElementById('et-input');
+  if (ta) ta.placeholder = placeholders[etSelectedType] || placeholders.other;
+}
+
+const ET_EXAMPLES = {
+  clause: { text: 'The Buyer has the right to terminate this Agreement if the Appraised Value is less than the Purchase Price and the Parties are unable to agree on an adjusted Purchase Price within 3 days of Buyer’s notice to Seller.' },
+  inspection: { text: 'Evidence of past moisture intrusion observed at the base of the east foundation wall. No active moisture detected at time of inspection. Recommend monitoring.' },
+  email: { text: 'Hi, we really liked the house but we’ve decided to wait and see what happens with interest rates before making any moves. We’ll circle back in a few months. Thanks.' },
+  appraisal: { text: 'The property appraised at $482,000. The purchase price is $500,000. The lender will only finance based on the appraised value.' },
+  situation: { text: 'Our buyers want to back out 3 days before closing. They say they got cold feet but haven’t given a formal reason. What are our options?' },
+};
+
+function etLoadExample(type) {
+  const ex = ET_EXAMPLES[type];
+  if (!ex) return;
+  // Select the type
+  const btn = document.querySelector(`.et-type-btn[data-type="${type}"]`);
+  if (btn) etSelectType(btn);
+  const ta = document.getElementById('et-input');
+  if (ta) { ta.value = ex.text; ta.focus(); }
+}
+
+/* Live AI explanation engine — calls Claude API */
+async function etExplain() {
+  const input = (document.getElementById('et-input') || {}).value || '';
+  if (!input.trim()) {
+    toast('Paste something first', 'Add the clause, email, or situation you need explained.', 'var(--amber)', '&#x26a0;');
+    return;
+  }
+
+  const type = etSelectedType;
+  const resultCard = document.getElementById('et-result');
+  const headingEl  = document.getElementById('et-result-heading');
+  const plainEl    = document.getElementById('et-plain');
+  const mattersEl  = document.getElementById('et-matters');
+  const nextEl     = document.getElementById('et-next');
+
+  /* Loading state */
+  const btn = document.querySelector('.et-submit-btn');
+  if (btn) { btn.textContent = 'Explaining\u2026'; btn.disabled = true; }
+  headingEl.textContent = 'Reading this\u2026';
+  plainEl.textContent = mattersEl.textContent = nextEl.textContent = '';
+  resultCard.classList.add('show');
+  setTimeout(() => resultCard.scrollIntoView({ behavior:'smooth', block:'nearest' }), 50);
+
+  const typeFraming = {
+    clause:'a contract clause or legal provision', inspection:'an inspection finding',
+    email:'a client email or message', appraisal:'an appraisal issue or gap',
+    situation:'a real estate deal situation', other:'something from a real estate deal',
+  };
+  const frame = typeFraming[type] || typeFraming.other;
+
+  const p = getProfile();
+  const agentCtx = p
+    ? ('The agent asking is ' + (p.name||'a real estate agent') + ' in ' + (p.market||'their market') + ', with ' + (p.years||'some') + ' experience.')
+    : 'A real estate agent is asking.';
+
+  const systemParts = [
+    'You are a plain-English real estate advisor helping agents understand deal situations, contracts, inspection reports, appraisals, and client messages.',
+    'You give clear, practical guidance — not legal advice. You always note that complex situations should involve a broker or attorney.',
+    '', agentCtx, '',
+    'Respond ONLY with a JSON object in this exact format — no markdown, no preamble:',
+    '{"heading":"Short heading (max 8 words)","plain":"2-4 sentences in plain English. No jargon.","matters":"2-3 sentences on why this matters in the deal.","next":"1-3 sentences: most important next step."}',
+  ];
+  const systemPrompt = systemParts.join('\n');
+  const userMessage  = 'Please explain this ' + frame + ':\n\n' + input.trim();
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 600,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userMessage }],
+      }),
+    });
+
+    if (!resp.ok) throw new Error('API ' + resp.status);
+    const data = await resp.json();
+    const raw  = (data.content && data.content[0] && data.content[0].text) || '';
+
+    let result;
+    try {
+      result = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    } catch(e) {
+      result = { heading: 'Here is the explanation', plain: raw.slice(0, 500), matters: '', next: '' };
+    }
+
+    headingEl.textContent = result.heading || 'Here is what this means';
+    plainEl.textContent   = result.plain   || '';
+    mattersEl.textContent = result.matters || '';
+    nextEl.textContent    = result.next    || '';
+
+  } catch(err) {
+    headingEl.textContent = 'Could not get explanation';
+    plainEl.textContent   = 'There was a problem reaching the AI. Check your connection and try again.';
+    mattersEl.textContent = '';
+    nextEl.textContent    = '';
+    console.error('[etExplain]', err);
+  } finally {
+    if (btn) { btn.textContent = 'Get the explanation →'; btn.disabled = false; }
+  }
+}
+
+/* ── HOOK NEW RENDERS INTO renderWithProfile / renderWithoutProfile ── */
+/* merged above */
+
+/* merged above */
+
+/* renderStarterDash — convenience alias used by renderWith* functions */
+function renderStarterDash(profile) {
+  renderStarterSteps('sp-steps-dash', profile, true);
+  const spSub = document.getElementById('sp-sub');
+  if (!spSub) return;
+  if (profile) {
+    const fn = (profile.name||'').split(' ')[0];
+    spSub.textContent = fn + "'s profile is set. Steps 1–3 are complete. Ready for your first win.";
+  } else {
+    spSub.textContent = 'Five things to know. Two minutes each.';
+  }
+}
+
+/* ── HOOK STARTER PAGE VIEW ────────────────────────────────── */
+/* merged above */
+
+/* OPP_META.listing is defined directly in the OPP_META const above */
+
+
+/* Set live date on BNM eyebrow + weekly streak */
+const _bnmDateEl = document.getElementById('bnm-date');
+if (_bnmDateEl) {
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  _bnmDateEl.textContent = days[new Date().getDay()];
+}
+const _streakEl = document.getElementById('bnm-streak');
+if (_streakEl) {
+  const _weekAct = typeof totalActionsThisWeek === 'function' ? totalActionsThisWeek() : 0;
+  if (_weekAct > 0) {
+    _streakEl.textContent = '· ' + _weekAct + ' action' + (_weekAct === 1 ? '' : 's') + ' this week';
+    _streakEl.style.display = '';
+  }
+}
+
+boot();
+
+
+
+/* ============================================================
+   KWIT STATEFUL SYSTEM — v2
+   Storage keys, data helpers, feedback loop, lead tracking,
+   cadence, template intelligence, BNM integration, settings.
+   ============================================================ */
+
+/* ── Storage Keys ─────────────────────────────────────────── */
+/* ── New stateful system storage keys ── */
+const LEADS_KEY       = 'kwit_leads';
+const FEEDBACK_KEY    = 'kwit_feedback';
+const CADENCE_KEY     = 'kwit_cadence_progress';
+const INTEL_KEY       = 'kwit_intelligence';
+const SETTINGS_KEY    = 'kwit_user_instructions';
+
+/* ── Leads CRUD ───────────────────────────────────────────── */
+function getLeads() {
+  try { return JSON.parse(localStorage.getItem(LEADS_KEY)) || []; } catch(e) { return []; }
+}
+function saveLeads(list) {
+  try { localStorage.setItem(LEADS_KEY, JSON.stringify(list)); } catch(e) {}
+}
+function createLead(label, leadType, situation, state) {
+  const leads = getLeads();
+  const id = 'lead_' + Date.now();
+  const cadence = CADENCE_STEPS[situation] || CADENCE_STEPS['_default'];
+  const lead = {
+    id, label: label || 'Unnamed lead', leadType: leadType || '',
+    situation: situation || '', state: state || 'generated',
+    createdAt: new Date().toISOString(),
+    stateHistory: [{ state: state || 'generated', at: new Date().toISOString() }],
+    cadenceKey: situation || '_default',
+    cadenceStep: 0,
+    followUpDue: computeDueDateFromStep(cadence[1]),  /* Day 2 step or null */
+    feedbackIds: [],
+  };
+  leads.unshift(lead);
+  saveLeads(leads);
+  updateLeadsBadge();
+  return lead;
+}
+function transitionLead(leadId, newState) {
+  const leads = getLeads();
+  const lead  = leads.find(l => l.id === leadId);
+  if (!lead) return;
+  lead.state = newState;
+  lead.stateHistory = lead.stateHistory || [];
+  lead.stateHistory.push({ state: newState, at: new Date().toISOString() });
+  if (newState === 'replied') lead.followUpDue = null;
+  saveLeads(leads);
+  updateLeadsBadge();
+  renderLeadsDash();
+  /* Keep BNM and intel bar in sync with lead state changes */
+  const _tp = getProfile();
+  if (_tp) renderBestNextMove(_tp);
+  renderBNMIntelBar(getBNMIntelSignals());
+  if (document.getElementById('view-leads').classList.contains('active')) renderLeadsView();
+}
+function updateLeadsBadge() {
+  const due = getLeads().filter(l => l.state === 'follow_up_due' || l.state === 'awaiting_reply').length;
+  const badge = document.getElementById('nb-leads');
+  if (!badge) return;
+  if (due > 0) { badge.textContent = due; badge.style.display = ''; }
+  else { badge.style.display = 'none'; }
+}
+
+/* ── Cadence Steps ────────────────────────────────────────── */
+const CADENCE_STEPS = {
+  'After showing':       ['Today','Day 3','Day 7','Day 14'],
+  'No response':         ['Today','Day 7','Day 21','Day 60'],
+  'Re-engagement':       ['Today','Day 7','Day 21'],
+  'Open house follow-up':['Today','Day 3','Day 7','Day 14'],
+  'First contact':       ['Today','Day 1','Day 3','Day 7'],
+  'Past client touch':   ['Today','Month 3','Month 6','Year 1'],
+  'Referral check-in':   ['Today','Month 2','Month 4','Month 6'],
+  '_default':            ['Today','Day 4','Day 10','Day 21'],
+};
+const CADENCE_ACTIONS = {
+  'After showing':       ['Send while the showing is fresh.','Short version + one direct question.','Market update or new similar listing.','Final soft check-in.'],
+  'No response':         ['No pressure re-engagement.','Try a different channel.','Value-add only — no ask.','Final check-in then quarterly nurture.'],
+  'First contact':       ['Send within the hour.','One follow-up text if no reply.','Voicemail + email if still quiet.','Final value-add then weekly nurture.'],
+  '_default':            ['Send this message.','Short version + direct question.','Value-add message.','Final check-in then nurture cadence.'],
+};
+function computeDueDateFromStep(dayStr) {
+  if (!dayStr) return null;
+  const d = new Date();
+  const match = String(dayStr).match(/(\d+)/);
+  if (!match) return null;
+  if (String(dayStr).startsWith('Day')) d.setDate(d.getDate() + parseInt(match[1]));
+  else if (String(dayStr).startsWith('Month')) d.setMonth(d.getMonth() + parseInt(match[1]));
+  else if (String(dayStr).startsWith('Year')) d.setFullYear(d.getFullYear() + parseInt(match[1]));
+  d.setHours(9,0,0,0);
+  return d.toISOString();
+}
+
+/* ── Cadence Progress ─────────────────────────────────────── */
+function getCadenceProgress() {
+  try { return JSON.parse(localStorage.getItem(CADENCE_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveCadenceProgress(data) {
+  try { localStorage.setItem(CADENCE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+function getCadenceForLead(leadId) {
+  return getCadenceProgress()[leadId] || null;
+}
+function initCadenceForLead(lead) {
+  const prog = getCadenceProgress();
+  if (prog[lead.id]) return;
+  const steps = CADENCE_STEPS[lead.situation] || CADENCE_STEPS['_default'];
+  const actions = CADENCE_ACTIONS[lead.situation] || CADENCE_ACTIONS['_default'];
+  prog[lead.id] = {
+    leadId: lead.id,
+    scenarioKey: lead.cadenceKey,
+    startedAt: new Date().toISOString(),
+    steps: steps.map((day, i) => ({
+      index: i, day,
+      action: actions[i] || actions[actions.length-1],
+      status: i === 0 ? 'pending' : 'pending',
+      completedAt: null,
+      dueDate: i === 0 ? new Date().toISOString() : computeDueDateFromStep(day),
+    }))
+  };
+  saveCadenceProgress(prog);
+}
+function markCadenceStep(leadId, stepIndex, status) {
+  const prog = getCadenceProgress();
+  if (!prog[leadId]) return;
+  prog[leadId].steps[stepIndex].status = status;
+  prog[leadId].steps[stepIndex].completedAt = new Date().toISOString();
+  saveCadenceProgress(prog);
+  /* Advance lead state */
+  const nextPending = prog[leadId].steps.find(s => s.index > stepIndex && s.status === 'pending');
+  if (nextPending) {
+    transitionLead(leadId, 'awaiting_reply');
+  } else {
+    transitionLead(leadId, 'replied');
+  }
+}
+
+/* ── Feedback CRUD ────────────────────────────────────────── */
+function getFeedback() {
+  try { return JSON.parse(localStorage.getItem(FEEDBACK_KEY)) || []; } catch(e) { return []; }
+}
+function saveFeedback(list) {
+  try {
+    if (list.length > 500) list = list.slice(0, 500);
+    localStorage.setItem(FEEDBACK_KEY, JSON.stringify(list));
+  } catch(e) {}
+}
+function logFeedback(fbData) {
+  const list = getFeedback();
+  list.unshift({
+    id: 'fb_' + Date.now(),
+    createdAt: new Date().toISOString(),
+    leadType: fbData.leadType || '',
+    situation: fbData.situation || '',
+    channel: fbData.channel || '',
+    goal: fbData.goal || '',
+    replied: fbData.replied || null,
+    replyQuality: fbData.replyQuality || null,
+    versionSent: fbData.versionSent || 'primary',
+    templateId: fbData.templateId || null,
+    leadId: fbData.leadId || null,
+  });
+  saveFeedback(list);
+  rebuildIntelligence();
+  updateTemplatesFromFeedback(fbData);
+}
+
+/* ── Intelligence ─────────────────────────────────────────── */
+function getIntelligence() {
+  try { return JSON.parse(localStorage.getItem(INTEL_KEY)) || {}; } catch(e) { return {}; }
+}
+function rebuildIntelligence() {
+  const fb = getFeedback();
+  const intel = {
+    updatedAt: new Date().toISOString(),
+    totalGenerations: fb.length,
+    totalSent: fb.filter(f => f.replied !== null).length,
+    totalReplied: fb.filter(f => f.replied === 'yes').length,
+    overallReplyRate: 0,
+    bySituation: {}, byChannel: {}, byToneShift: {},
+    topSituation: null, lowestSituation: null, bestChannel: null,
+    streakDays: 0,
+  };
+  const sent = fb.filter(f => f.replied === 'yes' || f.replied === 'no');
+  intel.overallReplyRate = sent.length ? Math.round((intel.totalReplied / sent.length) * 100) : 0;
+  /* By situation */
+  fb.forEach(f => {
+    if (!f.situation || f.replied === 'too_soon' || f.replied === null) return;
+    const k = f.situation;
+    if (!intel.bySituation[k]) intel.bySituation[k] = { sent: 0, replied: 0, rate: 0 };
+    if (f.replied === 'yes' || f.replied === 'no') {
+      intel.bySituation[k].sent++;
+      if (f.replied === 'yes') intel.bySituation[k].replied++;
+      intel.bySituation[k].rate = Math.round((intel.bySituation[k].replied / intel.bySituation[k].sent) * 100);
+    }
+  });
+  /* By channel */
+  fb.forEach(f => {
+    if (!f.channel || f.replied === null || f.replied === 'too_soon') return;
+    const k = f.channel;
+    if (!intel.byChannel[k]) intel.byChannel[k] = { sent: 0, replied: 0, rate: 0 };
+    if (f.replied === 'yes' || f.replied === 'no') {
+      intel.byChannel[k].sent++;
+      if (f.replied === 'yes') intel.byChannel[k].replied++;
+      intel.byChannel[k].rate = Math.round((intel.byChannel[k].replied / intel.byChannel[k].sent) * 100);
+    }
+  });
+  /* Top / lowest situation */
+  const sits = Object.entries(intel.bySituation).filter(([,v]) => v.sent >= 3);
+  if (sits.length) {
+    sits.sort((a,b) => b[1].rate - a[1].rate);
+    intel.topSituation    = sits[0][0];
+    intel.lowestSituation = sits[sits.length-1][0];
+  }
+  const chs = Object.entries(intel.byChannel).filter(([,v]) => v.sent >= 3);
+  if (chs.length) {
+    chs.sort((a,b) => b[1].rate - a[1].rate);
+    intel.bestChannel = chs[0][0];
+  }
+  try { localStorage.setItem(INTEL_KEY, JSON.stringify(intel)); } catch(e) {}
+  return intel;
+}
+function updateTemplatesFromFeedback(fbData) {
+  if (!fbData.templateId) return;
+  const list = getTemplates();
+  const tpl = list.find(t => t.id === fbData.templateId);
+  if (!tpl) return;
+  tpl.sentCount = (tpl.sentCount || 0) + (fbData.replied !== null ? 1 : 0);
+  tpl.replyCount = (tpl.replyCount || 0) + (fbData.replied === 'yes' ? 1 : 0);
+  if (tpl.sentCount >= 1) {
+    tpl.replyRate = Math.round((tpl.replyCount / tpl.sentCount) * 100);
+  }
+  tpl.score = computeTemplateScore(tpl);
+  try { localStorage.setItem(TEMPLATE_KEY, JSON.stringify(list)); } catch(e) {}
+}
+function computeTemplateScore(tpl) {
+  if ((tpl.sentCount || 0) < 3) {
+    const daysSaved = tpl.savedAt ? (Date.now() - new Date(tpl.savedAt)) / 86400000 : 90;
+    return Math.max(0, 1 - daysSaved / 90) * 0.5 + Math.min((tpl.usageCount || 0) / 20, 1) * 0.5;
+  }
+  return ((tpl.replyRate || 0) / 100) * 0.7 + (Math.min((tpl.usageCount || 0) / 20, 1)) * 0.3;
+}
+
+/* ── Template Intelligence: migrate old templates on load ─── */
+function migrateTemplates() {
+  const list = getTemplates();
+  let changed = false;
+  list.forEach(t => {
+    if (!t.id) { t.id = 'tpl_' + Date.now() + '_' + Math.random().toString(36).slice(2,5); changed = true; }
+    if (t.usageCount === undefined) { t.usageCount = 0; changed = true; }
+    if (t.sentCount === undefined)  { t.sentCount = 0;  changed = true; }
+    if (t.replyCount === undefined) { t.replyCount = 0; changed = true; }
+    if (t.score === undefined)      { t.score = computeTemplateScore(t); changed = true; }
+    if (!t.tags) {
+      t.tags = [];
+      if (t.leadType) t.tags.push(t.leadType.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-$/,''));
+      if (t.situation) t.tags.push(t.situation.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-$/,''));
+      changed = true;
+    }
+  });
+  if (changed) {
+    try { localStorage.setItem(TEMPLATE_KEY, JSON.stringify(list)); } catch(e) {}
+  }
+}
+
+/* ── Settings / User Instructions ───────────────────────────── */
+function getUserInstructions() {
+  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveUserInstructions() {
+  const always  = (document.getElementById('si-always')?.value  || '').trim();
+  const never   = (document.getElementById('si-never')?.value   || '').trim();
+  const context = (document.getElementById('si-context')?.value || '').slice(0, 300).trim();
+  const data = {
+    updatedAt: new Date().toISOString(),
+    always:  always  ? always.split(/\r?\n/).map(s=>s.trim()).filter(Boolean) : [],
+    never:   never   ? never.split(/\r?\n/).map(s=>s.trim()).filter(Boolean)  : [],
+    context: context,
+  };
+  try {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(data));
+    const msg = document.getElementById('settings-saved-msg');
+    if (msg) { msg.style.display = 'inline'; setTimeout(() => msg.style.display = 'none', 2000); }
+    toast('Instructions saved', 'These will shape every message KWIT writes for you.', 'var(--green)', '✓');
+  } catch(e) {}
+}
+function loadUserInstructionsUI() {
+  const data = getUserInstructions();
+  const always  = document.getElementById('si-always');
+  const never   = document.getElementById('si-never');
+  const context = document.getElementById('si-context');
+  if (always)  always.value  = (data.always  || []).join('\n');
+  if (never)   never.value   = (data.never   || []).join('\n');
+  if (context) context.value = data.context || '';
+}
+
+/* ── Export All ───────────────────────────────────────────── */
+function exportAll() {
+  const bundle = {
+    exportedAt: new Date().toISOString(),
+    version: '2.0',
+    profile: getProfile(),
+    templates: getTemplates(),
+    leads: getLeads(),
+    feedback: getFeedback(),
+    intelligence: getIntelligence(),
+    instructions: getUserInstructions(),
+  };
+  const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(blob),
+    download: 'kwit-backup-' + new Date().toISOString().slice(0,10) + '.json',
+  });
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+  toast('Backup downloaded', 'kwit-backup.json saved to your downloads folder.', 'var(--green)', '↓');
+}
+
+/* ── Log Lead UI Helpers ─────────────────────────────────── */
+const _pillState = {};
+function pillSel(btn, group) {
+  const pills = btn.closest('.log-pills').querySelectorAll('.log-pill');
+  pills.forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  _pillState[group] = btn.textContent.trim();
+}
+function showLogLeadPanel() {
+  const panel = document.getElementById('log-lead-panel');
+  if (panel) panel.style.display = 'block';
+  document.getElementById('ll-label')?.focus();
+}
+function hideLogLeadPanel() {
+  const panel = document.getElementById('log-lead-panel');
+  if (panel) panel.style.display = 'none';
+  document.getElementById('ll-label').value = '';
+}
+function saveLoggedLead() {
+  const label    = document.getElementById('ll-label')?.value?.trim() || 'Lead ' + new Date().toLocaleDateString();
+  const leadType = _pillState['ll-type'] || '';
+  const sit      = _pillState['ll-sit']  || '';
+  const state    = (_pillState['ll-state'] || 'generated').toLowerCase().replace(/\s+/g,'_');
+  const lead = createLead(label, leadType, sit, state);
+  initCadenceForLead(lead);
+  hideLogLeadPanel();
+  renderLeadsDash();
+  /* Update BNM — a new lead may trigger the lead-due-today rule */
+  const _p = getProfile();
+  if (_p) renderBestNextMove(_p);
+  renderBNMIntelBar(getBNMIntelSignals());
+  toast('Lead logged', esc(label) + ' is being tracked in Active Leads.', 'var(--green)', '◆');
+}
+
+/* ── Feedback Log Panel (inline in lead card) ───────────────── */
+let _fbContext = {};  /* temp state for the feedback being logged */
+function showFeedbackPanel(leadId, situation, channel) {
+  _fbContext = { leadId, situation, channel };
+  /* Build inline feedback panel */
+  const lead = getLeads().find(l => l.id === leadId);
+  const sitDisplay = situation || lead?.situation || '';
+  /* Show a modal-style overlay attached to the leads section */
+  let overlay = document.getElementById('fb-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'fb-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px;';
+    document.body.appendChild(overlay);
+  }
+  overlay.innerHTML = `
+    <div class="fb-panel" style="max-width:440px;width:100%;position:relative;">
+      <button onclick="closeFeedbackPanel()" style="position:absolute;top:12px;right:12px;background:transparent;border:none;color:rgba(255,255,255,.4);font-size:16px;cursor:pointer;">&#x2715;</button>
+      <div class="fb-ey">Log outcome</div>
+      <div class="fb-title">How did the "${esc(sitDisplay)}" message go?</div>
+      <div class="fb-question">
+        <div class="fb-q-label">Did they reply?</div>
+        <div class="fb-options">
+          <button class="fb-opt" onclick="fbSelect(this,'replied','yes')">Yes, they replied</button>
+          <button class="fb-opt" onclick="fbSelect(this,'replied','no')">Not yet</button>
+          <button class="fb-opt" onclick="fbSelect(this,'replied','too_soon')">Too soon to say</button>
+        </div>
+      </div>
+      <div id="fb-quality-q" style="display:none;" class="fb-question">
+        <div class="fb-q-label">How was the reply?</div>
+        <div class="fb-options">
+          <button class="fb-opt" onclick="fbSelect(this,'quality','good')">Moved things forward</button>
+          <button class="fb-opt" onclick="fbSelect(this,'quality','neutral')">Still warming up</button>
+          <button class="fb-opt" onclick="fbSelect(this,'quality','poor')">Needed more work</button>
+        </div>
+      </div>
+      <div class="fb-actions">
+        <button class="fb-submit" onclick="submitFeedback()">Save outcome</button>
+        <button class="fb-skip" onclick="closeFeedbackPanel()">Skip</button>
+      </div>
+    </div>`;
+  overlay.style.display = 'flex';
+}
+function fbSelect(btn, field, value) {
+  btn.closest('.fb-options').querySelectorAll('.fb-opt').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  _fbContext[field] = value;
+  if (field === 'replied' && value === 'yes') {
+    document.getElementById('fb-quality-q').style.display = 'block';
+  }
+}
+function submitFeedback() {
+  logFeedback({
+    leadId:       _fbContext.leadId,
+    situation:    _fbContext.situation,
+    channel:      _fbContext.channel,
+    replied:      _fbContext.replied || null,
+    replyQuality: _fbContext.quality || null,
+    versionSent:  'primary',
+  });
+  /* Update lead state based on reply */
+  if (_fbContext.replied === 'yes') transitionLead(_fbContext.leadId, 'replied');
+  else if (_fbContext.replied === 'no') transitionLead(_fbContext.leadId, 'awaiting_reply');
+  closeFeedbackPanel();
+  renderBNMIntelBar(getBNMIntelSignals());
+  toast('Outcome logged', 'KWIT learns from every result you log.', 'var(--green)', '✓');
+  if (document.getElementById('view-feedback').classList.contains('active')) renderFeedbackView();
+}
+function closeFeedbackPanel() {
+  const ov = document.getElementById('fb-overlay');
+  if (ov) ov.style.display = 'none';
+  _fbContext = {};
+}
+
+/* ── Dashboard: Active Leads Section ──────────────────────── */
+function renderLeadsDash() {
+  const section = document.getElementById('leads-dash-section');
+  const list    = document.getElementById('leads-dash-list');
+  const count   = document.getElementById('leads-dash-count');
+  if (!section || !list) return;
+
+  const leads = getLeads().filter(l => l.state !== 'closed' && l.state !== 'replied');
+  if (!leads.length) { section.classList.add('hidden'); return; }
+
+  section.classList.remove('hidden');
+  if (count) count.textContent = '(' + leads.length + ')';
+
+  /* Sort: follow_up_due first, then awaiting, then others */
+  const sorted = [...leads].sort((a, b) => {
+    const order = { follow_up_due: 0, awaiting_reply: 1, sent: 2, generated: 3 };
+    return (order[a.state] ?? 4) - (order[b.state] ?? 4);
+  });
+
+  list.innerHTML = sorted.slice(0, 4).map(lead => {
+    const stateLabel = { generated:'Generated', sent:'Sent', awaiting_reply:'Awaiting reply', follow_up_due:'Follow-up due', replied:'Replied' }[lead.state] || lead.state;
+    const stateClass = { generated:'lsb-gen', sent:'lsb-sent', awaiting_reply:'lsb-await', follow_up_due:'lsb-due', replied:'lsb-replied' }[lead.state] || 'lsb-gen';
+    const cardClass  = { follow_up_due:'state-follow-up-due', awaiting_reply:'state-awaiting', replied:'state-replied' }[lead.state] || '';
+    const due = lead.followUpDue ? 'Due ' + new Date(lead.followUpDue).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+    return `<div class="lead-card ${cardClass}">
+      <div class="lead-card-left">
+        <div class="lead-label">${esc(lead.label)}</div>
+        <div class="lead-meta">
+          <span class="lead-state-badge ${stateClass}">${stateLabel}</span>
+          ${lead.leadType ? `<span>${esc(lead.leadType)}</span>` : ''}
+          ${due ? `<span>${esc(due)}</span>` : ''}
+        </div>
+      </div>
+      <div class="lead-card-actions">
+        ${lead.state === 'follow_up_due' || lead.state === 'awaiting_reply' || lead.state === 'sent'
+          ? `<button class="lead-btn lb-red" onclick="writeForLead('${lead.id}')">Write next →</button>`
+          : `<button class="lead-btn lb-ghost" onclick="writeForLead('${lead.id}')">Write →</button>`}
+        ${lead.state !== 'replied'
+          ? `<button class="lead-btn lb-ghost" onclick="showFeedbackPanel('${lead.id}','${esc(lead.situation)}','')">Log reply</button>`
+          : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function writeForLead(leadId) {
+  const lead = getLeads().find(l => l.id === leadId);
+  if (!lead) { launch('followup'); return; }
+  /* Pre-select the follow-up tool for this lead's situation */
+  loadIframe('followup', getProfile());
+  nav('followup');
+  const ifr = document.getElementById('ifr-followup');
+  const send = () => {
+    try {
+      ifr.contentWindow.postMessage({
+        type: 'KWIT_PRESELECT',
+        profile: getProfile(),
+        preselect: {
+          leadType:  lead.leadType  || '',
+          situation: lead.situation || '',
+          goal:      'Get a reply',
+          channel:   'Text',
+          toneShift: 'Keep my usual tone',
+        }
+      }, '*');
+    } catch(ex) {}
+  };
+  if (ifr.contentDocument?.readyState === 'complete') send();
+  else { ifr.onload = send; setTimeout(send, 800); }
+}
+
+/* ── Leads Full View ──────────────────────────────────────── */
+let _leadFilter = 'all';
+function filterLeads(state, btn) {
+  _leadFilter = state;
+  document.querySelectorAll('.lt-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderLeadsView();
+}
+function renderLeadsView() {
+  const container = document.getElementById('leads-full-list');
+  if (!container) return;
+  let leads = getLeads();
+  if (_leadFilter !== 'all') leads = leads.filter(l => l.state === _leadFilter);
+  if (!leads.length) {
+    container.innerHTML = '<div class="leads-empty">No leads in this category. Use "+ Log lead" on the dashboard to start tracking.</div>';
+    return;
+  }
+  container.innerHTML = leads.map(lead => {
+    const cadProg = getCadenceForLead(lead.id);
+    const stateLabel = { generated:'Generated', sent:'Sent', awaiting_reply:'Awaiting reply', follow_up_due:'Follow-up due', replied:'Replied', closed:'Closed' }[lead.state] || lead.state;
+    const stateClass = { generated:'lsb-gen', sent:'lsb-sent', awaiting_reply:'lsb-await', follow_up_due:'lsb-due', replied:'lsb-replied' }[lead.state] || 'lsb-gen';
+    const stepsHTML = cadProg ? `
+      <div class="cadence-steps">
+        <div class="cs-label">Cadence — ${esc(cadProg.scenarioKey)}</div>
+        <div class="cs-list">
+          ${cadProg.steps.map(s => {
+            const isDone   = s.status === 'completed' || s.status === 'skipped';
+            const isActive = !isDone && cadProg.steps.filter(x => !['completed','skipped'].includes(x.status)).findIndex(x => x.index === s.index) === 0;
+            return `<div class="cs-step ${isDone ? 'done' : ''} ${isActive ? 'active-step' : ''}">
+              <div class="cs-day">${esc(s.day)}</div>
+              <div class="cs-action">${esc(s.action)}</div>
+              <div class="cs-btns">${isDone
+                ? `<span style="font-size:10px;color:var(--ink-40);">${s.status === 'skipped' ? 'Skipped' : '✓'}</span>`
+                : `<button class="cs-btn cs-done-btn" onclick="markCadenceStep('${lead.id}',${s.index},'completed');renderLeadsView()">✓</button>
+                   <button class="cs-btn cs-skip-btn" onclick="markCadenceStep('${lead.id}',${s.index},'skipped');renderLeadsView()">Skip</button>
+                   <button class="cs-btn cs-write-btn" onclick="writeForLead('${lead.id}')">Write</button>`
+              }</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>` : `<button class="lead-btn lb-ghost" style="margin-top:8px;" onclick="initAndRenderCadence('${lead.id}')">Start cadence tracking</button>`;
+    return `<div class="lead-full-card">
+      <div class="lfc-head" onclick="toggleLeadCard(this)">
+        <div class="lfc-label">${esc(lead.label)}</div>
+        <span class="lead-state-badge ${stateClass}">${stateLabel}</span>
+        <span style="font-size:12px;color:var(--ink-40);margin-left:8px;">&#x25be;</span>
+      </div>
+      <div class="lfc-body">
+        <div class="lfc-meta-row">
+          ${lead.leadType ? `<span class="lfc-meta-item"><span class="lfc-meta-key">Type</span>${esc(lead.leadType)}</span>` : ''}
+          ${lead.situation ? `<span class="lfc-meta-item"><span class="lfc-meta-key">Situation</span>${esc(lead.situation)}</span>` : ''}
+          ${lead.followUpDue ? `<span class="lfc-meta-item"><span class="lfc-meta-key">Due</span>${new Date(lead.followUpDue).toLocaleDateString()}</span>` : ''}
+          <span class="lfc-meta-item"><span class="lfc-meta-key">Created</span>${new Date(lead.createdAt).toLocaleDateString()}</span>
+        </div>
+        ${stepsHTML}
+        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="lead-btn lb-red" onclick="writeForLead('${lead.id}')">Write next message →</button>
+          <button class="lead-btn lb-ghost" onclick="showFeedbackPanel('${lead.id}','${esc(lead.situation)}','')">Log outcome</button>
+          ${lead.state !== 'replied' && lead.state !== 'closed'
+            ? `<button class="lead-btn lb-ghost" onclick="transitionLead('${lead.id}','replied');renderLeadsView()">Mark replied</button>`
+            : ''}
+          <button class="lead-btn lb-ghost" style="color:var(--red);border-color:var(--red-muted);" onclick="deleteLead('${lead.id}')">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function toggleLeadCard(head) {
+  head.nextElementSibling.classList.toggle('open');
+}
+function initAndRenderCadence(leadId) {
+  const lead = getLeads().find(l => l.id === leadId);
+  if (lead) { initCadenceForLead(lead); renderLeadsView(); }
+}
+function deleteLead(leadId) {
+  const leads = getLeads().filter(l => l.id !== leadId);
+  saveLeads(leads);
+  const prog = getCadenceProgress();
+  delete prog[leadId];
+  saveCadenceProgress(prog);
+  updateLeadsBadge();
+  renderLeadsDash();
+  renderLeadsView();
+  toast('Lead removed.', '', 'var(--ink-40)', '✕');
+}
+
+/* ── Feedback Full View ────────────────────────────────────── */
+function renderFeedbackView() {
+  const statsEl = document.getElementById('feedback-stats-grid');
+  const logEl   = document.getElementById('feedback-log-list');
+  if (!statsEl || !logEl) return;
+
+  const intel = getIntelligence();
+  const fb    = getFeedback();
+
+  statsEl.innerHTML = `
+    <div class="fb-stat">
+      <div class="fb-stat-num" style="color:var(--red-light);">${intel.overallReplyRate || 0}%</div>
+      <div class="fb-stat-label">Reply rate</div>
+      <div class="fb-stat-sub">${intel.totalSent || 0} messages tracked</div>
+    </div>
+    <div class="fb-stat">
+      <div class="fb-stat-num" style="color:#fff;">${intel.totalReplied || 0}</div>
+      <div class="fb-stat-label">Replies received</div>
+      <div class="fb-stat-sub">Out of ${intel.totalSent || 0} sent</div>
+    </div>
+    <div class="fb-stat">
+      <div class="fb-stat-num" style="color:#fff;">${getTemplates().length}</div>
+      <div class="fb-stat-label">Templates saved</div>
+      <div class="fb-stat-sub">${intel.topSituation ? 'Best: ' + intel.topSituation : 'Log more to see best'}</div>
+    </div>
+    <div class="fb-stat">
+      <div class="fb-stat-num" style="color:#fff;">${getLeads().length}</div>
+      <div class="fb-stat-label">Leads tracked</div>
+      <div class="fb-stat-sub">${getLeads().filter(l=>l.state==='replied').length} replied</div>
+    </div>
+  `;
+
+  if (!fb.length) {
+    logEl.innerHTML = '<div class="leads-empty">No outcomes logged yet. Use "Log reply" on any active lead, or use the Follow-Up System and mark messages as sent.</div>';
+    return;
+  }
+
+  logEl.innerHTML = fb.slice(0, 20).map(f => {
+    const outcomeClass = { yes:'fb-outcome-yes', no:'fb-outcome-no', too_soon:'fb-outcome-soon' }[f.replied] || 'fb-outcome-no';
+    const outcomeText  = { yes:'Replied ✓', no:'No reply', too_soon:'Too soon', null:'Not logged' }[f.replied] || 'Not logged';
+    return `<div class="fb-log-item">
+      <div>
+        <div class="fb-log-situation">${esc(f.situation || 'Follow-up')}</div>
+        <div class="fb-log-meta">${[f.leadType, f.channel, new Date(f.createdAt).toLocaleDateString()].filter(Boolean).join(' · ')}</div>
+      </div>
+      <div class="fb-log-outcome ${outcomeClass}">${outcomeText}${f.replyQuality ? '<br><span style="font-weight:400;color:var(--ink-40);">' + esc(f.replyQuality) + '</span>' : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ── Enhanced Template Library ─────────────────────────────── */
+function renderTemplateLibrary() {
+  const container = document.getElementById('tl-container');
+  if (!container) return;
+  const templates = getTemplates().slice().sort((a,b) => (b.score||0) - (a.score||0));
+
+  if (!templates.length) {
+    container.innerHTML = '<div class="tl-empty">No templates saved yet. Use the Follow-Up System and click "Save as Template" to build your library.</div>';
+    return;
+  }
+
+  container.innerHTML = '<div class="tl-list">' +
+    templates.map((t, i) => {
+      const score = t.score || 0;
+      const sent  = t.sentCount  || 0;
+      const rate  = t.replyRate !== undefined ? t.replyRate + '%' : null;
+      const usage = t.usageCount || 0;
+      const badgeClass = rate && sent >= 3 ? (parseInt(rate) >= 60 ? 'tsb-high' : parseInt(rate) >= 35 ? 'tsb-med' : 'tsb-low') : '';
+      const scoreBadge = rate && sent >= 3
+        ? `<span class="tl-score-badge ${badgeClass}">${rate} reply rate</span>` : '';
+      const tags = (t.tags || []).slice(0,4);
+      const tagsHTML = tags.length ? `<div class="tl-tags">${tags.map(tag => `<span class="tl-tag">${esc(tag)}</span>`).join('')}</div>` : '';
+      const perfHTML = sent >= 1
+        ? `<div class="tl-perf-row"><span class="tl-perf"><strong>${sent}</strong> sent</span>${rate ? `<span class="tl-perf"><strong>${rate}</strong> reply rate</span>` : ''}<span class="tl-perf"><strong>${usage}</strong> uses</span></div>`
+        : `<div class="tl-perf-row"><span class="tl-perf" style="color:var(--ink-40);">Not yet logged</span></div>`;
+      return `<div class="tl-item">
+        <div class="tl-item-left">
+          <div class="tl-item-name">${esc(t.name || 'Untitled')}${scoreBadge}</div>
+          <div class="tl-item-preview">${esc(t.text ? t.text.slice(0,120) + (t.text.length > 120 ? '…' : '') : '')}</div>
+          <div class="tl-item-meta">
+            ${t.leadType  ? `<span>${esc(t.leadType)}</span>` : ''}
+            ${t.situation ? `<span>${esc(t.situation)}</span>` : ''}
+            ${t.channel   ? `<span>${esc(t.channel)}</span>` : ''}
+            <span>${t.savedAt ? new Date(t.savedAt).toLocaleDateString() : ''}</span>
+          </div>
+          ${tagsHTML}
+          ${perfHTML}
+        </div>
+        <div class="tl-item-actions">
+          <button class="tl-use-btn" onclick="useTemplate(${i})">Use</button>
+          <button class="tl-btn tl-copy" onclick="copyTemplate(${i})">&#x2A02; Copy</button>
+          <button class="tl-btn tl-del"  onclick="deleteTemplateAndRefresh(${i})">&#x2715;</button>
+        </div>
+      </div>`;
+    }).join('') + '</div>';
+}
+function useTemplate(sortedIndex) {
+  const templates = getTemplates().slice().sort((a,b) => (b.score||0) - (a.score||0));
+  const t = templates[sortedIndex];
+  if (!t) return;
+  /* Track usage */
+  const allTpl = getTemplates();
+  const orig = allTpl.find(x => x.id === t.id);
+  if (orig) { orig.usageCount = (orig.usageCount||0) + 1; orig.lastUsedAt = new Date().toISOString(); }
+  try { localStorage.setItem(TEMPLATE_KEY, JSON.stringify(allTpl)); } catch(e) {}
+  /* Launch follow-up with this lead type pre-selected */
+  loadIframe('followup', getProfile());
+  nav('followup');
+  if (t.leadType || t.situation) {
+    const ifr = document.getElementById('ifr-followup');
+    const send = () => {
+      try { ifr.contentWindow.postMessage({ type:'KWIT_PRESELECT', profile:getProfile(), preselect:{ leadType:t.leadType||'', situation:t.situation||'', channel:t.channel||'', goal:t.goal||'' } }, '*'); } catch(ex) {}
+    };
+    if (ifr.contentDocument?.readyState === 'complete') send();
+    else { ifr.onload = send; setTimeout(send, 800); }
+  }
+}
+
+/* ── BNM Intelligence Integration ──────────────────────────── */
+function getBNMIntelSignals() {
+  const intel = getIntelligence();
+  const leads = getLeads();
+  return {
+    hasLeadsDue: leads.some(l => l.state === 'follow_up_due'),
+    dueCount:    leads.filter(l => l.state === 'follow_up_due').length,
+    dueLeadLabel:leads.find(l => l.state === 'follow_up_due')?.label || null,
+    hasPendingFb:leads.some(l => l.state === 'replied' && (l.feedbackIds||[]).length === 0),
+    overallRate: intel.overallReplyRate || 0,
+    topSit:      intel.topSituation,
+    totalSent:   intel.totalSent || 0,
+    hasIntel:    (intel.totalSent || 0) >= 5,
+  };
+}
+function renderBNMIntelBar(intel) {
+  const bar = document.getElementById('bnm-intel-bar');
+  if (!bar) return;
+  if (!intel || (!intel.hasIntel && !intel.hasLeadsDue)) { bar.innerHTML = ''; return; }
+  const items = [];
+  if (intel.hasLeadsDue) items.push(`<span class="bnm-intel-item"><strong>${intel.dueCount} follow-up${intel.dueCount>1?'s':''} due</strong> today</span>`);
+  if (intel.overallRate > 0) items.push(`<span class="bnm-intel-item"><strong>${intel.overallRate}%</strong> reply rate overall</span>`);
+  if (intel.topSit) items.push(`<span class="bnm-intel-item">Best scenario: <strong>${esc(intel.topSit)}</strong></span>`);
+  bar.innerHTML = items.join('<span class="bnm-intel-item" style="opacity:.3;"> · </span>');
+}
+
+/* ── KWIT_SAVE_TEMPLATE handler extension — add id + tags ─── */
+function enrichTemplate(tpl) {
+  return {
+    ...tpl,
+    id:         'tpl_' + Date.now() + '_' + Math.random().toString(36).slice(2,5),
+    usageCount: 0, sentCount: 0, replyCount: 0, score: 0,
+    tags: [
+      tpl.leadType  ? tpl.leadType.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-$/,'') : null,
+      tpl.situation ? tpl.situation.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-$/,'') : null,
+      tpl.channel   ? tpl.channel.toLowerCase() : null,
+    ].filter(Boolean),
+  };
+}
+
+
+</script>
+</body>
+</html>

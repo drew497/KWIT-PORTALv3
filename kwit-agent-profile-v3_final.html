@@ -1,0 +1,2862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KWIT — Business Diagnostic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;}
+
+
+/* ============================================================
+   KWIT PORTAL — DESIGN TOKENS
+   v2: Portal-native. Not a landing page.
+   ============================================================ */
+
+:root {
+  --ink:         #1a1714;
+  --ink-90:      #252119;
+  --ink-80:      #2e2a26;
+  --ink-60:      #4a443d;
+  --ink-40:      #7a7068;
+  --ink-20:      #b8b0a6;
+  --ink-10:      #d6cfc8;
+  --ink-05:      #ece8e3;
+  --parchment:   #f5f0ea;
+  --cream:       #faf8f5;
+  --white:       #ffffff;
+  --red:         #c41e3a;
+  --red-dark:    #9e1730;
+  --red-light:   #e8394f;
+  --red-muted:   #f7e2e5;
+  --red-faint:   #fdf1f3;
+  --gold:        #c49a3c;
+  --gold-muted:  #f5eedc;
+  --green:       #2d6a4f;
+  --green-muted: #d8efe6;
+  --amber:       #b87333;
+  --amber-muted: #f5ead8;
+  
+  --topbar-h:    56px;
+  --shadow-sm:   0 1px 3px rgba(26,23,20,0.07), 0 1px 2px rgba(26,23,20,0.05);
+  --shadow-md:   0 4px 16px rgba(26,23,20,0.10);
+  --shadow-lg:   0 12px 40px rgba(26,23,20,0.14);
+  --radius:      10px;
+  --radius-sm:   6px;
+  --radius-lg:   14px;
+  --transition:  0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   PORTAL SHELL — sidebar + topbar + content
+   ============================================================ */
+
+
+
+/* ---- SIDEBAR ---- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.agent-info {}
+
+
+
+/* ---- MAIN CONTENT ---- */
+
+
+/* ---- TOP BAR ---- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ============================================================
+   SCREENS — inside portal main
+   ============================================================ */
+.screen{display:none;width:100%;flex:1;flex-direction:column;}
+.screen.active{display:flex;width:100%;height:100vh;overflow:hidden;}
+@keyframes screenIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ============================================================
+   SCREEN 1 — WELCOME (portal-native, not landing page)
+   ============================================================ */
+#screen-welcome {
+  background: var(--cream);
+  padding: 40px 40px 60px;
+  height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.module-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 36px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.module-header-left {}
+
+.module-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red);
+  background: var(--red-faint);
+  border: 1px solid var(--red-muted);
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+}
+.module-tag::before { content: '●'; font-size: 6px; }
+
+.module-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.module-subtitle {
+  font-size: 15px;
+  color: var(--ink-40);
+  max-width: 520px;
+  line-height: 1.65;
+}
+
+.module-meta-chips {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.meta-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-60);
+  background: var(--white);
+  border: 1px solid var(--ink-05);
+  padding: 5px 12px;
+  border-radius: 100px;
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Welcome grid: two-column info layout */
+.welcome-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.welcome-card-main {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--ink-05);
+  overflow: hidden;
+}
+
+.welcome-card-hero {
+  background: var(--ink);
+  padding: 36px 36px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.welcome-card-hero::after {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(196,30,58,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.welcome-card-hero-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red-light);
+  margin-bottom: 14px;
+}
+
+.welcome-card-hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.3;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-card-hero-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.65;
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-card-body {
+  padding: 28px 36px 32px;
+}
+
+.what-youll-get {
+  margin-bottom: 28px;
+}
+
+.wyg-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 14px;
+}
+
+.wyg-list { list-style: none; }
+.wyg-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--ink-60);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--ink-05);
+  line-height: 1.5;
+}
+.wyg-list li:last-child { border-bottom: none; }
+.wyg-check {
+  width: 18px; height: 18px;
+  background: var(--green-muted);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  color: var(--green);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.welcome-actions-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-start {
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  padding: 13px 28px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 3px 14px rgba(196,30,58,0.25);
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-start:hover { background: var(--red-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(196,30,58,0.32); }
+
+.btn-sample {
+  background: transparent;
+  color: var(--ink-40);
+  border: 1px solid var(--ink-10);
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.btn-sample:hover { color: var(--ink); border-color: var(--ink-20); background: var(--parchment); }
+
+/* ── Embedded mode (running inside iframe) ── */
+body.embedded .sidebar,
+body.embedded .topbar,
+body.embedded .sb-footer,
+body.embedded .agent-chip,
+body.embedded .portal-shell-left,
+body.embedded .portal-chrome {
+  display: none !important;
+}
+body.embedded .portal-main {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+}
+body.embedded .portal,
+body.embedded .app-shell {
+  display: block !important;
+}
+body.embedded .diagnostic-content,
+body.embedded .main-content {
+  width: 100% !important;
+}
+
+/* Sidebar info cards */
+.welcome-sidebar-cards { display: none; }
+
+.info-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--ink-05);
+  box-shadow: var(--shadow-sm);
+  padding: 20px 22px;
+}
+
+.info-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+  margin-bottom: 14px;
+}
+
+.info-card-stat { display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px; }
+.stat-big { font-family: 'DM Mono', monospace; font-size: 28px; font-weight: 500; color: var(--ink); }
+.stat-unit { font-size: 13px; color: var(--ink-40); font-weight: 400; }
+
+.info-stat-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--ink-05);
+  color: var(--ink-60);
+}
+.info-stat-row:last-child { border-bottom: none; }
+.info-stat-row strong { color: var(--ink); font-weight: 600; }
+
+.info-card-phases { display: flex; flex-direction: column; gap: 8px; }
+.phase-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--ink-60);
+}
+.phase-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.phase-dot-active { background: var(--red); }
+.phase-dot-future { background: var(--ink-10); }
+
+/* ============================================================
+   SCREEN 2 — ASSESSMENT
+   ============================================================ */
+#screen-assessment {
+  background: var(--cream);
+  padding: 32px 40px 60px;
+}
+
+.assess-layout{display:grid;grid-template-columns:1fr;gap:24px;align-items:start;width:100%;}
+.assess-sidebar { display: none; }
+.step-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--ink-05);
+  padding: 44px 48px;
+  animation: screenIn 0.3s ease forwards;
+}
+
+.step-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.step-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--red-muted);
+}
+
+.step-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+
+.step-sub {
+  font-size: 14px;
+  color: var(--ink-40);
+  margin-bottom: 36px;
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+/* Assessment sidebar */
+.assess-sidebar { display: none; }
+
+.progress-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--ink-05);
+  box-shadow: var(--shadow-sm);
+  padding: 20px 22px;
+}
+
+.progress-card-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink-40); margin-bottom: 16px;
+}
+
+.progress-section-name {
+  font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 10px;
+}
+
+.progress-track {
+  height: 5px;
+  background: var(--ink-05);
+  border-radius: 100px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--red);
+  border-radius: 100px;
+  transition: width 0.55s cubic-bezier(0.4,0,0.2,1);
+}
+
+.progress-pct-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--ink-40);
+}
+
+.progress-steps { margin-top: 18px; display: flex; flex-direction: column; gap: 6px; }
+
+.prog-step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink-20);
+  padding: 3px 0;
+  transition: color var(--transition);
+}
+.prog-step-item.done { color: var(--ink-60); }
+.prog-step-item.current { color: var(--red); font-weight: 600; }
+
+.prog-step-icon {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px;
+  flex-shrink: 0;
+  border: 1.5px solid var(--ink-10);
+  color: transparent;
+}
+.prog-step-item.done .prog-step-icon {
+  background: var(--green-muted);
+  border-color: var(--green);
+  color: var(--green);
+}
+.prog-step-item.current .prog-step-icon {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--white);
+}
+
+.tip-card {
+  background: var(--ink-90);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+
+.tip-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 8px;
+}
+
+.tip-text {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.6;
+}
+
+/* ---- FORM ELEMENTS ---- */
+.field-group { margin-bottom: 26px; }
+
+.field-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-60);
+  letter-spacing: 0.04em;
+  margin-bottom: 9px;
+  text-transform: uppercase;
+}
+
+.field-sublabel {
+  font-size: 12px;
+  color: var(--ink-40);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-left: 6px;
+}
+
+.field-input {
+  width: 100%;
+  border: 1.5px solid var(--ink-05);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--cream);
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+  outline: none;
+  -webkit-appearance: none;
+}
+.field-input::placeholder { color: var(--ink-20); }
+.field-input:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px var(--red-faint);
+  background: var(--white);
+}
+textarea.field-input { resize: vertical; min-height: 88px; line-height: 1.6; }
+
+select.field-input {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%234a443d' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  background-color: var(--cream);
+}
+
+/* ---- PILLS ---- */
+.pill-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+
+.pill {
+  padding: 7px 16px;
+  border: 1.5px solid var(--ink-05);
+  border-radius: 100px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition: all var(--transition);
+  background: var(--white);
+  user-select: none;
+  box-shadow: var(--shadow-sm);
+}
+.pill:hover { border-color: var(--red); color: var(--red); background: var(--red-faint); }
+.pill.selected {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--white);
+  box-shadow: 0 2px 10px rgba(196,30,58,0.22);
+}
+
+/* ---- CARDS ---- */
+.card-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(162px, 1fr));
+  gap: 10px;
+}
+
+.select-card {
+  border: 1.5px solid var(--ink-05);
+  border-radius: var(--radius);
+  padding: 16px 14px;
+  cursor: pointer;
+  transition: all var(--transition);
+  background: var(--white);
+  text-align: left;
+  user-select: none;
+  box-shadow: var(--shadow-sm);
+}
+.select-card:hover {
+  border-color: var(--red);
+  box-shadow: 0 3px 12px rgba(196,30,58,0.1);
+  transform: translateY(-1px);
+}
+.select-card.selected {
+  border-color: var(--red);
+  background: var(--red-faint);
+}
+
+.card-icon { font-size: 20px; margin-bottom: 8px; display: block; }
+.card-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.card-desc  { font-size: 11px; color: var(--ink-40); line-height: 1.4; }
+.select-card.selected .card-title { color: var(--red-dark); }
+
+/* ---- SLIDER ---- */
+.slider-wrap { padding: 4px 0; }
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--ink-05);
+  border-radius: 100px;
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--red);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(196,30,58,0.28);
+  border: 3px solid var(--white);
+  transition: transform 0.12s ease;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+input[type=range]::-moz-range-thumb {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--red); cursor: pointer; border: 3px solid var(--white);
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+.slider-labels span { font-size: 11px; color: var(--ink-40); }
+.slider-value-display {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--red);
+  margin-top: 4px;
+  background: var(--red-faint);
+  display: inline-block;
+  padding: 3px 14px;
+  border-radius: 100px;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ---- STEP NAV ---- */
+.step-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--ink-05);
+}
+
+.btn-back {
+  background: transparent; border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--ink-40);
+  cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+  padding: 8px 0;
+  transition: color var(--transition);
+}
+.btn-back:hover { color: var(--ink); }
+.btn-back:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.btn-next {
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  padding: 12px 28px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex; align-items: center; gap: 7px;
+  box-shadow: 0 3px 12px rgba(196,30,58,0.22);
+}
+.btn-next:hover {
+  background: var(--red-light);
+  transform: translateX(2px);
+  box-shadow: 0 5px 20px rgba(196,30,58,0.32);
+}
+
+/* ============================================================
+   SCREEN 3 — LOADING (inside portal)
+   ============================================================ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.lstep-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ink-10);
+  transition: background 0.4s ease;
+  flex-shrink: 0;
+}
+
+
+
+ }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+/* ============================================================
+   SCREEN 4 — REPORT
+   ============================================================ */
+#screen-report {
+  background: var(--cream);
+  padding: 0;
+}
+
+/* Report hero — dark stripe inside portal */
+.report-hero {
+  background: var(--ink);
+  padding: 40px 40px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.report-hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 50% 120% at 100% 50%, rgba(196,30,58,0.14) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.report-hero-inner {
+  max-width: 100%;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+}
+
+.report-eyebrow {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--red-light); margin-bottom: 10px;
+}
+
+.report-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 8px;
+}
+
+.report-tagline {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+  max-width: 560px;
+}
+
+.report-hero-stats {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.hero-stat {
+  text-align: right;
+}
+.hero-stat-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--red-light);
+  display: block;
+  line-height: 1;
+}
+.hero-stat-label {
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
+}
+
+/* Report actions bar */
+.report-actions-bar {
+  background: var(--white);
+  border-bottom: 1px solid var(--ink-05);
+  padding: 12px 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rab-label { font-size: 12px; color: var(--ink-40); margin-right: 4px; }
+
+.rab-btn {
+  height: 34px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: none;
+  display: flex; align-items: center; gap: 6px;
+}
+
+.rab-primary { background: var(--red); color: var(--white); box-shadow: 0 2px 8px rgba(196,30,58,0.2); }
+.rab-primary:hover { background: var(--red-light); }
+.rab-save { background: var(--ink); color: var(--white); }
+.rab-save:hover { background: var(--ink-80); }
+.rab-tool { background: var(--gold-muted); color: #6b4f10; border: 1px solid #e0cc9a; }
+.rab-tool:hover { background: #ecddb0; }
+.rab-ghost { background: transparent; color: var(--ink-40); border: 1px solid var(--ink-10); }
+.rab-ghost:hover { color: var(--ink); border-color: var(--ink-20); }
+
+/* Report body */
+.report-body {
+  padding: 36px 40px 60px;
+}
+
+.report-section { margin-bottom: 44px; }
+
+.report-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ink-05);
+}
+
+.rs-icon {
+  width: 34px; height: 34px;
+  background: var(--ink);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.rs-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); margin-bottom: 1px; }
+.rs-title { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; color: var(--ink); }
+
+/* Executive Summary */
+.exec-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--ink-05);
+  border-left: 4px solid var(--red);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+.exec-card p {
+  font-size: 14px;
+  color: var(--ink-80);
+  line-height: 1.75;
+}
+.exec-card p + p { margin-top: 12px; }
+.exec-card strong { color: var(--ink); font-weight: 600; }
+
+/* Callout boxes inline */
+.exec-callouts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.exec-callout {
+  background: var(--cream);
+  border: 1px solid var(--ink-05);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  text-align: center;
+}
+.ec-val { font-family: 'DM Mono', monospace; font-size: 20px; font-weight: 500; color: var(--red); display: block; }
+.ec-label { font-size: 11px; color: var(--ink-40); margin-top: 3px; }
+
+/* Leverage list */
+.leverage-list { display: flex; flex-direction: column; gap: 12px; }
+
+.leverage-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--ink-05);
+  padding: 22px 26px;
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 16px;
+  align-items: start;
+  transition: all var(--transition);
+  cursor: default;
+}
+.leverage-card:hover {
+  border-color: var(--ink-10);
+  box-shadow: var(--shadow-md);
+  transform: translateX(3px);
+}
+.leverage-card.rank-1 {
+  border-left: 4px solid var(--red);
+  background: #fffbfb;
+  box-shadow: 0 2px 16px rgba(196,30,58,0.08), var(--shadow-sm);
+  padding: 26px 26px 24px;
+}
+
+.leverage-rank-1-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--red);
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-bottom: 8px;
+}
+
+.leverage-rank-1-directive {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--red);
+  font-weight: 500;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.leverage-rank {
+  font-family: 'DM Mono', monospace;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--ink-10);
+  line-height: 1;
+  padding-top: 2px;
+}
+.leverage-card.rank-1 .leverage-rank { color: var(--red-muted); }
+
+.leverage-title { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
+.leverage-desc { font-size: 13px; color: var(--ink-60); line-height: 1.6; margin-bottom: 10px; }
+
+.leverage-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.ltag {
+  font-size: 10px; font-weight: 700; padding: 3px 10px;
+  border-radius: 100px; letter-spacing: 0.04em;
+}
+.ltag-high  { background: var(--red-faint); color: var(--red-dark); }
+.ltag-med   { background: var(--gold-muted); color: #7a5c1e; }
+.ltag-easy  { background: var(--green-muted); color: var(--green); }
+.ltag-time  { background: var(--parchment); color: var(--ink-60); }
+
+.leverage-time { text-align: right; white-space: nowrap; }
+.leverage-time-val { font-family: 'DM Mono', monospace; font-size: 16px; font-weight: 500; color: var(--green); display: block; }
+.leverage-time-label { font-size: 10px; color: var(--ink-40); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+
+/* Time suck */
+.time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+.time-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--ink-05);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-sm);
+}
+
+.time-card-head {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--ink-05);
+}
+.tc-dot { width: 8px; height: 8px; border-radius: 50%; }
+.tc-red .tc-dot { background: var(--red); }
+.tc-gold .tc-dot { background: var(--gold); }
+.tc-green .tc-dot { background: var(--green); }
+.tc-red { color: var(--red); }
+.tc-gold { color: var(--amber); }
+.tc-green { color: var(--green); }
+
+.time-items { list-style: none; }
+.time-items li {
+  font-size: 13px; color: var(--ink-60);
+  padding: 7px 0;
+  border-bottom: 1px solid var(--ink-05);
+  line-height: 1.45;
+}
+.time-items li:last-child { border-bottom: none; }
+
+/* Bottleneck analysis */
+.bottleneck-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.bottleneck-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--ink-05);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.bc-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+.bc-red   { background: var(--red-faint); }
+.bc-gold  { background: var(--gold-muted); }
+.bc-green { background: var(--green-muted); }
+.bc-ink   { background: var(--parchment); }
+
+.bc-content {}
+.bc-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-40); margin-bottom: 4px; }
+.bc-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; line-height: 1.3; }
+.bc-desc  { font-size: 12px; color: var(--ink-60); line-height: 1.5; }
+
+/* Skill gap */
+.skill-map { display: flex; flex-direction: column; gap: 10px; }
+
+.skill-row {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--ink-05);
+  padding: 18px 22px;
+  box-shadow: var(--shadow-sm);
+  display: grid;
+  grid-template-columns: 1fr 32px 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.skill-problem {}
+.skill-problem strong { display: block; font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.skill-problem span { font-size: 12px; color: var(--ink-40); line-height: 1.5; }
+
+.skill-arrow { text-align: center; color: var(--ink-20); font-size: 16px; }
+
+.skill-solution {
+  background: var(--red-faint);
+  border: 1px solid var(--red-muted);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+.skill-solution strong { display: block; font-size: 13px; font-weight: 700; color: var(--red-dark); margin-bottom: 3px; }
+.skill-solution span { font-size: 12px; color: var(--red); }
+
+/* Starting stack */
+.stack-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+.stack-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--ink-05);
+  box-shadow: var(--shadow-sm);
+  padding: 24px 22px;
+  border-top: 3px solid var(--red);
+  transition: all var(--transition);
+}
+.stack-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+
+.stack-num { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; color: var(--red); letter-spacing: 0.08em; margin-bottom: 10px; }
+.stack-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.stack-why  { font-size: 12px; color: var(--ink-60); line-height: 1.6; margin-bottom: 12px; }
+.stack-match {
+  background: var(--gold-muted);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #6b4f10;
+  line-height: 1.5;
+}
+.stack-match-label {
+  font-weight: 700;
+  display: block;
+  margin-bottom: 2px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a6520;
+}
+.stack-tag {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 10px; font-weight: 700; padding: 3px 10px;
+  border-radius: 100px;
+  background: var(--green-muted); color: var(--green);
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* 30-day plan */
+.plan-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+.week-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--ink-05);
+  padding: 20px 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.week-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+.week-focus { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 12px; line-height: 1.3; }
+
+.week-tasks { list-style: none; }
+.week-tasks li {
+  font-size: 12px; color: var(--ink-60);
+  padding: 6px 0; border-bottom: 1px solid var(--ink-05);
+  display: flex; align-items: flex-start; gap: 6px; line-height: 1.45;
+}
+.week-tasks li:last-child { border-bottom: none; }
+.week-tasks li::before { content: '→'; color: var(--red); font-size: 10px; flex-shrink: 0; margin-top: 3px; }
+
+/* Handoff CTA */
+.handoff-panel {
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 44px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.handoff-panel::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 80% 30%, rgba(196,30,58,0.14) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.handoff-inner {
+  position: relative; z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 40px;
+  align-items: center;
+}
+
+.handoff-text {}
+.handoff-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red-light); margin-bottom: 10px; }
+.handoff-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--white); line-height: 1.25; margin-bottom: 10px; }
+.handoff-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.65; max-width: 420px; }
+
+.handoff-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+  min-width: 220px;
+}
+
+.hbtn {
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: none;
+  display: flex; align-items: center; gap: 8px;
+  justify-content: center;
+}
+.hbtn-download { background: var(--red); color: var(--white); box-shadow: 0 3px 14px rgba(196,30,58,0.3); }
+.hbtn-download:hover { background: var(--red-light); }
+.hbtn-save { background: rgba(255,255,255,0.1); color: var(--white); border: 1px solid rgba(255,255,255,0.14); }
+.hbtn-save:hover { background: rgba(255,255,255,0.16); }
+.hbtn-save.saved { background: var(--green-muted); color: var(--green); border-color: var(--green); }
+.hbtn-tool { background: var(--gold-muted); color: #6b4f10; }
+.hbtn-tool:hover { background: #ecddb0; }
+
+/* ============================================================
+   TOAST NOTIFICATION
+   ============================================================ */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: var(--ink);
+  color: var(--white);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  z-index: 9999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 280px;
+  max-width: 360px;
+  border-left: 3px solid var(--green);
+}
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+.toast-icon { font-size: 18px; flex-shrink: 0; }
+.toast-content {}
+.toast-title { font-weight: 700; color: var(--white); margin-bottom: 2px; font-size: 13px; }
+.toast-sub { font-size: 11px; color: rgba(255,255,255,0.5); }
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+.hide { display: none !important; }
+
+@media (max-width: 900px) {
+  
+  
+
+  #screen-welcome { padding: 24px 20px 40px; }
+  .welcome-grid { grid-template-columns: 1fr; }
+  .welcome-sidebar-cards { display: none; }
+
+  #screen-assessment { padding: 20px 20px 40px; }
+  .assess-layout { grid-template-columns: 1fr; }
+  .assess-sidebar { display: none; }
+  .step-card { padding: 28px 24px; }
+
+  .report-hero { padding: 28px 20px; }
+  .report-hero-inner { grid-template-columns: 1fr; }
+  .report-hero-stats { display: none; }
+  .report-actions-bar { padding: 12px 20px; }
+  .report-body { padding: 24px 20px 40px; }
+
+  .time-grid { grid-template-columns: 1fr; }
+  .bottleneck-grid { grid-template-columns: 1fr; }
+  .stack-cards { grid-template-columns: 1fr; }
+  .plan-grid { grid-template-columns: repeat(2, 1fr); }
+  .exec-callouts { grid-template-columns: 1fr; }
+  .skill-row { grid-template-columns: 1fr; gap: 8px; }
+  .skill-arrow { transform: rotate(90deg); text-align: left; }
+  .handoff-inner { grid-template-columns: 1fr; }
+  .leverage-card { grid-template-columns: 36px 1fr; }
+  .leverage-time { grid-column: 2; }
+}
+
+
+/* ── Module content wrapper ─────────────────────────────── */
+.kwit-module{width:100%;height:100vh;overflow:hidden;background:var(--cream,#faf8f5);display:flex;flex-direction:column;}
+#screen-welcome.active ~ * { display:none; }
+body:has(#screen-welcome.active){overflow:hidden;height:100vh;}
+.screen { display: none; width: 100%; flex-direction: column; }
+.screen.active { display: flex; }
+</style>
+</head>
+<body>
+<script>
+(function(){
+  try {
+    if (window.self !== window.top || window.frameElement !== null || window.location.search.indexOf('embedded=1') !== -1) {
+      document.body.classList.add('embedded');
+    }
+  } catch(e) { document.body.classList.add('embedded'); }
+})();
+</script>
+
+<div id="toast" class="toast">
+  <div class="toast-icon">✓</div>
+  <div class="toast-content">
+    <div class="toast-title" id="toast-title">Profile saved to KWIT</div>
+    <div class="toast-sub" id="toast-sub">You can access it from your dashboard anytime.</div>
+  </div>
+</div>
+
+<div class="kwit-module">
+
+<div id="screen-welcome" class="screen active">
+      <div class="module-header">
+        <div class="module-header-left">
+          <div class="module-tag">Step 1 of 3 — Get Started</div>
+          <h1 class="module-title">Agent Business Diagnostic</h1>
+          <p class="module-subtitle">
+            A structured assessment that finds where your time is leaking, what should be automated first, and exactly where AI gives you the fastest return. Takes 6–8 minutes.
+          </p>
+          <div class="module-meta-chips">
+            <div class="meta-chip">⏱ 6–8 min</div>
+            <div class="meta-chip">◈ Personalized report</div>
+            <div class="meta-chip">↓ Downloadable profile</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="welcome-grid">
+        <div class="welcome-card-main">
+          <div class="welcome-card-hero">
+            <div class="welcome-card-hero-eyebrow">Business Diagnostic — Confidential</div>
+            <div class="welcome-card-hero-title">Find your highest-leverage AI starting point</div>
+            <div class="welcome-card-hero-desc">Most agents don't have an AI problem — they have a clarity problem. This diagnostic tells you exactly what to automate, in what order, and why it matters for your specific business.</div>
+          </div>
+          <div class="welcome-card-body">
+            <div class="what-youll-get">
+              <div class="wyg-label">What you walk away with</div>
+              <ul class="wyg-list">
+                <li><span class="wyg-check">✓</span> A ranked list of your 5 biggest AI leverage areas — specific to your production goals and pain points</li>
+                <li><span class="wyg-check">✓</span> A time-leak analysis showing where hours disappear and what to automate first</li>
+                <li><span class="wyg-check">✓</span> A skill gap map connecting your weakest areas to specific KWIT workflows</li>
+                <li><span class="wyg-check">✓</span> A 30-day adoption plan with week-by-week actions</li>
+                <li><span class="wyg-check">✓</span> A downloadable AI profile — reusable in ChatGPT, Claude, or any AI tool</li>
+              </ul>
+            </div>
+            <div class="welcome-actions-row">
+              <button class="btn-start" onclick="startAssessment()">
+                Start Diagnostic →
+              </button>
+              <button class="btn-sample" onclick="skipToReport()">See sample report</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="welcome-sidebar-cards">
+          <div class="info-card">
+            <div class="info-card-label">What This Replaces</div>
+            <div class="info-stat-row"><span>Generic AI tutorials</span><strong>✓</strong></div>
+            <div class="info-stat-row"><span>Trial-and-error setup</span><strong>✓</strong></div>
+            <div class="info-stat-row"><span>Guessing where to start</span><strong>✓</strong></div>
+            <div class="info-stat-row"><span>Vendor sales pitches</span><strong>✓</strong></div>
+          </div>
+          <div class="info-card">
+            <div class="info-card-label">Assessment Sections</div>
+            <div class="info-card-phases">
+              <div class="phase-item"><div class="phase-dot phase-dot-active"></div> Business Snapshot</div>
+              <div class="phase-item"><div class="phase-dot phase-dot-future"></div> Production Goals</div>
+              <div class="phase-item"><div class="phase-dot phase-dot-future"></div> Time & Lead Leakage</div>
+              <div class="phase-item"><div class="phase-dot phase-dot-future"></div> Strengths & Bottlenecks</div>
+              <div class="phase-item"><div class="phase-dot phase-dot-future"></div> AI Readiness</div>
+              <div class="phase-item"><div class="phase-dot phase-dot-future"></div> Brand Voice</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<div id="screen-assessment" class="screen">
+      <div class="assess-layout">
+        <div class="step-card" id="step-card">
+          <!-- injected by JS -->
+        </div>
+
+        <div class="assess-sidebar">
+          <div class="progress-card">
+            <div class="progress-card-label">Your Progress</div>
+            <div class="progress-section-name" id="prog-section-name">Business Snapshot</div>
+            <div class="progress-track">
+              <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+            </div>
+            <div class="progress-pct-row">
+              <span id="progress-pct">0% complete</span>
+              <span id="step-counter">1 of 6</span>
+            </div>
+            <div class="progress-steps" id="progress-steps">
+              <!-- injected -->
+            </div>
+          </div>
+
+          <div class="tip-card" id="tip-card">
+            <div class="tip-label">Why this matters</div>
+            <div class="tip-text" id="tip-text">Every answer you give sharpens the report. Vague answers produce generic recommendations — specific answers produce a plan you can act on tomorrow.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<div id="screen-report" class="screen">
+
+      <div class="report-hero">
+        <div class="report-hero-inner">
+          <div>
+            <div class="report-eyebrow">KWIT Business Diagnostic — Confidential</div>
+            <div class="report-name" id="report-name">Your AI Opportunity Report</div>
+            <div class="report-tagline" id="report-tagline">Personalized analysis based on your business profile.</div>
+          </div>
+          <div class="report-hero-stats" id="report-hero-stats"></div>
+        </div>
+      </div>
+
+      <div class="report-actions-bar">
+        <span class="rab-label">Actions:</span>
+        <button class="rab-btn rab-primary" onclick="downloadProfile()">↓ Download Profile (.txt)</button>
+        <button class="rab-btn rab-save" id="rab-save-btn" onclick="saveToKWIT()">⊙ Activate in KWIT</button>
+        <button class="rab-btn rab-tool" id="rab-first-tool-btn" onclick="launchFirstTool()">▷ Open First Workflow</button>
+        <button class="rab-btn rab-ghost" onclick="retakeAssessment()" style="margin-left:auto">↩ Retake</button>
+      </div>
+
+      <div class="report-body" id="report-body">
+        <!-- injected -->
+      </div>
+
+    </div>
+
+</div>
+
+</body>
+<script>
+
+/* ============================================================
+   KWIT AGENT AI PROFILE v2
+   Portal-native. Operational. Sharp.
+   ============================================================ */
+
+/* ------ STATE ------ */
+const state = {
+  currentStep: 0,
+  answers: {},
+  saved: false
+};
+
+/* ------ STEP CONFIG ------ */
+const sectionNames = [
+  'Business Snapshot',
+  'Production Goals',
+  'Time & Lead Leakage',
+  'Bottlenecks',
+  'AI Readiness',
+  'Brand Voice'
+];
+
+const stepTips = [
+  'Tell us exactly how your business runs. The more specific, the more targeted your report.',
+  'Production goals shape which AI tools pay off fastest for you.',
+  'This is the most important section. Most agents lose 10+ hours a week to tasks AI should be doing.',
+  'Knowing where you get stuck is how we match you to the right workflows — not the popular ones.',
+  'No judgment here. Your comfort level determines what we recommend you start with.',
+  'This becomes your permanent AI communication profile — usable in any tool, forever.'
+];
+
+/* ------ STEPS ------ */
+const steps = [
+
+  /* STEP 0 — Business Snapshot */
+  {
+    section: 'Section A',
+    title: 'Your Business Snapshot',
+    subtitle: 'How you operate determines which AI tools move the needle first.',
+    fields: [
+      { id: 'name',      label: 'Your name',         type: 'text',   placeholder: 'First name works' },
+      { id: 'market',    label: 'Your market',        type: 'text',   placeholder: 'City / region — e.g. Phoenix metro, North Austin' },
+      { id: 'years',     label: 'Years in real estate', type: 'select', options: ['Under 2 years','2–5 years','5–10 years','10–20 years','20+ years'] },
+      { id: 'focus',     label: 'Business focus', type: 'pills',
+        choices: ['Residential Buyers','Residential Sellers','Luxury','Investment','New Construction','Relocation','Commercial','Mixed'] },
+      { id: 'structure', label: 'How you operate', type: 'pills',
+        choices: ['Solo agent','Small team (2–4)','Large team','Part-time / building'] },
+    ]
+  },
+
+  /* STEP 1 — Production Goals */
+  {
+    section: 'Section B',
+    title: 'Production Goals',
+    subtitle: 'Be direct. These numbers shape your recommendations — vague answers produce vague results.',
+    fields: [
+      { id: 'gci_target', label: 'GCI target this year', type: 'select',
+        options: ['Under $100k','$100k–$200k','$200k–$400k','$400k–$750k','$750k+','Prefer not to say'] },
+      { id: 'transactions_last', label: 'Transactions closed last year', type: 'select',
+        options: ['Under 5','5–10','10–20','20–35','35+'] },
+      { id: 'primary_goal', label: "This year's #1 goal", type: 'cards', multi: false,
+        choices: [
+          { icon:'📈', title:'More volume',        desc:'Close more transactions than last year' },
+          { icon:'💰', title:'Higher GCI',         desc:'Same transactions, more income' },
+          { icon:'🔁', title:'Referral engine',    desc:'Build a business that runs on repeats and referrals' },
+          { icon:'🏆', title:'Market ownership',   desc:'Dominate a specific neighborhood or niche' },
+          { icon:'⏱️', title:'Time back',          desc:'Maintain production while cutting hours' },
+          { icon:'👥', title:'Build a team',       desc:'Delegate, grow, scale' },
+        ]
+      },
+      { id: 'want_more', label: 'What you need more of', type: 'pills', multi: true,
+        choices: ['Listings','Buyer clients','Referrals','Online leads','Luxury clients','Investor clients','Repeat business'] },
+    ]
+  },
+
+  /* STEP 2 — Time & Lead Leakage */
+  {
+    section: 'Section C',
+    title: 'Time & Lead Leakage',
+    subtitle: 'Where hours go and where leads fall through the cracks. This is usually where AI wins fastest.',
+    fields: [
+      { id: 'time_drains', label: 'Tasks that eat the most time each week', type: 'cards', multi: true,
+        choices: [
+          { icon:'✉️', title:'Writing & emails',   desc:'Follow-ups, outreach, client updates' },
+          { icon:'📱', title:'Social media',        desc:'Creating and posting content consistently' },
+          { icon:'📋', title:'Admin & paperwork',   desc:'Chasing signatures, coordinating files' },
+          { icon:'🔄', title:'Lead follow-up',      desc:'Manually staying in touch with leads' },
+          { icon:'🏠', title:'Listing prep',        desc:'CMAs, descriptions, marketing setup' },
+          { icon:'📅', title:'Scheduling',          desc:'Coordinating showings, calls, appointments' },
+          { icon:'📢', title:'Marketing',           desc:'Campaigns, flyers, ads' },
+          { icon:'📞', title:'Status update calls', desc:'Repeating the same info to clients' },
+        ]
+      },
+      { id: 'lead_leakage', label: 'Where leads most often fall through the cracks', type: 'pills', multi: true,
+        choices: ['After initial inquiry','Post-showing, pre-offer','After a deal falls through','Long-term nurture (6+ months)','Past clients / referral asks','Open house follow-up'] },
+      { id: 'procrastinate', label: 'Tasks you consistently put off or avoid', type: 'text',
+        placeholder: 'Be specific — e.g. cold calling expireds, writing property descriptions, posting on Instagram, following up after showings…' },
+    ]
+  },
+
+  /* STEP 3 — Bottlenecks */
+  {
+    section: 'Section D',
+    title: 'Strengths & Bottlenecks',
+    subtitle: "Where you're strong shapes what AI should support. Where you stall shapes what AI should replace.",
+    fields: [
+      { id: 'strength', label: 'Your actual strongest skill', type: 'pills', multi: false,
+        choices: ['Building trust fast','Negotiating','Market knowledge','Listing presentation','Follow-through','Prospecting','Writing & marketing','Closing'] },
+      { id: 'weakness', label: 'Where you most often stall or underperform', type: 'pills', multi: false,
+        choices: ['Consistent follow-up','Content & social','Writing','Cold prospecting','Tech & tools','Pricing conversations','Time management','Self-promotion'] },
+      { id: 'energy_drain', label: 'Tasks that drain your energy even when you do them', type: 'text',
+        placeholder: 'e.g. Responding to the same questions, creating marketing from scratch every time, keeping up with social…' },
+      { id: 'lose_momentum', label: 'Situations that most often break your momentum', type: 'text',
+        placeholder: 'e.g. Deal falls through, busy season ends, got ghosted on a listing appointment…' },
+    ]
+  },
+
+  /* STEP 4 — AI Readiness */
+  {
+    section: 'Section E',
+    title: 'Your AI Starting Point',
+    subtitle: "Honest answers here prevent us from recommending tools you're not ready for.",
+    fields: [
+      { id: 'ai_comfort', label: 'Current comfort with AI tools', type: 'slider',
+        min: 1, max: 5, labels: ['Never used it', 'Curious only', 'Tried a little', 'Use it sometimes', 'Daily user'] },
+      { id: 'ai_used', label: 'Tools tried before', type: 'pills', multi: true,
+        choices: ['ChatGPT','Claude (Anthropic)','Jasper','CRM with AI features','MLS AI tools','Voice-to-text AI','None yet','Not sure what counts'] },
+      { id: 'ai_hesitation', label: 'Your biggest hesitation with AI', type: 'cards', multi: false,
+        choices: [
+          { icon:'🤷', title:"Don't know where to start", desc:'Too many options, no clear first step' },
+          { icon:'⏰', title:'No time to learn it',        desc:'Too busy to set anything up' },
+          { icon:'😬', title:"Worried it'll sound fake",   desc:'I need to sound like me, not a bot' },
+          { icon:'🔒', title:'Privacy concerns',           desc:"Not sure what's safe to put in AI" },
+          { icon:'💸', title:'ROI feels unclear',          desc:"Not sure it's worth the time investment" },
+          { icon:'✅', title:'No hesitation',              desc:"I'm ready — just point me somewhere" },
+        ]
+      },
+      { id: 'ai_first_win', label: 'What would make AI feel immediately worth it?', type: 'text',
+        placeholder: 'Be specific — e.g. "If it wrote my follow-up emails in my voice," or "If I could create a week of posts in 20 minutes…"' },
+    ]
+  },
+
+  /* STEP 5 — Brand Voice */
+  {
+    section: 'Section F',
+    title: 'Your Brand Voice',
+    subtitle: 'This becomes your permanent AI communication profile. Every tool in KWIT uses this.',
+    fields: [
+      { id: 'tone', label: 'How you want to sound', type: 'pills', multi: false,
+        choices: ['Warm & personal','Polished & professional','Direct & no-nonsense','Friendly & casual','Expert & authoritative','Energetic & enthusiastic'] },
+      { id: 'formality', label: 'Your default communication register', type: 'pills', multi: false,
+        choices: ['Formal','Mostly professional','Balanced — reads the room','Mostly casual','Conversational / informal'] },
+      { id: 'brand_vibe', label: 'Three words that describe how clients experience you', type: 'text',
+        placeholder: 'e.g. Responsive, honest, neighborhood expert — or whatever is actually true' },
+      { id: 'avoid_phrases', label: "Words or phrases that don't sound like you", type: 'text',
+        placeholder: 'e.g. "synergy," "leverage" (verb), "seamless," "reaching out to touch base," motivational clichés…' },
+      { id: 'self_describe', label: 'How you introduce yourself to a new client', type: 'text',
+        placeholder: 'Paste what you actually say or type it fresh. This is your AI voice baseline.' },
+    ]
+  }
+];
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function startAssessment() {
+  state.currentStep = 0;
+  (document.getElementById('topbar-title')||{}).textContent = 'Business Diagnostic — Assessment';
+  (document.getElementById('topbar-right')||{}).innerHTML = `
+    <button class="topbar-btn topbar-btn-ghost" onclick="retakeAssessment()">↩ Back to start</button>
+  `;
+  showScreen('screen-assessment');
+  renderStep();
+}
+
+function skipToReport() {
+  state.answers = {
+    name: 'Sarah', market: 'Austin, TX', years: '5–10 years',
+    focus: ['Residential Sellers', 'Luxury'], structure: ['Solo agent'],
+    gci_target: '$200k–$400k', transactions_last: '10–20',
+    primary_goal: 'More volume',
+    want_more: ['Listings', 'Referrals'],
+    time_drains: ['Writing & emails', 'Social media', 'Lead follow-up', 'Listing prep'],
+    lead_leakage: ['After initial inquiry', 'Long-term nurture (6+ months)', 'Past clients / referral asks'],
+    procrastinate: 'Writing property descriptions and consistently following up after showings. Also Instagram — I avoid it.',
+    strength: ['Building trust fast'], weakness: ['Consistent follow-up'],
+    energy_drain: 'Writing emails from scratch every time. Responding to the same questions over and over.',
+    lose_momentum: 'After a deal falls through — getting back into proactive mode takes days.',
+    ai_comfort: 2, ai_used: ['ChatGPT'],
+    ai_hesitation: "Worried it'll sound fake",
+    ai_first_win: 'If it wrote my follow-up emails in my voice without sounding like a template.',
+    tone: ['Warm & personal'], formality: ['Balanced — reads the room'],
+    brand_vibe: 'Trustworthy, responsive, neighborhood expert',
+    avoid_phrases: 'Corporate jargon, synergy, leverage (the verb), seamless experience',
+    self_describe: "I'm a neighborhood specialist who helps sellers get top dollar without the stress. I've been in Austin real estate for seven years and I actually live in the neighborhoods I sell."
+  };
+  runReport();
+}
+
+function retakeAssessment() {
+  state.answers = {};
+  state.currentStep = 0;
+  state.saved = false;
+  (document.getElementById('topbar-title')||{}).textContent = 'Business Diagnostic';
+  (document.getElementById('topbar-right')||{}).innerHTML = `
+    <button class="topbar-btn topbar-btn-ghost" onclick="skipToReport()">View sample report</button>
+  `;
+  showScreen('screen-welcome');
+}
+
+/* ============================================================
+   STEP RENDERER
+   ============================================================ */
+function renderStep() {
+  const step  = steps[state.currentStep];
+  const total = steps.length;
+  const pct   = Math.round((state.currentStep / total) * 100);
+
+  // Progress bar + sidebar
+  document.getElementById('prog-section-name').textContent = sectionNames[state.currentStep];
+  document.getElementById('progress-pct').textContent = pct + '% complete';
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('step-counter').textContent = `${state.currentStep + 1} of ${total}`;
+  document.getElementById('tip-text').textContent = stepTips[state.currentStep];
+
+  // Progress steps list
+  document.getElementById('progress-steps').innerHTML = sectionNames.map((name, i) => {
+    let cls = i < state.currentStep ? 'done' : i === state.currentStep ? 'current' : '';
+    let icon = i < state.currentStep ? '✓' : i === state.currentStep ? `${i+1}` : '';
+    return `
+      <div class="prog-step-item ${cls}">
+        <div class="prog-step-icon">${icon}</div>
+        <span>${name}</span>
+      </div>`;
+  }).join('');
+
+  // Animate card
+  const card = document.getElementById('step-card');
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(14px)';
+
+  setTimeout(() => {
+    card.innerHTML = buildStepHTML(step);
+    attachStepEvents(step);
+    restoreAnswers(step);
+    card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    requestAnimationFrame(() => {
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    });
+  }, 130);
+}
+
+function buildStepHTML(step) {
+  let html = `
+    <div class="step-section-label">${step.section}</div>
+    <h2 class="step-headline">${step.title}</h2>
+    <p class="step-sub">${step.subtitle}</p>
+  `;
+
+  step.fields.forEach(f => {
+    html += `<div class="field-group" id="fg-${f.id}">`;
+    html += `<label class="field-label">${f.label}${f.multi ? '<span class="field-sublabel">— select all that apply</span>' : ''}</label>`;
+
+    if (f.type === 'text') {
+      if (f.multiline) {
+        html += `<textarea class="field-input" id="f-${f.id}" placeholder="${f.placeholder||''}" rows="3"></textarea>`;
+      } else {
+        html += `<input type="text" class="field-input" id="f-${f.id}" placeholder="${f.placeholder||''}">`;
+      }
+    } else if (f.type === 'select') {
+      html += `<select class="field-input" id="f-${f.id}">`;
+      html += `<option value="">— Select —</option>`;
+      f.options.forEach(o => html += `<option value="${o}">${o}</option>`);
+      html += `</select>`;
+    } else if (f.type === 'pills') {
+      html += `<div class="pill-group" id="f-${f.id}">`;
+      f.choices.forEach(c => {
+        html += `<button type="button" class="pill" data-value="${c}" onclick="togglePill(this,'${f.id}',${f.multi||false})">${c}</button>`;
+      });
+      html += `</div>`;
+    } else if (f.type === 'cards') {
+      html += `<div class="card-group" id="f-${f.id}">`;
+      f.choices.forEach(c => {
+        html += `
+          <div class="select-card" data-value="${c.title}" onclick="toggleCard(this,'${f.id}',${f.multi||false})">
+            <span class="card-icon">${c.icon}</span>
+            <div class="card-title">${c.title}</div>
+            <div class="card-desc">${c.desc}</div>
+          </div>`;
+      });
+      html += `</div>`;
+    } else if (f.type === 'slider') {
+      const def = Math.ceil((f.min + f.max) / 2);
+      html += `
+        <div class="slider-wrap">
+          <input type="range" id="f-${f.id}" min="${f.min}" max="${f.max}" value="${def}"
+            oninput="updateSlider(this,'${f.id}',${JSON.stringify(f.labels)})">
+          <div class="slider-labels"><span>${f.labels[0]}</span><span>${f.labels[f.labels.length-1]}</span></div>
+          <div class="slider-value-display" id="sv-${f.id}">${f.labels[def-1]}</div>
+        </div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  const isFirst = state.currentStep === 0;
+  const isLast  = state.currentStep === steps.length - 1;
+
+  html += `
+    <div class="step-nav">
+      <button class="btn-back" onclick="prevStep()" ${isFirst?'disabled':''}>← Back</button>
+      <button class="btn-next" onclick="nextStep()">
+        ${isLast ? 'Generate My Report →' : 'Continue →'}
+      </button>
+    </div>
+  `;
+  return html;
+}
+
+/* ============================================================
+   INTERACTION HELPERS
+   ============================================================ */
+function togglePill(el, fieldId, multi) {
+  if (!multi) el.closest('.pill-group').querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+  el.classList.toggle('selected');
+  saveAnswer(fieldId);
+}
+
+function toggleCard(el, fieldId, multi) {
+  if (!multi) el.closest('.card-group').querySelectorAll('.select-card').forEach(c => c.classList.remove('selected'));
+  el.classList.toggle('selected');
+  saveAnswer(fieldId);
+}
+
+function updateSlider(input, fieldId, labels) {
+  const idx = parseInt(input.value) - 1;
+  document.getElementById('sv-' + fieldId).textContent = labels[idx];
+  saveAnswer(fieldId);
+}
+
+function saveAnswer(fieldId) {
+  const step  = steps[state.currentStep];
+  const field = step.fields.find(f => f.id === fieldId);
+  if (!field) return;
+
+  if (field.type === 'pills' || field.type === 'cards') {
+    const container = document.getElementById('f-' + fieldId);
+    if (!container) return;
+    const selected = [...container.querySelectorAll('.selected')].map(el => el.dataset.value);
+    state.answers[fieldId] = field.multi ? selected : (selected[0] || '');
+  } else if (field.type === 'slider') {
+    const el = document.getElementById('f-' + fieldId);
+    if (el) state.answers[fieldId] = parseInt(el.value);
+  } else {
+    const el = document.getElementById('f-' + fieldId);
+    if (el) state.answers[fieldId] = el.value;
+  }
+}
+
+function attachStepEvents(step) {
+  step.fields.forEach(f => {
+    if (f.type === 'text') {
+      const el = document.getElementById('f-' + f.id);
+      if (el) el.addEventListener('input', () => { state.answers[f.id] = el.value; });
+    } else if (f.type === 'select') {
+      const el = document.getElementById('f-' + f.id);
+      if (el) el.addEventListener('change', () => { state.answers[f.id] = el.value; });
+    }
+  });
+}
+
+function restoreAnswers(step) {
+  step.fields.forEach(f => {
+    const val = state.answers[f.id];
+    if (val === undefined || val === null || val === '') return;
+
+    if (f.type === 'text') {
+      const el = document.getElementById('f-' + f.id);
+      if (el) el.value = val;
+    } else if (f.type === 'select') {
+      const el = document.getElementById('f-' + f.id);
+      if (el) el.value = val;
+    } else if (f.type === 'slider') {
+      const el = document.getElementById('f-' + f.id);
+      if (el) {
+        el.value = val;
+        document.getElementById('sv-' + f.id).textContent = f.labels[val - 1];
+      }
+    } else if (f.type === 'pills') {
+      const container = document.getElementById('f-' + f.id);
+      if (!container) return;
+      const vals = Array.isArray(val) ? val : [val];
+      container.querySelectorAll('.pill').forEach(p => {
+        if (vals.includes(p.dataset.value)) p.classList.add('selected');
+      });
+    } else if (f.type === 'cards') {
+      const container = document.getElementById('f-' + f.id);
+      if (!container) return;
+      const vals = Array.isArray(val) ? val : [val];
+      container.querySelectorAll('.select-card').forEach(c => {
+        if (vals.includes(c.dataset.value)) c.classList.add('selected');
+      });
+    }
+  });
+}
+
+/* ============================================================
+   STEP NAVIGATION
+   ============================================================ */
+function gatherCurrentStep() {
+  steps[state.currentStep].fields.forEach(f => saveAnswer(f.id));
+}
+
+function prevStep() {
+  gatherCurrentStep();
+  if (state.currentStep > 0) { state.currentStep--; renderStep(); window.scrollTo(0,0); }
+}
+
+function nextStep() {
+  gatherCurrentStep();
+  if (state.currentStep < steps.length - 1) { state.currentStep++; renderStep(); window.scrollTo(0,0); }
+  else runReport();
+}
+
+/* ============================================================
+   LOADING SCREEN
+   ============================================================ */
+const CLAUDE_API_URL = 'https://api.anthropic.com/v1/messages';
+const CLAUDE_MODEL   = 'claude-sonnet-4-20250514';
+const CLAUDE_API_KEY = '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';
+
+function buildDiagnosticPrompt() {
+  const a = state.answers;
+  const asA = key => { const v = a[key]; return Array.isArray(v) ? v : (v ? [v] : []); };
+  return `You are the KWIT diagnostic engine for KW Intown Atlanta. Write a personalized AI opportunity report for this agent. Be direct and specific — use their actual answers throughout. No generic filler.
+
+Name: ${a.name||'Agent'} | Market: ${a.market||'Atlanta'} | Experience: ${a.years||''}
+Focus: ${asA('focus').join(', ')||''} | Structure: ${asA('structure').join(', ')||''}
+GCI Target: ${a.gci_target||''} | Transactions: ${a.transactions_last||''}
+Primary goal: ${a.primary_goal||''} | Wants more: ${asA('want_more').join(', ')||''}
+Time drains: ${asA('time_drains').join(', ')||''}
+Lead leakage: ${asA('lead_leakage').join(', ')||''}
+Procrastinates: ${a.procrastinate||''}
+Strongest skill: ${asA('strength').join(', ')||''}
+Biggest bottleneck: ${asA('weakness').join(', ')||''}
+Energy drains: ${a.energy_drain||''}
+Breaks momentum: ${a.lose_momentum||''}
+Tone: ${asA('tone').join(', ')||''} | Formality: ${asA('formality').join(', ')||''}
+Brand words: ${a.brand_vibe||''} | Avoid: ${a.avoid_phrases||''}
+Self-intro: ${a.self_describe||''}
+
+Write this report in exact HTML, no markdown:
+
+<div class="ai-report">
+<div class="rpt-section"><div class="rpt-section-label">Executive Summary</div><div class="rpt-summary">[2-3 sentences. Name them. Reference their market, goal, and top bottleneck specifically.]</div></div>
+<div class="rpt-section"><div class="rpt-section-label">Your Top 3 AI Leverage Areas</div><div class="rpt-opps">
+<div class="rpt-opp"><div class="rpt-opp-rank">01</div><div class="rpt-opp-body"><div class="rpt-opp-title">[Tool name]</div><div class="rpt-opp-why">[Why this matches their specific answers]</div><div class="rpt-opp-win">[Concrete first win]</div></div></div>
+<div class="rpt-opp"><div class="rpt-opp-rank">02</div><div class="rpt-opp-body"><div class="rpt-opp-title">[Tool]</div><div class="rpt-opp-why">[Why]</div><div class="rpt-opp-win">[First win]</div></div></div>
+<div class="rpt-opp"><div class="rpt-opp-rank">03</div><div class="rpt-opp-body"><div class="rpt-opp-title">[Tool]</div><div class="rpt-opp-why">[Why]</div><div class="rpt-opp-win">[First win]</div></div></div>
+</div></div>
+<div class="rpt-section"><div class="rpt-section-label">Your AI Voice Profile</div><div class="rpt-voice-grid">
+<div class="rpt-voice-item"><span class="rpt-voice-key">Tone</span><span class="rpt-voice-val">${asA('tone').join(', ')||'—'}</span></div>
+<div class="rpt-voice-item"><span class="rpt-voice-key">Register</span><span class="rpt-voice-val">${asA('formality').join(', ')||'—'}</span></div>
+<div class="rpt-voice-item"><span class="rpt-voice-key">Brand words</span><span class="rpt-voice-val">${a.brand_vibe||'—'}</span></div>
+<div class="rpt-voice-item"><span class="rpt-voice-key">Always avoid</span><span class="rpt-voice-val">${a.avoid_phrases||'—'}</span></div>
+</div></div>
+<div class="rpt-section"><div class="rpt-section-label">30-Day Plan</div><div class="rpt-plan">
+<div class="rpt-week"><div class="rpt-week-label">Week 1</div><div class="rpt-week-task">[Specific first action with their top tool]</div></div>
+<div class="rpt-week"><div class="rpt-week-label">Week 2</div><div class="rpt-week-task">[Second action]</div></div>
+<div class="rpt-week"><div class="rpt-week-label">Week 3-4</div><div class="rpt-week-task">[What success looks like tied to their goal]</div></div>
+</div></div>
+</div>`;
+}
+
+async function runReport() {
+  buildReport();
+  (document.getElementById('topbar-title')||{}).textContent = 'Business Diagnostic — Your Report';
+  (document.getElementById('topbar-right')||{}).innerHTML = `
+    <button class="topbar-btn topbar-btn-ghost" onclick="downloadProfile()">↓ Download Profile</button>
+    <button class="topbar-btn topbar-btn-primary" onclick="saveToKWIT()">⊙ Activate in KWIT</button>
+  `;
+  showScreen('screen-report');
+}
+
+/* ============================================================
+   UTILITY HELPERS
+   ============================================================ */
+function firstName() {
+  return (state.answers.name || '').trim().split(' ')[0] || 'You';
+}
+
+function asArray(key) {
+  const v = state.answers[key];
+  if (!v) return [];
+  return Array.isArray(v) ? v : [v];
+}
+
+function has(key, ...vals) {
+  const arr = asArray(key);
+  return vals.some(v => arr.includes(v));
+}
+
+function contains(key, substr) {
+  return (state.answers[key] || '').toLowerCase().includes(substr.toLowerCase());
+}
+
+/* ============================================================
+   OPPORTUNITY ENGINE
+   Each opportunity has triggers (boolean functions).
+   Higher trigger count = higher rank.
+   matchReason() generates personalized justification.
+   ============================================================ */
+const opportunities = [
+  {
+    id: 'followup',
+    title: 'AI Follow-Up System',
+    desc: 'Your leads are going cold because follow-up is manual and inconsistent. AI drafts every follow-up in your voice — buyer check-ins, seller updates, re-engagement sequences — on schedule, without you starting from scratch each time.',
+    triggers: [
+      () => has('time_drains', 'Lead follow-up'),
+      () => has('weakness', 'Consistent follow-up'),
+      () => has('lead_leakage', 'After initial inquiry', 'Long-term nurture (6+ months)', 'Open house follow-up'),
+      () => has('want_more', 'Referrals', 'Repeat business'),
+      () => contains('procrastinate', 'follow'),
+      () => has('primary_goal', 'Referral engine', 'More volume'),
+    ],
+    impactLabel: 'High Impact', impactClass: 'ltag-high',
+    easeLabel:   'Easy Start',  easeClass:   'ltag-easy',
+    timeSaved:   '4–6 hrs/wk',
+    matchReasons: [
+      [() => has('time_drains', 'Lead follow-up'),       'Lead follow-up is in your top weekly time drains.'],
+      [() => has('weakness', 'Consistent follow-up'),    'You named consistent follow-up as your biggest weak spot.'],
+      [() => has('lead_leakage', 'After initial inquiry'), 'You flagged initial inquiry as a lead leakage point.'],
+      [() => has('lead_leakage', 'Long-term nurture (6+ months)'), 'Long-term nurture is where you said leads go cold.'],
+      [() => contains('procrastinate', 'follow'),         'You mentioned follow-up as something you procrastinate.'],
+    ]
+  },
+  {
+    id: 'listing',
+    title: 'Listing Description Writer',
+    desc: 'Listing descriptions are high-stakes, time-consuming, and written from scratch every time. AI generates on-brand property copy in under 2 minutes — tailored to your market and your voice.',
+    triggers: [
+      () => has('time_drains', 'Listing prep'),
+      () => has('focus', 'Residential Sellers', 'Luxury'),
+      () => has('want_more', 'Listings'),
+      () => contains('procrastinate', 'description'),
+      () => contains('energy_drain', 'scratch'),
+    ],
+    impactLabel: 'High Impact', impactClass: 'ltag-high',
+    easeLabel:   'Easy Start',  easeClass:   'ltag-easy',
+    timeSaved:   '2–3 hrs/wk',
+    matchReasons: [
+      [() => has('time_drains', 'Listing prep'),        'Listing prep is one of your named weekly time drains.'],
+      [() => has('focus', 'Residential Sellers'),        'Your primary focus is residential sellers — descriptions are a core output.'],
+      [() => has('focus', 'Luxury'),                     'Luxury listings require more polished copy — AI gives you a strong starting point in seconds.'],
+      [() => contains('procrastinate', 'description'),   'You specifically mentioned property descriptions as something you avoid.'],
+      [() => has('want_more', 'Listings'),               'You want more listings — strong descriptions support your listing presentation.'],
+    ]
+  },
+  {
+    id: 'social',
+    title: 'Social Content Batch Tool',
+    desc: 'You\'re spending hours on social with inconsistent results. AI batches a week of posts from your listings, market data, and closings in one 20-minute session. You approve, it posts.',
+    triggers: [
+      () => has('time_drains', 'Social media'),
+      () => has('weakness', 'Content & social'),
+      () => has('want_more', 'Online leads'),
+      () => contains('procrastinate', 'instagram') || contains('procrastinate', 'social') || contains('procrastinate', 'post'),
+      () => has('primary_goal', 'Market ownership'),
+    ],
+    impactLabel: 'High Impact', impactClass: 'ltag-high',
+    easeLabel:   'Moderate',    easeClass:   'ltag-easy',
+    timeSaved:   '3–4 hrs/wk',
+    matchReasons: [
+      [() => has('time_drains', 'Social media'),         'Social media is one of your biggest weekly time drains.'],
+      [() => has('weakness', 'Content & social'),         'You named content and social as a primary weak spot.'],
+      [() => contains('procrastinate', 'instagram') || contains('procrastinate', 'social'), 'You mentioned social or Instagram as something you put off.'],
+      [() => has('want_more', 'Online leads'),            'Online leads are a goal — consistent social directly supports this.'],
+    ]
+  },
+  {
+    id: 'sphere',
+    title: 'Sphere Nurture System',
+    desc: 'Your warmest leads — past clients and referral sources — are the most under-contacted segment in most businesses. AI drafts consistent, personal check-ins so your sphere stays warm without manual effort.',
+    triggers: [
+      () => has('want_more', 'Referrals', 'Repeat business'),
+      () => has('primary_goal', 'Referral engine'),
+      () => has('lead_leakage', 'Past clients / referral asks'),
+      () => has('time_drains', 'Lead follow-up'),
+    ],
+    impactLabel: 'High Impact', impactClass: 'ltag-high',
+    easeLabel:   'Easy Start',  easeClass:   'ltag-easy',
+    timeSaved:   '2–4 hrs/wk',
+    matchReasons: [
+      [() => has('want_more', 'Referrals'),               'Referrals are a stated business goal.'],
+      [() => has('want_more', 'Repeat business'),          'You want more repeat clients — sphere nurture is the primary driver.'],
+      [() => has('lead_leakage', 'Past clients / referral asks'), 'Past clients and referral asks are a named lead leakage point.'],
+      [() => has('primary_goal', 'Referral engine'),       'Building a referral engine is your #1 goal this year.'],
+    ]
+  },
+  {
+    id: 'email',
+    title: 'Email & Outreach Templates',
+    desc: 'You\'re rewriting variations of the same emails repeatedly. AI builds a permanent, personalized template library for every scenario — price reductions, offer presentations, expired outreach — ready in seconds.',
+    triggers: [
+      () => has('time_drains', 'Writing & emails'),
+      () => has('weakness', 'Writing'),
+      () => contains('energy_drain', 'same'),
+      () => contains('energy_drain', 'email') || contains('energy_drain', 'scratch'),
+      () => contains('ai_first_win', 'email'),
+    ],
+    impactLabel: 'Medium Impact', impactClass: 'ltag-med',
+    easeLabel:   'Easy Start',    easeClass:   'ltag-easy',
+    timeSaved:   '2–3 hrs/wk',
+    matchReasons: [
+      [() => has('time_drains', 'Writing & emails'),      'Writing and emails made your top weekly time drains.'],
+      [() => contains('energy_drain', 'same'),             'You flagged repeating the same content as an energy drain.'],
+      [() => contains('energy_drain', 'scratch'),          'Writing from scratch came up in your energy drain answers.'],
+      [() => contains('ai_first_win', 'email'),            'You specifically mentioned email as your first AI win.'],
+    ]
+  },
+  {
+    id: 'roleplay',
+    title: 'Conversation Roleplay Lab',
+    desc: 'Pricing conversations, listing objections, and buyer hesitation kill deals before they start. The Roleplay Lab lets you practice high-stakes conversations with AI before they happen in real life.',
+    triggers: [
+      () => has('weakness', 'Pricing conversations', 'Cold prospecting'),
+      () => contains('lose_momentum', 'listing appointment') || contains('lose_momentum', 'call'),
+      () => has('primary_goal', 'More volume', 'Market ownership'),
+    ],
+    impactLabel: 'High Impact', impactClass: 'ltag-high',
+    easeLabel:   'Moderate',    easeClass:   'ltag-easy',
+    timeSaved:   '1–2 hrs/wk',
+    matchReasons: [
+      [() => has('weakness', 'Pricing conversations'),    'Pricing conversations are a named weak spot.'],
+      [() => has('weakness', 'Cold prospecting'),          'Cold prospecting came up as an area where you stall.'],
+      [() => contains('lose_momentum', 'listing appointment'), 'Listing appointments are where you said you lose momentum.'],
+    ]
+  },
+  {
+    id: 'crm',
+    title: 'CRM Cleanup & Notes AI',
+    desc: 'Your database is likely your most valuable asset and your most neglected one. AI summarizes call notes, writes CRM entries, and flags contacts who haven\'t heard from you in 90+ days.',
+    triggers: [
+      () => has('time_drains', 'Admin & paperwork', 'Status update calls'),
+      () => has('weakness', 'Time management'),
+      () => has('lead_leakage', 'Long-term nurture (6+ months)'),
+    ],
+    impactLabel: 'Medium Impact', impactClass: 'ltag-med',
+    easeLabel:   'Easy Start',    easeClass:   'ltag-easy',
+    timeSaved:   '2–3 hrs/wk',
+    matchReasons: [
+      [() => has('time_drains', 'Admin & paperwork'),     'Admin and paperwork made your weekly time drain list.'],
+      [() => has('weakness', 'Time management'),           'You flagged time management as a weak area — CRM clarity directly helps.'],
+      [() => has('lead_leakage', 'Long-term nurture (6+ months)'), 'Long-term nurture leads going cold often signals a database problem.'],
+    ]
+  },
+  {
+    id: 'marketing',
+    title: 'Campaign Builder',
+    desc: 'Just-listed, just-sold, and neighborhood content campaigns built from scratch take hours. AI generates full campaign copy and a posting schedule from a single listing address.',
+    triggers: [
+      () => has('time_drains', 'Marketing'),
+      () => has('primary_goal', 'Market ownership'),
+      () => has('focus', 'Luxury', 'New Construction'),
+      () => has('want_more', 'Listings'),
+    ],
+    impactLabel: 'High Impact', impactClass: 'ltag-high',
+    easeLabel:   'Moderate',    easeClass:   'ltag-easy',
+    timeSaved:   '3–4 hrs/wk',
+    matchReasons: [
+      [() => has('time_drains', 'Marketing'),              'Marketing made your top weekly time drains.'],
+      [() => has('primary_goal', 'Market ownership'),      'Dominating your market requires consistent campaign output — this automates it.'],
+      [() => has('focus', 'Luxury'),                       'Luxury marketing demands polished content — AI gives you a professional base quickly.'],
+    ]
+  },
+];
+
+function scoreOpportunities() {
+  return opportunities.map(opp => {
+    const score = opp.triggers.filter(t => { try { return t(); } catch(e){ return false; } }).length;
+    return { ...opp, score };
+  }).sort((a,b) => b.score - a.score).slice(0, 5);
+}
+
+function getMatchReason(opp) {
+  if (!opp.matchReasons) return 'Matched to your business profile.';
+  for (const [triggerFn, reason] of opp.matchReasons) {
+    try { if (triggerFn()) return reason; } catch(e){}
+  }
+  return 'Matched based on your overall business profile.';
+}
+
+/* ============================================================
+   REPORT GENERATORS
+   ============================================================ */
+function generateSummary(topOpps) {
+  const name    = firstName();
+  const focus   = asArray('focus').join(' and ') || 'real estate';
+  const years   = state.answers.years || 'several years';
+  const market  = state.answers.market || 'your market';
+  const goal    = state.answers.primary_goal || 'growing their business';
+  const struct  = asArray('structure')[0] || 'solo';
+  const weakness= asArray('weakness')[0] || '';
+  const drains  = asArray('time_drains');
+  const leakage = asArray('lead_leakage');
+
+  const goalMap = {
+    'More volume':     'closing more transactions',
+    'Higher GCI':      'increasing commission income per deal',
+    'Referral engine': 'building a referral-first business',
+    'Market ownership':'owning a specific market segment',
+    'Time back':       'maintaining production with fewer working hours',
+    'Build a team':    'scaling through delegation and team growth',
+  };
+
+  const goalText = goalMap[goal] || goal;
+  const totalHrs = topOpps.reduce((a, o) => { const m = o.timeSaved.match(/(\d+)/); return a + (m ? parseInt(m[1]) : 0); }, 0);
+
+  // Diagnostic punch line — core constraint, made specific
+  const punchMap = {
+    'Consistent follow-up': `Right now, this business is constrained less by opportunity and more by execution — specifically, the inability to follow up consistently without that follow-up being entirely dependent on available mental energy.`,
+    'Content & social':     `Right now, this business is constrained less by market conditions and more by invisible inconsistency — specifically, a content and social presence that goes silent whenever life gets busy.`,
+    'Writing':              `Right now, this business is constrained less by pipeline and more by the time cost of communicating — specifically, every client-facing message requiring a full draft from scratch.`,
+    'Cold prospecting':     `Right now, this business is constrained less by leads and more by the friction of generating them — specifically, cold prospecting that requires more willpower than systems.`,
+    'Tech & tools':         `Right now, this business is constrained less by skill and more by infrastructure — specifically, the absence of systems that work when you're not actively running them.`,
+    'Pricing conversations':`Right now, this business is constrained less by market knowledge and more by confidence in the room — specifically, pricing conversations that require preparation that rarely happens.`,
+    'Time management':      `Right now, this business is constrained less by production capacity and more by fragmented attention — specifically, a schedule that reacts to the day instead of directing it.`,
+    'Self-promotion':       `Right now, this business is constrained less by client results and more by visibility — specifically, a reluctance to talk about those results consistently and publicly.`,
+  };
+
+  const punchLine = weakness && punchMap[weakness]
+    ? punchMap[weakness]
+    : `Right now, this business is constrained less by opportunity and more by the manual execution cost of staying consistent — across follow-up, content, and outbound communication.`;
+
+  const leakLine = leakage.length
+    ? `You are losing deals at ${leakage.slice(0,2).join(' and ').toLowerCase()} — not because of skill, but because follow-up at those stages is manual and therefore inconsistent.`
+    : '';
+
+  const weakLine = weakness
+    ? `The primary constraint to fix is <strong>${weakness.toLowerCase()}</strong>. It is mapped to specific workflows in Section E below.`
+    : '';
+
+  return {
+    p1: `${name} is a ${struct.toLowerCase()} operating in ${market} with ${years} in ${focus}. Stated goal: <strong>${goalText}</strong>.`,
+    p2: drains.length
+      ? `You are losing time every week to <strong>${drains.slice(0,3).join(', ').toLowerCase()}</strong>. This work is not manual by necessity — it is manual by default. ${leakLine}`
+      : 'Time drain data was not captured — retake the assessment for a sharper analysis.',
+    p3: `${punchLine} ${weakLine} This profile identifies <strong>${totalHrs}+ recoverable hours per week</strong>. That time should be in prospecting, relationships, and pipeline — not in content creation and status emails.`,
+  };
+}
+
+function generateTimeSuck() {
+  const drains = asArray('time_drains');
+  const leakage = asArray('lead_leakage');
+
+  const automate = drains.filter(d =>
+    ['Writing & emails','Social media','Lead follow-up','Listing prep','Marketing'].includes(d)
+  );
+  const assist = drains.filter(d =>
+    ['Admin & paperwork','Scheduling','Status update calls'].includes(d)
+  );
+  const keepHuman = [
+    'Listing presentations', 'Pricing strategy conversations',
+    'Negotiating offers', 'In-person relationship building', 'Client trust moments'
+  ];
+
+  return { automate, assist, keepHuman, leakage };
+}
+
+function generateBottlenecks(topOpps) {
+  const weakness   = asArray('weakness')[0] || '';
+  const drains     = asArray('time_drains');
+  const leakage    = asArray('lead_leakage');
+  const procr      = state.answers.procrastinate || '';
+  const energyDr   = state.answers.energy_drain || '';
+  const loseMom    = state.answers.lose_momentum || '';
+
+  const cards = [];
+
+  if (weakness) {
+    cards.push({
+      icon: '⚠', iconCls: 'bc-red',
+      label: 'Primary Constraint',
+      title: weakness,
+      desc: `This is not a knowledge gap — it is an execution gap. The skill exists. The system to make it consistent does not. ${topOpps[0]?.title || 'Your top recommendation'} is the direct fix.`
+    });
+  }
+
+  if (leakage.length) {
+    cards.push({
+      icon: '↓', iconCls: 'bc-gold',
+      label: 'Active Lead Leakage',
+      title: leakage.slice(0,2).join(' & '),
+      desc: 'You are losing deals at these stages — not because of skill, but because manual follow-up is too inconsistent to cover every contact at every stage. This should not be manual anymore.'
+    });
+  }
+
+  if (procr) {
+    cards.push({
+      icon: '⏸', iconCls: 'bc-ink',
+      label: 'Chronic Avoidance',
+      title: procr.length > 60 ? procr.slice(0, 60) + '…' : procr,
+      desc: 'Consistently avoided tasks do not get done — they create invisible drag on production. AI removes the blank-page friction that causes the avoidance in the first place.'
+    });
+  }
+
+  if (energyDr) {
+    cards.push({
+      icon: '⚡', iconCls: 'bc-gold',
+      label: 'Energy Drain',
+      title: energyDr.length > 55 ? energyDr.slice(0, 55) + '…' : energyDr,
+      desc: 'Work that depletes energy — even when completed — signals a task that is below your level of leverage. AI absorbs the repetitive execution so your attention goes where it actually compounds.'
+    });
+  }
+
+  if (cards.length < 2) {
+    cards.push({
+      icon: '◎', iconCls: 'bc-green',
+      label: 'Scale Opportunity',
+      title: 'Systematize what is already working',
+      desc: 'The constraint here is not skill — it is repeatability. Your best work needs to become the default output, not the occasional result. That is precisely what AI makes possible.'
+    });
+  }
+
+  return cards;
+}
+
+function generateSkillGaps() {
+  const weakness = asArray('weakness')[0] || '';
+  const drains   = asArray('time_drains');
+  const leakage  = asArray('lead_leakage');
+
+  const gapMap = {
+    'Consistent follow-up':  { tool: 'AI Follow-Up System',     why: 'Automates every check-in in your voice, on schedule — no manual tracking' },
+    'Content & social':      { tool: 'Social Content Batch Tool',why: 'Batch a week of content in one session — no more blank-screen avoidance' },
+    'Writing':               { tool: 'Email & Template Library', why: 'Build a permanent library of AI-personalized templates for every scenario' },
+    'Cold prospecting':      { tool: 'Roleplay Lab + Outreach AI', why: 'Practice cold outreach conversations and generate personalized scripts' },
+    'Tech & tools':          { tool: 'KWIT Guided Workflows',    why: 'Step-by-step workflows — no tech knowledge required, no setup overwhelm' },
+    'Pricing conversations': { tool: 'Conversation Roleplay Lab',why: 'Practice price reduction and pricing objection conversations before they happen' },
+    'Time management':       { tool: 'Weekly AI Planning System',why: 'AI helps you plan, batch tasks, and protect focus time each week' },
+    'Self-promotion':        { tool: 'Personal Brand Content AI', why: 'Consistently tell your story without the discomfort of writing about yourself' },
+  };
+
+  const gaps = [];
+  if (weakness && gapMap[weakness]) {
+    gaps.push({ problem: weakness, ...gapMap[weakness] });
+  }
+
+  if (has('time_drains', 'Lead follow-up') && weakness !== 'Consistent follow-up') {
+    gaps.push({ problem: 'Lead follow-up execution', tool: 'AI Follow-Up System', why: "Turns your follow-up from reactive to systematic — runs even when you're busy" });
+  }
+  if (has('time_drains', 'Social media') && weakness !== 'Content & social') {
+    gaps.push({ problem: 'Social media output', tool: 'Social Content Batch Tool', why: 'Create a month of content in one afternoon — stops the weekly scramble' });
+  }
+  if (has('lead_leakage', 'Past clients / referral asks')) {
+    gaps.push({ problem: 'Referral contact cadence', tool: 'Sphere Nurture System', why: 'Keeps past clients warm with consistent, personal touchpoints — without manual reminders' });
+  }
+
+  return gaps.slice(0, 4);
+}
+
+function generateStack(topOpps) {
+  return topOpps.slice(0, 3).map((opp, i) => ({
+    num:    `0${i + 1}`,
+    name:   opp.title,
+    why:    opp.desc,
+    match:  getMatchReason(opp),
+    tag:    i === 0 ? 'Start Here — Week 1' : i === 1 ? 'Add in Week 2' : 'Add in Week 3–4',
+  }));
+}
+
+function generate30DayPlan(topOpps) {
+  return [
+    {
+      week: 'Week 1', focus: 'First Real Win',
+      tasks: [
+        `Set up your AI communication profile`,
+        `Use ${topOpps[0]?.title || 'your top tool'} for one live task`,
+        `Save your first AI output to your template library`,
+      ]
+    },
+    {
+      week: 'Week 2', focus: 'Add the Second Tool',
+      tasks: [
+        `Activate ${topOpps[1]?.title || 'tool #2'}`,
+        `Batch 3 follow-up messages using AI`,
+        `Refine your voice settings based on first outputs`,
+      ]
+    },
+    {
+      week: 'Week 3', focus: 'Build the Habit',
+      tasks: [
+        `Block a weekly 30-min AI session`,
+        `Batch your first week of social content`,
+        `Start a reusable template library`,
+      ]
+    },
+    {
+      week: 'Week 4', focus: 'Measure & Expand',
+      tasks: [
+        `Track hours saved vs. Week 1`,
+        `Add ${topOpps[2]?.title || 'tool #3'}`,
+        `Identify the next manual task to eliminate`,
+      ]
+    }
+  ];
+}
+
+/* ============================================================
+   BUILD REPORT
+   ============================================================ */
+function buildReport() {
+  const name      = firstName();
+  const market    = state.answers.market || 'your market';
+  const topOpps   = scoreOpportunities();
+  const summary   = generateSummary(topOpps);
+  const timeSuck  = generateTimeSuck();
+  const bottlenecks = generateBottlenecks(topOpps);
+  const gaps      = generateSkillGaps();
+  const stack     = generateStack(topOpps);
+  const plan      = generate30DayPlan(topOpps);
+
+  const totalHrs  = topOpps.reduce((a, o) => { const m = o.timeSaved.match(/(\d+)/); return a + (m ? parseInt(m[1]) : 0); }, 0);
+  const focus     = asArray('focus').join(' & ') || 'Real Estate';
+
+  // Hero
+  document.getElementById('report-name').textContent = `${name}'s AI Opportunity Report`;
+  document.getElementById('report-tagline').textContent =
+    `Business diagnostic for ${market}. Ranked recommendations based on your production goals, time drains, and skill profile.`;
+
+  document.getElementById('report-hero-stats').innerHTML = `
+    <div class="hero-stat"><span class="hero-stat-val">${topOpps.length}</span><div class="hero-stat-label">Leverage Areas</div></div>
+    <div class="hero-stat"><span class="hero-stat-val">${totalHrs}+</span><div class="hero-stat-label">Hrs/Wk Recoverable</div></div>
+    <div class="hero-stat"><span class="hero-stat-val">${asArray('time_drains').length}</span><div class="hero-stat-label">Time Drains ID'd</div></div>
+  `;
+
+  // First tool for CTA
+  const firstTool = topOpps[0]?.title || 'Follow-Up System';
+  document.getElementById('rab-first-tool-btn').textContent = `▷ Open First Workflow: ${firstTool}`;
+
+  // Update sidebar avatar
+  const initials = (state.answers.name || 'A').charAt(0).toUpperCase();
+  (document.getElementById('sidebar-avatar')||{}).textContent = initials;
+  (document.getElementById('sidebar-name')||{}).textContent = state.answers.name || 'Agent';
+
+  document.getElementById('report-body').innerHTML = `
+
+    <!-- SECTION A: EXECUTIVE SUMMARY -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <div class="rs-icon">◈</div>
+        <div>
+          <div class="rs-label">Section A</div>
+          <div class="rs-title">Diagnostic Summary</div>
+        </div>
+      </div>
+      <div class="exec-card">
+        <p>${summary.p1}</p>
+        <p>${summary.p2}</p>
+        <p>${summary.p3}</p>
+        <div class="exec-callouts">
+          <div class="exec-callout">
+            <span class="ec-val">${totalHrs}+</span>
+            <div class="ec-label">Hrs/wk recoverable</div>
+          </div>
+          <div class="exec-callout">
+            <span class="ec-val">${asArray('lead_leakage').length || '—'}</span>
+            <div class="ec-label">Lead leakage points</div>
+          </div>
+          <div class="exec-callout">
+            <span class="ec-val">${asArray('time_drains').length || '—'}</span>
+            <div class="ec-label">Time drains identified</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION B: TOP LEVERAGE AREAS -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <div class="rs-icon">🎯</div>
+        <div>
+          <div class="rs-label">Section B</div>
+          <div class="rs-title">Top 5 AI Leverage Areas — Ranked for Your Business</div>
+        </div>
+      </div>
+      <div class="leverage-list">
+        ${topOpps.map((opp, i) => `
+          <div class="leverage-card ${i === 0 ? 'rank-1' : ''}">
+            <div class="leverage-rank">0${i+1}</div>
+            <div class="leverage-main">
+              ${i === 0 ? `<div class="leverage-rank-1-badge">★ Start Here</div>` : ''}
+              <div class="leverage-title">${opp.title}</div>
+              ${i === 0 ? `<div class="leverage-rank-1-directive">If you implement nothing else from this report, implement this first.</div>` : ''}
+              <div class="leverage-desc">${opp.desc}</div>
+              <div class="leverage-tags">
+                <span class="ltag ${opp.impactClass}">${opp.impactLabel}</span>
+                <span class="ltag ${opp.easeClass}">${opp.easeLabel}</span>
+                <span class="ltag ltag-time">${opp.timeSaved} saved/wk</span>
+              </div>
+            </div>
+            <div class="leverage-time">
+              <span class="leverage-time-val">${opp.timeSaved}</span>
+              <span class="leverage-time-label">Saved/week</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- SECTION C: TIME ANALYSIS -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <div class="rs-icon">⏱</div>
+        <div>
+          <div class="rs-label">Section C</div>
+          <div class="rs-title">Time & Lead Leakage Analysis</div>
+        </div>
+      </div>
+      <div class="time-grid">
+        <div class="time-card">
+          <div class="time-card-head tc-red"><div class="tc-dot"></div> Should Not Be Manual</div>
+          <ul class="time-items">
+            ${timeSuck.automate.map(d => `<li>${d}</li>`).join('') || '<li>Complete the assessment for specific recommendations</li>'}
+            ${timeSuck.leakage.length ? `<li style="color:var(--red);font-size:11px;padding-top:10px;font-weight:600;">Losing deals at: ${timeSuck.leakage.slice(0,2).join(', ')}</li>` : ''}
+          </ul>
+        </div>
+        <div class="time-card">
+          <div class="time-card-head tc-gold"><div class="tc-dot"></div> AI Drafts, You Decide</div>
+          <ul class="time-items">
+            ${timeSuck.assist.length
+              ? timeSuck.assist.map(d => `<li>${d} — first draft is AI's job</li>`).join('')
+              : '<li>Scheduling and coordination tasks</li>'
+            }
+            <li>Meeting follow-up notes</li>
+            <li>Offer summary write-ups</li>
+          </ul>
+        </div>
+        <div class="time-card">
+          <div class="time-card-head tc-green"><div class="tc-dot"></div> Stays Human — Do Not Automate</div>
+          <ul class="time-items">
+            ${timeSuck.keepHuman.map(d => `<li>${d}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION D: BOTTLENECK ANALYSIS -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <div class="rs-icon">⚠</div>
+        <div>
+          <div class="rs-label">Section D</div>
+          <div class="rs-title">Production Bottleneck Map</div>
+        </div>
+      </div>
+      <div class="bottleneck-grid">
+        ${bottlenecks.map(b => `
+          <div class="bottleneck-card">
+            <div class="bc-icon ${b.iconCls}">${b.icon}</div>
+            <div class="bc-content">
+              <div class="bc-label">${b.label}</div>
+              <div class="bc-title">${b.title}</div>
+              <div class="bc-desc">${b.desc}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- SECTION E: SKILL GAP MAP -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <div class="rs-icon">◇</div>
+        <div>
+          <div class="rs-label">Section E</div>
+          <div class="rs-title">Gap → Workflow Map</div>
+        </div>
+      </div>
+      <div class="skill-map">
+        ${gaps.length ? gaps.map(g => `
+          <div class="skill-row">
+            <div class="skill-problem">
+              <strong>${g.problem}</strong>
+              <span>This is where time, deals, or momentum are being lost — not from lack of ability, but from the absence of a system.</span>
+            </div>
+            <div class="skill-arrow">→</div>
+            <div class="skill-solution">
+              <strong>${g.tool}</strong>
+              <span>${g.why}. Uses your saved voice profile automatically.</span>
+            </div>
+          </div>
+        `).join('') : `
+          <div class="skill-row">
+            <div class="skill-problem"><strong>Systematizing what works</strong><span>The constraint is not skill — it is repeatability. Your best outputs need to become the default, not the exception.</span></div>
+            <div class="skill-arrow">→</div>
+            <div class="skill-solution"><strong>AI Efficiency Stack</strong><span>Turns your strongest outputs into reusable templates across all KWIT tools.</span></div>
+          </div>
+        `}
+      </div>
+    </div>
+
+    <!-- SECTION F: STARTING STACK -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <div class="rs-icon">🛠</div>
+        <div>
+          <div class="rs-label">Section F</div>
+          <div class="rs-title">Your Recommended Starting Stack</div>
+        </div>
+      </div>
+      <div class="stack-cards">
+        ${stack.map((s, i) => `
+          <div class="stack-card">
+            <div class="stack-num">${s.num}</div>
+            <div class="stack-name">${s.name}</div>
+            <div class="stack-why">${s.why.length > 100 ? s.why.slice(0, 100) + '…' : s.why}</div>
+            <div class="stack-match">
+              <span class="stack-match-label">Why you were matched to this</span>
+              ${s.match}
+            </div>
+            <div class="stack-tag">${s.tag}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- SECTION G: 30-DAY PLAN -->
+    <div class="report-section">
+      <div class="report-section-header">
+        <div class="rs-icon">📅</div>
+        <div>
+          <div class="rs-label">Section G</div>
+          <div class="rs-title">30-Day Adoption Plan</div>
+        </div>
+      </div>
+      <div class="plan-grid">
+        ${plan.map(w => `
+          <div class="week-card">
+            <div class="week-label">${w.week}</div>
+            <div class="week-focus">${w.focus}</div>
+            <ul class="week-tasks">
+              ${w.tasks.map(t => `<li>${t}</li>`).join('')}
+            </ul>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- HANDOFF PANEL -->
+    <div class="report-section">
+      <div class="handoff-panel">
+        <div class="handoff-inner">
+          <div class="handoff-text">
+            <div class="handoff-eyebrow">Activate Your Profile</div>
+            <div class="handoff-title">The diagnostic is complete.<br>Now put it to work.</div>
+            <div class="handoff-desc">Saving your profile activates it across every KWIT tool — your voice, your goals, and your business context carry forward automatically. Nothing has to be re-explained. Every workflow starts from where this report left off.</div>
+          </div>
+          <div class="handoff-buttons">
+            <button class="hbtn hbtn-download" onclick="downloadProfile()">↓ Download My AI Profile (.txt)</button>
+            <button class="hbtn hbtn-save" id="hbtn-save" onclick="saveToKWIT()">⊙ Activate Profile in KWIT</button>
+            <button class="hbtn hbtn-tool" onclick="launchFirstTool()">▷ Open Your First Workflow: ${firstTool}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  `;
+}
+
+/* ============================================================
+   ACTIONS: SAVE, LAUNCH, DOWNLOAD
+   ============================================================ */
+
+function showToast(title, sub, color) {
+  const toast = document.getElementById('toast');
+  toast.style.borderLeftColor = color || 'var(--green)';
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-sub').textContent = sub;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3800);
+}
+
+function saveToKWIT() {
+  if (state.saved) {
+    showToast('Profile already active', 'All KWIT tools are using your business and voice profile.', 'var(--ink-40)');
+    return;
+  }
+  state.saved = true;
+
+  // Update buttons
+  const hbtn = document.getElementById('hbtn-save');
+  if (hbtn) { hbtn.textContent = '✓ Profile Active in KWIT'; hbtn.classList.add('saved'); }
+  const rabBtn = document.getElementById('rab-save-btn');
+  if (rabBtn) { rabBtn.textContent = '✓ Active'; rabBtn.style.background = 'var(--green-muted)'; rabBtn.style.color = 'var(--green)'; }
+
+  // Update sidebar role text
+  const roleEl = document.querySelector('.agent-info-role');
+  if (roleEl) roleEl.textContent = 'AI profile active — all tools connected';
+
+  showToast(
+    'Your AI profile is now active across KWIT',
+    'All tools will use your voice, goals, and business context automatically.',
+    'var(--green)'
+  );
+}
+
+function launchFirstTool() {
+  const topOpps = scoreOpportunities();
+  const tool = topOpps[0]?.title || 'Follow-Up Writer';
+  showToast(
+    `Opening: ${tool}`,
+    'Your business profile is pre-loaded. This workflow already knows your voice and goals.',
+    'var(--gold)'
+  );
+}
+
+/* ============================================================
+   DOWNLOAD PROFILE (.TXT)
+   ============================================================ */
+function downloadProfile() {
+  const a     = state.answers;
+  const name  = firstName();
+  const topOpps = scoreOpportunities();
+  const stack = generateStack(topOpps);
+  const tone  = asArray('tone').join(', ') || 'Warm and professional';
+  const now   = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+  const txt = `
+================================================================
+  KWIT AGENT AI PROFILE
+  ${name} — ${a.market || 'Market not specified'}
+  Generated: ${now}
+================================================================
+
+AGENT OVERVIEW
+──────────────
+Name:              ${a.name || '—'}
+Market:            ${a.market || '—'}
+Experience:        ${a.years || '—'}
+Business Focus:    ${asArray('focus').join(', ') || '—'}
+Team Structure:    ${asArray('structure').join(', ') || '—'}
+GCI Target:        ${a.gci_target || '—'}
+Transactions/Year: ${a.transactions_last || '—'}
+
+PRODUCTION GOALS
+────────────────
+Primary Goal:      ${a.primary_goal || '—'}
+Want More Of:      ${asArray('want_more').join(', ') || '—'}
+
+TIME DRAINS (What to Automate)
+───────────────────────────────
+${asArray('time_drains').map(d => `• ${d}`).join('\n') || '• Not specified'}
+
+Lead Leakage Points:
+${asArray('lead_leakage').map(d => `• ${d}`).join('\n') || '• Not specified'}
+
+Procrastinated Tasks:
+${a.procrastinate || 'Not specified'}
+
+STRENGTHS & BOTTLENECKS
+───────────────────────
+Strongest Skill:    ${asArray('strength').join(', ') || '—'}
+Biggest Bottleneck: ${asArray('weakness').join(', ') || '—'}
+Energy Drains:      ${a.energy_drain || '—'}
+Momentum Breakers:  ${a.lose_momentum || '—'}
+
+AI READINESS
+────────────
+Comfort Level:      ${a.ai_comfort || '—'} / 5
+Tools Used Before:  ${asArray('ai_used').join(', ') || 'None'}
+Biggest Hesitation: ${a.ai_hesitation || '—'}
+First Win Needed:   ${a.ai_first_win || '—'}
+
+================================================================
+BRAND VOICE & COMMUNICATION PROFILE
+(Use this section in any AI tool as your base prompt)
+================================================================
+
+Tone:           ${tone}
+Register:       ${asArray('formality').join(', ') || '—'}
+Brand Words:    ${a.brand_vibe || '—'}
+Avoid:          ${a.avoid_phrases || '—'}
+
+How I introduce myself:
+"${a.self_describe || '—'}"
+
+─────────────────────────────────────────
+INSTRUCTIONS FOR ANY AI TOOL:
+─────────────────────────────────────────
+I am a real estate agent named ${a.name || '[name]'} based in ${a.market || '[market]'}.
+
+My communication tone is ${tone.toLowerCase()}.
+My register: ${asArray('formality').join(', ').toLowerCase() || 'balanced'}.
+My brand words: ${a.brand_vibe || '[add yours]'}.
+Avoid these phrases: ${a.avoid_phrases || '[add yours]'}.
+
+When writing for me:
+- Always write in first person
+- Sound like a real person, not a corporate template
+- Match my voice — not a generic AI assistant voice
+- Default to ${asArray('formality')[0]?.toLowerCase() || 'conversational'} language
+- Keep sentences tight. Avoid filler phrases.
+
+My intro to clients: "${a.self_describe || '[add your intro]'}"
+
+================================================================
+TOP AI LEVERAGE AREAS (Ranked for This Business)
+================================================================
+${topOpps.map((o, i) => `
+${i+1}. ${o.title}
+   ${o.desc}
+   → Match reason: ${getMatchReason(o)}
+   → Est. time saved: ${o.timeSaved}/week
+`).join('')}
+
+================================================================
+RECOMMENDED STARTING STACK
+================================================================
+${stack.map(s => `
+${s.num}. ${s.name}  [${s.tag}]
+   Matched because: ${s.match}
+`).join('')}
+
+30-DAY PLAN SUMMARY
+────────────────────
+Week 1: First win with ${topOpps[0]?.title || 'your top tool'}
+Week 2: Add ${topOpps[1]?.title || 'tool #2'}
+Week 3: Batch content — build template library
+Week 4: Measure hours saved — expand stack
+
+================================================================
+KWIT Agent Training Portal — Business Diagnostic
+This profile is reusable. Paste it into any AI tool as context.
+Re-run anytime your business changes.
+================================================================
+`.trim();
+
+  const blob = new Blob([txt], { type: 'text/plain' });
+  const url  = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href     = url;
+  link.download = `kwit-ai-profile-${(a.name || 'agent').toLowerCase().replace(/\s+/g, '-')}.txt`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+
+  showToast('Profile downloaded', 'Paste the AI instructions section into any AI tool to get started.', 'var(--red)');
+}
+
+
+/* Platform navigation — posts to parent hub if in iframe, else no-op */
+function parentNav(viewId) {
+  try { window.parent.postMessage({ type: 'KWIT_NAV', view: viewId }, '*'); } catch(e){}
+}
+
+
+</script>
+</html>

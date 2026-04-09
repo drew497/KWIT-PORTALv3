@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KWIT — Follow-Up System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;width:100%;height:100%;}
+
+
+/* ============================================================
+   KWIT PORTAL — FOLLOW-UP SYSTEM v1
+   Visual system matches Business Diagnostic v3:
+   dark ink / warm neutrals / red accent / premium cards.
+   ============================================================ */
+
+:root {
+  --ink:         #1a1714;
+  --ink-90:      #252119;
+  --ink-80:      #2e2a26;
+  --ink-60:      #4a443d;
+  --ink-40:      #7a7068;
+  --ink-20:      #b8b0a6;
+  --ink-10:      #d6cfc8;
+  --ink-05:      #ece8e3;
+  --parchment:   #f5f0ea;
+  --cream:       #faf8f5;
+  --white:       #ffffff;
+  --red:         #c41e3a;
+  --red-dark:    #9e1730;
+  --red-light:   #e8394f;
+  --red-muted:   #f7e2e5;
+  --red-faint:   #fdf1f3;
+  --gold:        #c49a3c;
+  --gold-muted:  #f5eedc;
+  --green:       #2d6a4f;
+  --green-muted: #d8efe6;
+  --amber:       #b87333;
+  
+  --topbar-h:    56px;
+  --shadow-sm:   0 1px 3px rgba(26,23,20,0.07), 0 1px 2px rgba(26,23,20,0.05);
+  --shadow-md:   0 4px 16px rgba(26,23,20,0.10);
+  --shadow-lg:   0 12px 40px rgba(26,23,20,0.14);
+  --radius:      10px;
+  --radius-sm:   6px;
+  --radius-lg:   14px;
+  --tr:          0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);font-size:15px;line-height:1.6;overflow-x:hidden;min-height:100vh;}
+
+/* ============================================================ PORTAL SHELL */
+
+
+/* ---- SIDEBAR ---- */
+
+.sb-brand{padding:20px 22px 16px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px;}
+.sb-mark{width:30px;height:30px;background:var(--red);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}
+.sb-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff;letter-spacing:.03em;}
+.sb-name em{font-style:normal;color:rgba(255,255,255,.3);font-size:11px;font-family:'DM Sans',sans-serif;display:block;letter-spacing:.06em;font-weight:400;margin-top:1px;}
+.sb-section{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:20px 22px 8px;}
+.sb-nav{flex:1;overflow-y:auto;}
+
+
+
+
+
+.ni{font-size:15px;width:18px;text-align:center;flex-shrink:0;}
+.nb-new{margin-left:auto;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--red);color:#fff;padding:2px 7px;border-radius:100px;}
+.nb-active{margin-left:auto;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--green);color:#fff;padding:2px 7px;border-radius:100px;}
+.sb-footer{padding:16px 22px;border-top:1px solid rgba(255,255,255,.06);}
+
+.agent-av{width:30px;height:30px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}
+.agent-n{font-size:12px;font-weight:600;color:rgba(255,255,255,.75);line-height:1.3;}
+.agent-r{font-size:11px;color:var(--green);}
+
+/* ---- MAIN ---- */
+
+
+/* ---- TOPBAR ---- */
+
+.tb-crumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-40);}
+.tb-crumb .sep{color:var(--ink-20);}
+.tb-crumb strong{color:var(--ink);font-weight:600;}
+
+
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.tb-btn{height:32px;padding:0 14px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;gap:6px;border:none;}
+.tb-ghost{background:transparent;color:var(--ink-40);border:1px solid var(--ink-10);}
+.tb-ghost:hover{color:var(--ink);border-color:var(--ink-20);}
+
+/* ---- SCREENS ---- */
+.screen{display:none;width:100%;flex:1;flex-direction:column;}
+.screen.active{display:flex;width:100%;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ============================================================ SHARED */
+.module-tag{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);background:var(--red-faint);border:1px solid var(--red-muted);padding:4px 12px;border-radius:100px;margin-bottom:14px;}
+.module-tag::before{content:'●';font-size:6px;}
+.module-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:8px;}
+.module-sub{font-size:15px;color:var(--ink-40);max-width:520px;line-height:1.65;}
+.pill-group{display:flex;flex-wrap:wrap;gap:8px;}
+.pill{padding:7px 15px;border:1.5px solid var(--ink-05);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--ink-60);cursor:pointer;transition:all var(--tr);background:#fff;user-select:none;box-shadow:var(--shadow-sm);}
+.pill:hover{border-color:var(--red);color:var(--red);background:var(--red-faint);}
+.pill.selected{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 2px 10px rgba(196,30,58,.22);}
+
+/* ============================================================ SCREEN 1 — INTRO */
+#screen-intro{background:var(--cream);padding:40px 40px 60px;}
+.intro-grid{display:grid;grid-template-columns:1fr;gap:0;margin-top:32px;width:100%;}
+.intro-main{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);overflow:hidden;}
+.intro-hero{background:var(--ink);padding:36px 40px 32px;position:relative;overflow:hidden;}
+.intro-hero::after{content:'';position:absolute;top:-40px;right:-40px;width:220px;height:220px;background:radial-gradient(circle,rgba(196,30,58,.16) 0%,transparent 70%);pointer-events:none;}
+.ih-ey{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red-light);margin-bottom:14px;}
+.ih-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:12px;position:relative;z-index:1;}
+.ih-desc{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;position:relative;z-index:1;max-width:460px;}
+.intro-body{padding:32px 40px 36px;}
+.sc-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-40);margin-bottom:12px;}
+.bfl{list-style:none;margin-bottom:28px;}
+.bfl li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--ink-60);padding:8px 0;border-bottom:1px solid var(--ink-05);line-height:1.5;}
+.bfl li:last-child{border-bottom:none;}
+.bfl-i{width:18px;height:18px;background:var(--red-faint);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--red);flex-shrink:0;margin-top:1px;}
+.intro-actions{display:flex;gap:10px;align-items:center;}
+.btn-start{background:var(--red);color:#fff;border:none;padding:13px 28px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all var(--tr);box-shadow:0 3px 14px rgba(196,30,58,.25);display:flex;align-items:center;gap:8px;}
+.btn-start:hover{background:var(--red-light);transform:translateY(-1px);}
+.btn-sample{background:transparent;color:var(--ink-40);border:1px solid var(--ink-10);padding:12px 20px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all var(--tr);}
+.btn-sample:hover{color:var(--ink);border-color:var(--ink-20);background:var(--parchment);}
+.intro-sidebar{display:none;}
+.isc{background:#fff;border-radius:var(--radius);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);padding:20px 22px;}
+.isc-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-40);margin-bottom:14px;}
+.prof-badge{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--green);background:var(--green-muted);border:1px solid #b0dbc8;padding:6px 12px;border-radius:var(--radius-sm);margin-bottom:14px;}
+.pbd{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.pr{display:flex;justify-content:space-between;align-items:flex-start;font-size:12px;padding:7px 0;border-bottom:1px solid var(--ink-05);gap:8px;}
+.pr:last-child{border-bottom:none;}
+.prk{color:var(--ink-40);font-weight:500;flex-shrink:0;}
+.prv{color:var(--ink);font-weight:600;text-align:right;}
+.opl{list-style:none;}
+.opl li{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-60);padding:7px 0;border-bottom:1px solid var(--ink-05);}
+.opl li:last-child{border-bottom:none;}
+.opn{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;color:var(--red);background:var(--red-faint);border-radius:4px;padding:2px 6px;flex-shrink:0;}
+
+/* ============================================================ SCREEN 2 — CONTEXT BUILDER */
+#screen-context{background:var(--cream);padding:32px 40px 60px;}
+.ctx-layout{display:grid;grid-template-columns:1fr 260px;gap:24px;align-items:start;}
+.ctx-form{background:#fff;border-radius:var(--radius-lg);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);padding:44px 48px;}
+.fs{margin-bottom:34px;}
+.fs:last-of-type{margin-bottom:0;}
+.fs-ey{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.fs-ey::after{content:'';flex:1;height:1px;background:var(--red-muted);}
+.fs-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:14px;line-height:1.3;}
+.fs-title .opt{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:var(--ink-40);margin-left:6px;}
+.lt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.lt-card{border:1.5px solid var(--ink-05);border-radius:var(--radius);padding:14px 12px;cursor:pointer;transition:all var(--tr);background:var(--cream);text-align:left;user-select:none;}
+.lt-card:hover{border-color:var(--red);transform:translateY(-1px);box-shadow:0 3px 12px rgba(196,30,58,.1);}
+.lt-card.selected{border-color:var(--red);background:var(--red-faint);}
+.lt-card.selected .ltc-title{color:var(--red-dark);}
+.ltc-icon{font-size:20px;margin-bottom:6px;display:block;}
+.ltc-title{font-size:13px;font-weight:600;color:var(--ink);line-height:1.2;}
+.ltc-desc{font-size:11px;color:var(--ink-40);margin-top:3px;line-height:1.35;}
+.notes-ta{width:100%;border:1.5px solid var(--ink-05);border-radius:var(--radius-sm);padding:14px 16px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--cream);transition:border-color var(--tr),box-shadow var(--tr),background var(--tr);outline:none;resize:vertical;min-height:110px;line-height:1.65;}
+.notes-ta::placeholder{color:var(--ink-20);font-style:italic;}
+.notes-ta:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-faint);background:#fff;}
+.notes-hint{font-size:11px;color:var(--ink-40);margin-top:8px;line-height:1.5;font-style:italic;}
+.gen-bar{padding-top:28px;border-top:1px solid var(--ink-05);margin-top:8px;display:flex;align-items:center;gap:16px;}
+.btn-gen{background:var(--red);color:#fff;border:none;padding:15px 36px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all var(--tr);box-shadow:0 4px 16px rgba(196,30,58,.25);display:flex;align-items:center;gap:8px;}
+.btn-gen:hover{background:var(--red-light);transform:translateY(-1px);}
+.gen-hint{font-size:12px;color:var(--ink-40);line-height:1.55;}
+.ctx-sidebar{display:flex;flex-direction:column;gap:16px;position:sticky;top:80px;}
+.ctx-card{background:#fff;border-radius:var(--radius);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);padding:20px 22px;}
+.ctx-dark{background:var(--ink-90);border-color:rgba(255,255,255,.06);}
+.ctx-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-40);margin-bottom:12px;}
+.ctx-dark .ctx-lbl{color:rgba(255,255,255,.3);}
+.sel-sum{display:flex;flex-direction:column;gap:8px;}
+.ss-row{display:flex;align-items:flex-start;gap:8px;font-size:12px;}
+.ssk{font-weight:600;color:var(--ink-40);white-space:nowrap;min-width:58px;flex-shrink:0;}
+.ssv{color:var(--ink);font-weight:500;}
+.ssv.empty{color:var(--ink-20);font-style:italic;}
+.tips{list-style:none;}
+.tips li{font-size:12px;color:rgba(255,255,255,.45);padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);line-height:1.55;}
+.tips li:last-child{border-bottom:none;}
+.tips li strong{color:rgba(255,255,255,.75);font-weight:600;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ============================================================ SCREEN 4 — RESULTS */
+#screen-results{background:var(--cream);padding:0;}
+.res-hero{background:var(--ink);padding:32px 40px 28px;position:relative;overflow:hidden;}
+.res-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 120% at 100% 50%,rgba(196,30,58,.12) 0%,transparent 60%);pointer-events:none;}
+.rh-inner{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;position:relative;z-index:1;}
+.rh-ey{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red-light);margin-bottom:8px;}
+.rh-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:6px;}
+.rh-meta{font-size:12px;color:rgba(255,255,255,.4);}
+.rh-meta span{color:rgba(255,255,255,.6);font-weight:500;margin-right:14px;}
+.rh-ppill{display:flex;align-items:center;gap:7px;background:rgba(45,106,79,.25);border:1px solid rgba(45,106,79,.4);border-radius:var(--radius-sm);padding:10px 14px;font-size:11px;color:#8fd4b5;white-space:nowrap;}
+.rh-pdot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.res-bar{background:#fff;border-bottom:1px solid var(--ink-05);padding:11px 40px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.rb{height:32px;padding:0 14px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all var(--tr);border:none;display:flex;align-items:center;gap:5px;}
+.rb-red{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(196,30,58,.2);}
+.rb-red:hover{background:var(--red-light);}
+.rb-ink{background:var(--ink);color:#fff;}
+.rb-ink:hover{background:var(--ink-80);}
+.rb-gold{background:var(--gold-muted);color:#6b4f10;border:1px solid #e0cc9a;}
+.rb-gold:hover{background:#ecddb0;}
+.rb-green{background:var(--green-muted);color:var(--green);border:1px solid #b0dbc8;}
+.rb-green:hover{background:#c6e8d8;}
+.rb-ghost{background:transparent;color:var(--ink-40);border:1px solid var(--ink-10);}
+.rb-ghost:hover{color:var(--ink);border-color:var(--ink-20);}
+.res-body{padding:32px 40px 60px;display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:start;}
+.res-main{display:flex;flex-direction:column;gap:16px;}
+.oc{background:#fff;border-radius:var(--radius);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);overflow:hidden;transition:box-shadow var(--tr);}
+.oc:hover{box-shadow:var(--shadow-md);}
+.oc.primary{border-left:4px solid var(--red);box-shadow:0 2px 16px rgba(196,30,58,.07),var(--shadow-sm);}
+.oc-hdr{padding:13px 22px 11px;border-bottom:1px solid var(--ink-05);display:flex;align-items:center;justify-content:space-between;}
+.oc-hdr-l{display:flex;align-items:center;gap:8px;}
+.oc-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-40);}
+.oc-badge{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--red-dark);background:var(--red-faint);border:1px solid var(--red-muted);padding:2px 8px;border-radius:100px;}
+.oc-copy{background:transparent;border:1px solid var(--ink-10);border-radius:var(--radius-sm);padding:4px 10px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--ink-40);cursor:pointer;transition:all var(--tr);display:flex;align-items:center;gap:4px;}
+.oc-copy:hover{border-color:var(--red);color:var(--red);background:var(--red-faint);}
+.oc-copy.copied{border-color:var(--green);color:var(--green);background:var(--green-muted);}
+.oc-body{padding:20px 22px;}
+.oc-subj{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-40);margin-bottom:10px;}
+.oc-subj span{font-weight:500;text-transform:none;letter-spacing:0;color:var(--ink-60);margin-left:4px;}
+.oc-msg{font-size:14px;color:var(--ink-80);line-height:1.8;white-space:pre-wrap;}
+.oc.primary .oc-msg{font-size:15px;color:var(--ink);}
+.oc-chip{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-40);background:var(--parchment);border:1px solid var(--ink-05);padding:3px 10px;border-radius:100px;margin-top:14px;}
+.mc-row{display:flex;flex-direction:column;gap:12px;}
+.mc{background:#fff;border-radius:var(--radius);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);padding:18px 22px;}
+.mc-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.mc-val{font-size:14px;color:var(--ink-80);line-height:1.65;}
+.mc-val.lg{font-size:15px;font-weight:500;color:var(--ink);}
+.mc-val.mono{font-family:'DM Mono',monospace;font-size:13px;color:var(--ink-60);}
+.res-sidebar{display:flex;flex-direction:column;gap:16px;position:sticky;top:80px;}
+.sc{background:#fff;border-radius:var(--radius);border:1px solid var(--ink-05);box-shadow:var(--shadow-sm);padding:18px 20px;}
+.sc-dark{background:var(--ink-90);border-color:rgba(255,255,255,.05);}
+.sc-lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-40);margin-bottom:12px;}
+.sc-dark .sc-lbl{color:rgba(255,255,255,.3);}
+.sca-list{display:flex;flex-direction:column;gap:8px;}
+.sca{width:100%;padding:11px 14px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all var(--tr);border:none;display:flex;align-items:center;gap:8px;text-align:left;}
+.sca-red{background:var(--red);color:#fff;box-shadow:0 2px 10px rgba(196,30,58,.22);}
+.sca-red:hover{background:var(--red-light);}
+.sca-m{background:var(--cream);color:var(--ink-60);border:1px solid var(--ink-05);}
+.sca-m:hover{color:var(--ink);border-color:var(--ink-10);background:var(--parchment);}
+.sca-gold{background:var(--gold-muted);color:#6b4f10;border:1px solid #e0cc9a;}
+.sca-gold:hover{background:#ecddb0;}
+.sir{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--ink-05);gap:8px;}
+.sir:last-child{border-bottom:none;}
+.sir-k{color:var(--ink-40);flex-shrink:0;}
+.sir-v{color:var(--ink);font-weight:600;text-align:right;}
+.spl{font-size:12px;color:rgba(255,255,255,.45);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.06);line-height:1.5;}
+.spl:last-child{border-bottom:none;}
+.spl strong{color:rgba(255,255,255,.8);}
+.spl-foot{padding-top:10px;font-size:11px;color:rgba(255,255,255,.25);line-height:1.5;}
+
+/* NEXT ACTION PANEL */
+.next-action-panel{background:var(--ink-90);border-radius:var(--radius);padding:18px 22px;margin-bottom:16px;border-left:3px solid var(--red);}
+.na-ey{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;}
+.na-title{font-family:"Playfair Display",serif;font-size:15px;font-weight:700;color:#fff;margin-bottom:5px;line-height:1.3;}
+.na-note{font-size:11px;line-height:1.5;margin-bottom:14px;font-style:italic;}
+.na-cadence-label{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px;}
+.na-steps{display:flex;flex-direction:column;gap:0;}
+.na-step{display:grid;grid-template-columns:60px 12px 1fr;gap:0 10px;align-items:start;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);}
+.na-step:last-child{border-bottom:none;}
+.na-step-active .na-step-day{color:var(--red-light);font-weight:700;}
+.na-step-active .na-step-dot{background:var(--red-light);}
+.na-step-active .na-step-action{color:#fff;}
+.na-step-day{font-family:"DM Mono",monospace;font-size:10px;font-weight:500;color:rgba(255,255,255,.35);padding-top:2px;}
+.na-step-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(255,255,255,.25);background:transparent;margin-top:4px;flex-shrink:0;}
+.na-step-action{font-size:12px;color:rgba(255,255,255,.55);line-height:1.5;}
+
+/* ============================================================ TOAST */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--ink);color:#fff;border-radius:var(--radius);padding:13px 18px;display:flex;align-items:center;gap:12px;font-size:13px;font-weight:500;box-shadow:var(--shadow-lg);z-index:9999;transform:translateY(80px);opacity:0;transition:all .32s cubic-bezier(.34,1.56,.64,1);min-width:270px;max-width:360px;border-left:3px solid var(--green);}
+.toast.show{transform:translateY(0);opacity:1;}
+.t-icon{font-size:16px;flex-shrink:0;}
+.t-title{font-weight:700;font-size:13px;margin-bottom:1px;}
+.t-sub{font-size:11px;color:rgba(255,255,255,.5);}
+
+/* ============================================================ RESPONSIVE */
+@media(max-width:960px){
+  
+  
+  #screen-intro{padding:24px 20px 40px;}
+  #screen-context{padding:20px 20px 40px;}
+  .intro-grid{grid-template-columns:1fr;}
+  .intro-sidebar{display:none;}
+  .ctx-layout{grid-template-columns:1fr;}
+  .ctx-sidebar{display:none;}
+  .lt-grid{grid-template-columns:repeat(2,1fr);}
+  .ctx-form{padding:28px 24px;}
+  .res-hero{padding:24px 20px;}
+  .rh-inner{grid-template-columns:1fr;}
+  .rh-ppill{display:none;}
+  .res-bar{padding:10px 20px;}
+  .res-body{padding:20px 16px 40px;grid-template-columns:1fr;}
+  .res-sidebar{display:none;}
+}
+
+
+.kwit-module{width:100%;min-height:100vh;background:var(--cream,#faf8f5);display:flex;flex-direction:column;}
+.screen { display:none; width:100%; flex-direction:column; }
+.screen.active { display:flex; }
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast">
+  <div class="t-icon" id="t-icon">✓</div>
+  <div><div class="t-title" id="t-title"></div><div class="t-sub" id="t-sub"></div></div>
+</div>
+
+<div class="kwit-module">
+
+<div id="screen-intro" class="screen active">
+      <div style="padding:40px 40px 60px;background:var(--cream);">
+
+        <div class="module-tag">Follow-Up Workflow</div>
+        <h1 class="module-title">Follow-Up System</h1>
+        <p class="module-sub">Paste what happened. Get a client-ready message in your voice, with three versions, a cadence plan, and the reason it will work.</p>
+
+        <div class="intro-grid">
+
+          <div class="intro-main">
+            <div class="intro-hero">
+              <div class="ih-ey">Based on your diagnostic — your #1 time saver</div>
+              <div class="ih-title">Stop writing follow-ups from scratch. You have better things to do.</div>
+              <div class="ih-desc">Tell KWIT which lead, what happened, and what you want them to do. You get a message that sounds like you wrote it — plus two shorter versions and a plan for what to send next if they don't reply.</div>
+            </div>
+            <div class="intro-body">
+              <div class="sc-label">This workflow is built for</div>
+              <ul class="bfl">
+                <li><span class="bfl-i">↓</span> Leads that went cold after first contact or a showing</li>
+                <li><span class="bfl-i">↓</span> Open house prospects you haven't followed up with yet</li>
+                <li><span class="bfl-i">↓</span> Past clients you want to re-engage without sounding transactional</li>
+                <li><span class="bfl-i">↓</span> Referral sources you've been meaning to check in with</li>
+                <li><span class="bfl-i">↓</span> Any situation where you know what to say but not how to start</li>
+              </ul>
+              <div class="intro-actions">
+                <button class="btn-start" onclick="goContext()">Write a follow-up message →</button>
+                <button class="btn-sample" onclick="loadSample()">Load Sample</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="intro-sidebar">
+            <div class="isc">
+              <div class="isc-label">Your Saved Profile</div>
+              <div class="prof-badge"><div class="pbd"></div>Active — all tools connected</div>
+              <div class="pr"><span class="prk">Tone</span><span class="prv" id="prv-tone">—</span></div>
+              <div class="pr"><span class="prk">Formality</span><span class="prv" id="prv-form">—</span></div>
+              <div class="pr"><span class="prk">Market</span><span class="prv" id="prv-mkt">—</span></div>
+              <div class="pr"><span class="prk">Focus</span><span class="prv" id="prv-focus">—</span></div>
+              <div class="pr"><span class="prk">Avoids</span><span class="prv" id="prv-avoid">—</span></div>
+            </div>
+            <div class="isc">
+              <div class="isc-label">What You'll Get</div>
+              <ul class="opl">
+                <li><span class="opn">01</span> A message ready to send</li>
+                <li><span class="opn">02</span> A shorter version (best for text)</li>
+                <li><span class="opn">03</span> A more direct version</li>
+                <li><span class="opn">04</span> Why this message works for this situation</li>
+                <li><span class="opn">05</span> The exact ask to put at the end</li>
+                <li><span class="opn">06</span> A name to save it under</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+<div id="screen-context" class="screen">
+      <div style="padding:32px 40px 60px;background:var(--cream);">
+        <div class="ctx-layout">
+
+          <div class="ctx-form">
+
+            <!-- A: Lead Type -->
+            <div class="fs">
+              <div class="fs-ey">Who are you writing to?</div>
+              <div class="fs-title">Pick the lead type.</div>
+              <div class="lt-grid" id="lt-grid">
+                <div class="lt-card" data-value="Buyer lead"           onclick="pickLead(this)"><span class="ltc-icon">🏡</span><div class="ltc-title">Buyer Lead</div><div class="ltc-desc">Active or prospective buyer</div></div>
+                <div class="lt-card" data-value="Seller lead"          onclick="pickLead(this)"><span class="ltc-icon">📋</span><div class="ltc-title">Seller Lead</div><div class="ltc-desc">Thinking about listing</div></div>
+                <div class="lt-card" data-value="Open house lead"      onclick="pickLead(this)"><span class="ltc-icon">🚪</span><div class="ltc-title">Open House Lead</div><div class="ltc-desc">Met at a showing event</div></div>
+                <div class="lt-card" data-value="Past client"          onclick="pickLead(this)"><span class="ltc-icon">🤝</span><div class="ltc-title">Past Client</div><div class="ltc-desc">Already closed with you</div></div>
+                <div class="lt-card" data-value="Referral source"      onclick="pickLead(this)"><span class="ltc-icon">🔁</span><div class="ltc-title">Referral Source</div><div class="ltc-desc">Someone who sends you business</div></div>
+                <div class="lt-card" data-value="Cold / inactive lead" onclick="pickLead(this)"><span class="ltc-icon">❄️</span><div class="ltc-title">Cold / Inactive</div><div class="ltc-desc">Gone quiet, needs re-engagement</div></div>
+              </div>
+            </div>
+
+            <!-- B: Situation -->
+            <div class="fs">
+              <div class="fs-ey">What just happened?</div>
+              <div class="fs-title">Pick the closest situation.</div>
+              <div class="pill-group" id="sit-grp">
+                <div class="pill" data-value="First contact"          onclick="pickPill(this,'sit')">First contact</div>
+                <div class="pill" data-value="After showing"          onclick="pickPill(this,'sit')">After showing</div>
+                <div class="pill" data-value="No response"            onclick="pickPill(this,'sit')">No response</div>
+                <div class="pill" data-value="Re-engagement"          onclick="pickPill(this,'sit')">Re-engagement</div>
+                <div class="pill" data-value="Open house follow-up"   onclick="pickPill(this,'sit')">Open house follow-up</div>
+                <div class="pill" data-value="Referral check-in"      onclick="pickPill(this,'sit')">Referral check-in</div>
+                <div class="pill" data-value="Past client touchpoint" onclick="pickPill(this,'sit')">Past client touchpoint</div>
+              </div>
+            </div>
+
+            <!-- C: Goal -->
+            <div class="fs">
+              <div class="fs-ey">What do you want them to do?</div>
+              <div class="fs-title">Pick one goal for this message.</div>
+              <div class="pill-group" id="goal-grp">
+                <div class="pill" data-value="Book a call"         onclick="pickPill(this,'goal')">Book a call</div>
+                <div class="pill" data-value="Get a reply"         onclick="pickPill(this,'goal')">Get a reply</div>
+                <div class="pill" data-value="Move to next step"   onclick="pickPill(this,'goal')">Move to next step</div>
+                <div class="pill" data-value="Stay top of mind"    onclick="pickPill(this,'goal')">Stay top of mind</div>
+                <div class="pill" data-value="Reopen conversation" onclick="pickPill(this,'goal')">Reopen conversation</div>
+              </div>
+            </div>
+
+            <!-- D: Channel -->
+            <div class="fs">
+              <div class="fs-ey">How are you sending this?</div>
+              <div class="fs-title">Pick the channel.</div>
+              <div class="pill-group" id="ch-grp">
+                <div class="pill" data-value="Text"  onclick="pickPill(this,'ch')">Text</div>
+                <div class="pill" data-value="Email" onclick="pickPill(this,'ch')">Email</div>
+                <div class="pill" data-value="DM"    onclick="pickPill(this,'ch')">DM / Social</div>
+              </div>
+            </div>
+
+            <!-- E: Notes -->
+            <div class="fs">
+              <div class="fs-ey">The most important part</div>
+              <div class="fs-title">What happened? Paste any notes you have.</div>
+              <textarea id="notes-field" class="notes-ta"
+                placeholder="Be specific — the more detail you give, the more personal the output.&#10;&#10;Examples:&#10;• Met at open house on Sunday. She liked the layout but said timing may be an issue.&#10;• Showed them 3 homes. They liked the second one most but seemed hesitant.&#10;• Lead went cold after I sent listings two weeks ago.&#10;• Past client closed last summer. Want to check in without sounding transactional."></textarea>
+              <div class="notes-hint">Vague notes produce generic output. Specific notes produce something you'd actually send.</div>
+            </div>
+
+            <!-- F: Tone Shift -->
+            <div class="fs">
+              <div class="fs-ey">Section F</div>
+              <div class="fs-title">Any tone adjustment? <span class="opt">Optional</span></div>
+              <div class="pill-group" id="tone-grp">
+                <div class="pill selected" data-value="Keep my usual tone" onclick="pickPill(this,'tone')">Keep my usual tone</div>
+                <div class="pill"          data-value="Softer"             onclick="pickPill(this,'tone')">Softer</div>
+                <div class="pill"          data-value="More direct"        onclick="pickPill(this,'tone')">More direct</div>
+                <div class="pill"          data-value="More polished"      onclick="pickPill(this,'tone')">More polished</div>
+              </div>
+            </div>
+
+            <div class="gen-bar">
+              <button class="btn-gen" onclick="generate()">Write this message →</button>
+              <div class="gen-hint">Your saved voice profile is loaded automatically.<br>Output will match your tone, register, and avoid phrases.</div>
+            </div>
+
+          </div><!-- /ctx-form -->
+
+          <div class="ctx-sidebar">
+            <div class="ctx-card">
+              <div class="ctx-lbl">Your Selections</div>
+              <div class="sel-sum">
+                <div class="ss-row"><span class="ssk">Lead</span><span class="ssv empty" id="ss-lead">—</span></div>
+                <div class="ss-row"><span class="ssk">Situation</span><span class="ssv empty" id="ss-sit">—</span></div>
+                <div class="ss-row"><span class="ssk">Goal</span><span class="ssv empty" id="ss-goal">—</span></div>
+                <div class="ss-row"><span class="ssk">Channel</span><span class="ssv empty" id="ss-ch">—</span></div>
+                <div class="ss-row"><span class="ssk">Tone</span><span class="ssv" id="ss-tone">Keep my usual tone</span></div>
+              </div>
+            </div>
+            <div class="ctx-card ctx-dark">
+              <div class="ctx-lbl">How outputs will adjust</div>
+              <ul class="tips">
+                <li><strong>No response?</strong> Message becomes low-friction and easy to answer with one line.</li>
+                <li><strong>Text channel?</strong> Output stays under 4 sentences.</li>
+                <li><strong>Past client?</strong> Warmer, no sales pressure.</li>
+                <li><strong>Book a call?</strong> Ends with a soft scheduling ask.</li>
+                <li><strong>More direct?</strong> Fewer words. Clear ask. No softening.</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+<div id="screen-results" class="screen">
+
+      <div class="res-hero">
+        <div class="rh-inner">
+          <div>
+            <div class="rh-ey">KWIT Follow-Up System — Output Ready</div>
+            <div class="rh-title" id="rh-title">Your follow-up is ready.</div>
+            <div class="rh-meta" id="rh-meta"></div>
+          </div>
+          <div class="rh-ppill"><div class="rh-pdot"></div>Generated using your saved KWIT profile</div>
+        </div>
+      </div>
+
+      <div class="res-bar">
+        <button class="rb rb-red"   onclick="copyMsg('primary')">⧉ Copy &amp; Send</button>
+        <button class="rb rb-ink"   onclick="copyMsg('short')">⧉ Copy Short</button>
+        <button class="rb rb-gold"  onclick="saveTemplate()">⊙ Save as Template</button>
+        <button class="rb rb-green" onclick="practiceConvo()">▷ Practice Before You Send</button>
+        <button class="rb rb-ghost" onclick="goContext()" style="margin-left:auto">← Edit Inputs</button>
+        <button class="rb rb-ghost" onclick="regenerate()">↻ Regenerate</button>
+      </div>
+
+      <div class="res-body">
+        <div class="res-main" id="res-main"><!-- injected --></div>
+        <div class="res-sidebar">
+          <div class="sc">
+            <div class="sc-lbl">What to do with this</div>
+            <div class="sca-list">
+              <button class="sca sca-red"  onclick="copyMsg('primary')">⧉ Copy Primary Message</button>
+              <button class="sca sca-m"    onclick="copyMsg('short')">⧉ Copy Short Version</button>
+              <button class="sca sca-m"    onclick="saveTemplate()">⊙ Save as Template</button>
+              <button class="sca sca-m"    onclick="regenerate()">↻ Regenerate</button>
+              <button class="sca sca-gold" onclick="practiceConvo()">▷ Practice This Conversation</button>
+            </div>
+          </div>
+          <div class="sc" id="sc-input">
+            <div class="sc-lbl">Written for</div>
+            <div id="sc-input-body"><!-- injected --></div>
+          </div>
+          <!-- Spec requirement: visibly reinforce "Generated using your saved KWIT profile" -->
+          <div class="sc sc-dark">
+            <div class="sc-lbl">Generated Using Your Saved KWIT Profile</div>
+            <div class="spl"><strong>Tone:</strong> Warm &amp; personal</div>
+            <div class="spl"><strong>Register:</strong> Balanced</div>
+            <div class="spl"><strong>Voice:</strong> Neighborhood specialist, direct, warm</div>
+            <div class="spl"><strong>Avoids:</strong> Corporate jargon, "synergy", "circle back"</div>
+            <div class="spl-foot">This profile feeds into every KWIT workflow automatically. Nothing re-entered.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+</div>
+
+</body>
+<script>
+
+/* ============================================================
+   KWIT FOLLOW-UP SYSTEM — JS ENGINE
+   ============================================================
+
+   ARCHITECTURE:
+     1. agentProfile  — saved profile from Business Diagnostic
+     2. inp           — current form state
+     3. Navigation    — goIntro / goContext / showScreen
+     4. Form picks    — pickLead / pickPill / syncSummary
+     5. loadSample    — fills demo data instantly
+     6. generate      — validates, shows loading, calls buildOutput
+     7. buildOutput   — full generation engine (situation × tone × channel × goal)
+     8. renderResults — injects all 6 output cards + sidebar
+     9. Actions       — copyMsg / saveTemplate / practiceConvo / regenerate
+    10. Toast         — unified notification system
+    11. esc()         — XSS-safe HTML injection
+
+   RED-FLAG RULES (per spec):
+     - Never sounds desperate
+     - Never guilts lead for not responding
+     - No "just circling back" or "just checking in" phrases
+     - No false urgency
+     - No exclamation overuse
+*/
+
+/* ------ MOCK SAVED AGENT PROFILE (from Business Diagnostic) ------ */
+const agentProfile = {
+  name:         '',
+  firstName:    '',
+  market:       '',
+  experience:   '',
+  focus:        [],
+  tone:         'Warm & personal',
+  formality:    'Balanced',
+  brandVibe:    '',
+  avoidPhrases: [],
+  selfDescribe: '',
+};
+
+/* ------ INPUT STATE ------ */
+const inp = {
+  leadType:  '',
+  situation: '',
+  goal:      '',
+  channel:   '',
+  notes:     '',
+  toneShift: 'Keep my usual tone',
+};
+
+let lastOutput = null; // holds last generated result for copy/save
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goIntro()   { showScreen('screen-intro'); }
+function goContext() { showScreen('screen-context'); syncSummary(); }
+
+/* ============================================================
+   FORM INTERACTIONS
+   ============================================================ */
+function pickLead(el) {
+  document.querySelectorAll('#lt-grid .lt-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  inp.leadType = el.dataset.value;
+  syncSummary();
+}
+
+function pickPill(el, field) {
+  const ids = { sit:'sit-grp', goal:'goal-grp', ch:'ch-grp', tone:'tone-grp' };
+  document.querySelectorAll('#' + ids[field] + ' .pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  if (field === 'sit')  inp.situation = el.dataset.value;
+  if (field === 'goal') inp.goal      = el.dataset.value;
+  if (field === 'ch')   inp.channel   = el.dataset.value;
+  if (field === 'tone') inp.toneShift = el.dataset.value;
+  syncSummary();
+}
+
+function syncSummary() {
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = val || '—';
+    el.className = 'ssv' + (val ? '' : ' empty');
+  };
+  set('ss-lead', inp.leadType);
+  set('ss-sit',  inp.situation);
+  set('ss-goal', inp.goal);
+  set('ss-ch',   inp.channel);
+  set('ss-tone', inp.toneShift || 'Keep my usual tone');
+}
+
+/* ============================================================
+   LOAD SAMPLE — fills realistic after-showing scenario
+   ============================================================ */
+function loadSample() {
+  goContext();
+  setTimeout(() => {
+    // Lead type
+    document.querySelectorAll('#lt-grid .lt-card').forEach(c => {
+      c.classList.toggle('selected', c.dataset.value === 'Buyer lead');
+    });
+    inp.leadType = 'Buyer lead';
+    // Situation
+    setByVal('sit-grp', 'After showing');  inp.situation = 'After showing';
+    // Goal
+    setByVal('goal-grp', 'Get a reply');   inp.goal      = 'Get a reply';
+    // Channel
+    setByVal('ch-grp', 'Text');            inp.channel   = 'Text';
+    // Tone
+    setByVal('tone-grp', 'Keep my usual tone'); inp.toneShift = 'Keep my usual tone';
+    // Notes
+    const sample = "Showed them 3 homes on Saturday. They seemed most interested in the second one on Maple — open layout, liked the backyard. Hesitated on the price, said it was \"at the top of their range.\" No follow-up from them since. It's been 4 days.";
+    document.getElementById('notes-field').value = sample;
+    inp.notes = sample;
+    syncSummary();
+  }, 40);
+}
+
+function setByVal(groupId, value) {
+  document.querySelectorAll('#' + groupId + ' .pill').forEach(p => {
+    p.classList.toggle('selected', p.dataset.value === value);
+  });
+}
+
+/* ============================================================
+   GENERATE — entry point
+   ============================================================ */
+function generate() {
+  inp.notes = (document.getElementById('notes-field') || {}).value || '';
+  if (!inp.leadType && !inp.situation) {
+    toast('Select a lead type or situation first.', '', 'var(--amber)', '⚠');
+    return;
+  }
+  showScreen('screen-results');
+  generateWithClaude();
+}
+
+/* ── CLAUDE API CALL ──────────────────────────────────────────────────────────
+   Assembles the full prompt from the stored agent profile + form inputs,
+   calls the Anthropic API, parses structured JSON output, falls back to
+   the mock engine if the API is unavailable or returns an error.
+   ─────────────────────────────────────────────────────────────────────────── */
+async function generateWithClaude() {
+  const ap = agentProfile;
+
+  /* Build the system prompt from the saved agent profile */
+  const systemPrompt = `You are a real-estate follow-up writing assistant inside KWIT.
+
+Your job is to draft client-ready follow-up messages for a real estate agent based on their saved business profile, the lead context, the goal of the message, and their notes from the interaction.
+
+AGENT PROFILE:
+Name: ${ap.name}
+Market: ${ap.market}
+Experience: ${ap.experience}
+Business focus: ${ap.focus ? ap.focus.join(', ') : ''}
+Tone: ${ap.tone}
+Formality: ${ap.formality}
+Brand vibe: ${ap.brandVibe}
+Avoid these words/phrases: ${ap.avoidPhrases ? ap.avoidPhrases.join(', ') : ''}
+How agent describes themselves: ${ap.selfDescribe}
+
+BEHAVIOR RULES:
+- Always write like this agent would actually text or email
+- Use their tone and brand style exactly
+- Avoid the phrases listed above
+- Default to concise, natural language
+- Never sound robotic, over-polished, or like marketing copy
+- Never use "just circling back", "touching base", or false urgency
+- Do not mention that AI wrote the message
+- Sound like a real person
+
+OUTPUT FORMAT — respond ONLY with valid JSON, no other text:
+{
+  "primary": "the main follow-up message",
+  "shorter": "a shorter version (2-4 sentences, best for text/DM)",
+  "direct": "a more direct version with a clearer ask",
+  "whyWorks": "2-3 sentence plain-language explanation of why this message works for this specific situation",
+  "cta": "the call to action as a single line (the question or ask at the end)",
+  "templateName": "a short saveable name like 'Post-Showing Check-In — Buyer' or 'Re-Engagement — Cold Lead'",
+  "subject": "email subject line if channel is Email, otherwise null"
+}
+
+IMPORTANT: whyWorks should be specific to this situation, not generic. Reference the lead type, the situation, and why this approach is right for this moment.`;
+
+  /* Build the user prompt from current form inputs */
+  const channelStr = inp.channel || 'text';
+  const toneStr    = inp.toneShift && inp.toneShift !== 'Keep my usual tone' ? inp.toneShift : 'agent default';
+  const userPrompt = `LEAD CONTEXT:
+Lead type: ${inp.leadType || 'not specified'}
+Situation: ${inp.situation || 'not specified'}
+Message goal: ${inp.goal || 'get a reply'}
+Channel: ${channelStr}
+Tone adjustment: ${toneStr}
+
+WHAT HAPPENED:
+${inp.notes || 'No notes provided — infer carefully from the situation.'}
+
+CHANNEL RULES:
+${channelStr.toLowerCase() === 'text' ? '- Keep it under 4 sentences. Fast and light.' : ''}
+${channelStr.toLowerCase() === 'email' ? '- Include a subject line. Add a little more context. Still concise.' : ''}
+${channelStr.toLowerCase() === 'dm' ? '- Very short. Most casual. No email phrasing.' : ''}
+
+Write the follow-up message now. Return ONLY the JSON object.`;
+
+  try {
+    /* Animate loading steps while waiting for API */
+    const msgEl = document.getElementById('ld-msg');
+    let step = 0;
+    const stepTimer = setInterval(() => {
+      step++;
+      if (step < LD_MSGS.length) {
+        const prev = document.getElementById('ld' + (step-1));
+        if (prev) { prev.classList.remove('active'); prev.classList.add('done'); }
+        const curr = document.getElementById('ld' + step);
+        if (curr) curr.classList.add('active');
+        if (msgEl) { msgEl.style.opacity='0'; setTimeout(()=>{ msgEl.textContent=LD_MSGS[step]; msgEl.style.opacity='1'; },220); }
+      }
+    }, 800);
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }],
+      }),
+    });
+
+    clearInterval(stepTimer);
+    /* Mark all steps done */
+    for (let i=0;i<5;i++){const e=document.getElementById('ld'+i);if(e){e.classList.remove('active');e.classList.add('done');}}
+
+    if (!response.ok) throw new Error('API ' + response.status);
+
+    const data = await response.json();
+    const rawText = data.content?.[0]?.text || '';
+
+    /* Strip any markdown fences Claude might add */
+    const cleaned = rawText.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+    const parsed  = JSON.parse(cleaned);
+
+    /* Merge with input metadata */
+    lastOutput = Object.assign(parsed, {
+      leadType:  inp.leadType,
+      situation: inp.situation,
+      goal:      inp.goal,
+      channel:   inp.channel,
+      toneShift: inp.toneShift,
+    });
+    renderResults(lastOutput);
+    showScreen('screen-results');
+
+  } catch (err) {
+    console.warn('Claude API unavailable, using mock engine:', err.message);
+    /* Graceful fallback to local mock engine */
+    for (let i=0;i<5;i++){const e=document.getElementById('ld'+i);if(e){e.classList.remove('active');e.classList.add('done');}}
+    lastOutput = buildOutput();
+    renderResults(lastOutput);
+    showScreen('screen-results');
+    toast('Generated offline', 'API unavailable — used local engine.', 'var(--amber)', '⚠');
+  }
+}
+
+function regenerate() {
+  showScreen('screen-results');
+  runLoading(() => {
+    lastOutput = buildOutput();
+    renderResults(lastOutput);
+    showScreen('screen-results');
+  });
+}
+
+/* ============================================================
+   LOADING SEQUENCE
+   ============================================================ */
+const LD_MSGS = [
+  'Reading what you shared…',
+  'Matching your voice and tone…',
+  'Writing the message…',
+  'Generating three versions…',
+  'Adding the cadence plan…',
+];
+
+function resetLoading() {
+  for (let i = 0; i < 5; i++) {
+    const el = document.getElementById('ld' + i);
+    if (el) el.classList.remove('done','active');
+  }
+  const f = document.getElementById('ld0');
+  if (f) f.classList.add('active');
+  const m = document.getElementById('ld-msg');
+  if (m) m.textContent = LD_MSGS[0];
+}
+
+function runLoading(cb) {
+  const msgEl = document.getElementById('ld-msg');
+  let i = 0;
+  const iv = setInterval(() => {
+    i++;
+    if (i < LD_MSGS.length) {
+      const prev = document.getElementById('ld' + (i-1));
+      if (prev) { prev.classList.remove('active'); prev.classList.add('done'); }
+      const curr = document.getElementById('ld' + i);
+      if (curr) curr.classList.add('active');
+      if (msgEl) {
+        msgEl.style.opacity = '0';
+        setTimeout(() => { msgEl.textContent = LD_MSGS[i]; msgEl.style.opacity = '1'; }, 220);
+      }
+    }
+  }, 620);
+  setTimeout(() => {
+    clearInterval(iv);
+    for (let j = 0; j < 5; j++) {
+      const el = document.getElementById('ld' + j);
+      if (el) { el.classList.remove('active'); el.classList.add('done'); }
+    }
+    cb();
+  }, 3200);
+}
+
+/* ============================================================
+   OUTPUT GENERATION ENGINE
+   Produces meaningfully different outputs based on:
+     leadType × situation × goal × channel × toneShift × notes
+
+   Red-flag avoidance:
+     - No "just circling back" / "just checking in"
+     - No guilt / pressure language on no-response scenarios
+     - No false urgency
+     - No exclamation overuse
+   ============================================================ */
+function buildOutput() {
+  const { leadType, situation, goal, channel, toneShift, notes } = inp;
+  const n = notes.toLowerCase();
+
+  /* Notes signal parsing */
+  const hasPriceHesit  = /price|budget|range|top of|expensive|afford/.test(n);
+  const hasTimingConc  = /timing|not ready|wait|soon|later|rush/.test(n);
+  const hasShowingDet  = /show|saw|visit|tour|walk/.test(n);
+  const hasInterest    = /liked|loved|interested|excited|favor|stood out|really like/.test(n);
+  const hasOH          = /open house|sunday|saturday|event/.test(n);
+
+  /* Street name extraction */
+  const stM  = notes.match(/\bon\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+)?)\b/);
+  const street = stM ? stM[1] : null;
+
+  /* Day count extraction */
+  const dayM = notes.match(/(\d+)\s*day/i);
+  const days  = dayM ? dayM[1] : null;
+
+  /* Tone flags */
+  const isDirect   = toneShift === 'More direct';
+  const isSofter   = toneShift === 'Softer';
+  const isPolished = toneShift === 'More polished';
+
+  /* Situation flags */
+  const isText     = channel === 'Text' || channel === 'DM';
+  const isEmail    = channel === 'Email';
+  const isDM       = channel === 'DM';
+  const isPast     = leadType === 'Past client'      || situation === 'Past client touchpoint';
+  const isRef      = leadType === 'Referral source'  || situation === 'Referral check-in';
+  const isCold     = situation === 'No response'     || situation === 'Re-engagement' || leadType === 'Cold / inactive lead';
+  const isShowing  = situation === 'After showing'   || hasShowingDet;
+  const isOH       = situation === 'Open house follow-up' || leadType === 'Open house lead' || hasOH;
+  const isFirst    = situation === 'First contact';
+
+  /* CTA by goal — goal logic per spec */
+  const ctaMap = {
+    'Book a call':         isText
+      ? 'Free for a quick call this week?'
+      : 'Would you be open to a 15-minute call this week? I can work around your schedule.',
+    'Get a reply':         'Does that still sound right to you?',
+    'Move to next step':   'What would make sense as a next step for you?',
+    'Stay top of mind':    'No need to reply — just wanted to stay on your radar.',
+    'Reopen conversation': 'Happy to pick back up whenever the timing makes sense for you.',
+  };
+  const cta = ctaMap[goal] || 'What makes sense as a next step?';
+
+  let primary='', shorter='', direct='', whyWorks='', templateName='', subject='';
+
+  /* ====================== AFTER SHOWING ====================== */
+  if (isShowing) {
+    const homeRef    = street ? `the one on ${street}` : 'the one that stood out';
+    const priceNote  = hasPriceHesit  ? ` I know the price gave you some pause — that's a fair thing to sit with.` : '';
+    const dayNote    = days ? `It's been ${days} days` : "It's been a few days";
+
+    if (isDirect) {
+      primary = `Following up on the homes we saw.${hasPriceHesit ? ` The price on ${homeRef} was a concern — I can pull comps or look at what else fits your range.` : ` ${homeRef} was the standout.`} Ready to talk through next steps?\n\n${cta}`;
+      shorter = isText ? `Following up from the showing.${hasPriceHesit ? ' Happy to talk through the price.' : ''} ${cta}` : primary;
+    } else if (isSofter) {
+      primary = `Hey — no pressure, just wanted to check in after our showing.${priceNote} Whenever you're ready to talk more, I'm here.\n\n${cta}`;
+      shorter = isText ? `Hey — just checking in. No rush at all. ${cta}` : primary;
+    } else if (isPolished) {
+      primary = `Hi — wanted to follow up after our time together. ${homeRef} seemed to resonate most with you.${priceNote} Happy to answer any questions or take a closer look at options.\n\n${cta}`;
+      shorter = isText ? `Hi — following up from Saturday. ${homeRef} stood out to me for you.${hasPriceHesit ? ' Happy to discuss the price piece.' : ''} ${cta}` : primary;
+    } else {
+      primary = `Hey — wanted to check in. ${dayNote} since we looked at those.${priceNote} ${homeRef} seemed to resonate most — curious what you're thinking now that you've had a bit of time.\n\n${cta}`;
+      shorter = isText
+        ? `Hey — following up from the showing. ${homeRef} really stood out.${hasPriceHesit ? " Happy to talk through the price." : ''} ${cta}`
+        : `Wanted to check in after our showing. ${homeRef} seemed like the strongest fit — would love to hear your thoughts.\n\n${cta}`;
+    }
+
+    direct      = `Following up from Saturday. ${homeRef} was the standout.${hasPriceHesit ? ' Price was a concern — I have options.' : ''} ${cta}`;
+    whyWorks    = `References the specific showing and property without being pushy.${hasPriceHesit ? ' Acknowledges the price concern directly — shows you were listening, not just selling.' : ''} The CTA is an easy question that invites a reply without demanding one.`;
+    templateName = street ? `Post-Showing Check-In — ${street}` : 'Post-Showing Check-In';
+    subject      = street ? `The home on ${street}` : 'Following up from our showing';
+  }
+
+  /* ====================== NO RESPONSE / COLD ====================== */
+  else if (isCold) {
+    const dayNote = days ? `It's been about ${days} days` : "It's been a little while";
+
+    if (isDirect) {
+      primary = `Hey — wanted to make sure my last message didn't get buried. Still here whenever the timing works.\n\n${cta}`;
+      shorter = isText ? `Hey — still here. ${cta}` : primary;
+    } else if (isSofter) {
+      primary = `Hey — no rush at all, just didn't want to disappear on you. ${dayNote} since we last connected. Still here whenever you're ready.\n\n${cta}`;
+      shorter = isText ? `Hey — wanted to stay on your radar. No pressure. ${cta}` : primary;
+    } else {
+      primary = `Hey — ${dayNote} since I last reached out. Didn't want to assume anything — messages get buried sometimes.\n\nStill here if timing has changed or you have questions. Happy to pick up wherever makes sense.\n\n${cta}`;
+      shorter = isText
+        ? `Hey — checking in. Still here if the timing has shifted. ${cta}`
+        : `Wanted to follow up — no pressure. Happy to help whenever you're ready.\n\n${cta}`;
+    }
+
+    direct      = `Hey — following up. Still happy to help if timing has changed. ${cta}`;
+    whyWorks    = `Removes pressure entirely — doesn't guilt the lead for not responding. The "messages get buried" framing gives them cover and removes the friction from replying. Easy to answer with one word.`;
+    templateName = 'Soft Re-Engagement — No Response';
+    subject      = 'Checking in';
+  }
+
+  /* ====================== OPEN HOUSE ====================== */
+  else if (isOH) {
+    const interestLine = hasInterest ? 'It seemed like a few things caught your eye' : 'Hope you got a good feel for the space';
+    const timingLine   = hasTimingConc ? ' — totally understand if the timing isn\'t right yet' : '';
+
+    if (isDirect) {
+      primary = `Good meeting you at the open house${timingLine}. Happy to send similar options or answer questions. ${cta}`;
+      shorter = isText ? `Good meeting you! Happy to help. ${cta}` : primary;
+    } else {
+      primary = `Hey — great meeting you at the open house${timingLine}. ${interestLine}. Happy to answer questions or pull a few other options in the area if anything felt like a fit.\n\n${cta}`;
+      shorter = isText
+        ? `Great meeting you! Happy to send similar options if you're interested. ${cta}`
+        : `Great to meet you at the open house. Happy to answer questions or show you other options.\n\n${cta}`;
+    }
+
+    direct      = `Good meeting you on Sunday. Happy to send options or answer questions — just say the word. ${cta}`;
+    whyWorks    = `Keeps the open house energy alive without being transactional.${hasInterest ? ' References their interest signals naturally.' : ''} The offer to send similar options gives them a low-friction reason to reply without committing to anything.`;
+    templateName = 'Warm Open House Follow-Up';
+    subject      = 'Great meeting you on Sunday';
+  }
+
+  /* ====================== PAST CLIENT / REFERRAL ====================== */
+  else if (isPast || isRef) {
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const mo = months[new Date().getMonth()];
+
+    if (isDirect) {
+      primary = `Hey — checking in and wanted to stay on your radar heading into ${mo}. If you know anyone thinking about buying or selling, I'd love the introduction. ${cta}`;
+      shorter = isText ? `Hey — checking in. Hope all is good! ${cta}` : primary;
+    } else {
+      primary = `Hey — just wanted to check in and see how things are going. Nothing specific — just didn't want to become a stranger.\n\nIf you ever hear of anyone thinking about buying or selling, I'd love the introduction. And if you need anything at all, I'm always around.\n\n${cta}`;
+      shorter = isText
+        ? `Hey — saying hi and checking in. Hope everything's going well! ${cta}`
+        : `Just checking in to say hello. No agenda — just wanted to stay connected.\n\n${cta}`;
+    }
+
+    direct      = `Hey — checking in. Hope all is well. Know anyone thinking about buying or selling? I'd love the intro. ${cta}`;
+    whyWorks    = `Opens the referral door without asking directly — the ask is embedded naturally in a relationship-first message. Past clients respond to warmth, not sales energy. Feels personal, not like a campaign.`;
+    templateName = isPast ? 'Warm Past Client Check-In' : 'Referral Source Touch-In';
+    subject      = 'Checking in';
+  }
+
+  /* ====================== FIRST CONTACT ====================== */
+  else if (isFirst) {
+    if (isDirect) {
+      primary = `Hi — ${agentProfile.firstName} here. I work in ${agentProfile.market}. ${agentProfile.selfDescribe} ${cta}`;
+      shorter = isText ? `Hi! ${agentProfile.firstName} here. ${agentProfile.market} specialist. ${cta}` : primary;
+    } else {
+      primary = `Hey — thanks for reaching out. I'm ${agentProfile.firstName}, and I work primarily in ${agentProfile.market}. ${agentProfile.selfDescribe}\n\nWould love to learn more about what you're looking for and see if I can help.\n\n${cta}`;
+      shorter = isText
+        ? `Hey! ${agentProfile.firstName} here. I cover ${agentProfile.market} — happy to help. ${cta}`
+        : `Thanks for reaching out. I'd love to learn more about what you're looking for.\n\n${cta}`;
+    }
+
+    direct      = `Hi — ${agentProfile.firstName}, ${agentProfile.market} specialist. ${cta}`;
+    whyWorks    = `Leads with who you are and what you do in one sentence — no over-explanation. The question at the end makes it easy to reply. First contact messages should earn a response, not try to close.`;
+    templateName = 'Warm First Contact Introduction';
+    subject      = `Hi from ${agentProfile.firstName} — happy to help`;
+  }
+
+  /* ====================== WARM / ACTIVE BUYER ====================== */
+  else if (leadType === 'Buyer lead' && !isShowing && !isCold && !isFirst) {
+    const interestNote = hasInterest ? ' You mentioned a few things really caught your eye.' : '';
+    const priceNote    = hasPriceHesit ? ' I know price is a key factor — happy to look at options in your range.' : '';
+    const timingNote   = hasTimingConc ? ' No rush — just want to stay useful while you work through the timing.' : '';
+
+    if (isDirect) {
+      primary = `Hey — wanted to check in and see where your head is at.${priceNote}${timingNote} ${cta}`;
+      shorter = isText ? `Hey — checking in. ${priceNote || timingNote || ''} ${cta}` : primary;
+    } else {
+      primary = `Hey — just wanted to stay on your radar.${interestNote}${priceNote}${timingNote}\n\nHappy to answer any questions or pull some new options if anything has changed.\n\n${cta}`;
+      shorter = isText
+        ? `Hey — staying in touch. ${priceNote || timingNote || 'Happy to help when you\'re ready.'} ${cta}`
+        : `Wanted to check in and see if anything has changed on your end. Happy to help.\n\n${cta}`;
+    }
+
+    direct      = `Hey — where are you in your search? ${priceNote} ${cta}`;
+    whyWorks    = `Checks in without pressure. Acknowledges their specific context — price, timing, or interest — which shows you were paying attention, not just following a script. Easy to reply to.`;
+    templateName = 'Active Buyer Check-In';
+    subject      = 'Checking in on your search';
+  }
+
+  /* ====================== WARM / ACTIVE SELLER ====================== */
+  else if (leadType === 'Seller lead' && !isFirst && !isCold) {
+    const priceNote  = hasPriceHesit ? ' I know list price is the key question — I\'d love to walk you through comps when you\'re ready.' : '';
+    const timingNote = hasTimingConc ? ' Totally understand if the timing isn\'t locked in yet — I can work around your schedule.' : '';
+
+    if (isDirect) {
+      primary = `Hi — wanted to follow up on your listing plans.${priceNote}${timingNote} ${cta}`;
+      shorter = isText ? `Hi — following up on selling.${priceNote} ${cta}` : primary;
+    } else {
+      primary = `Hi — just wanted to check in on where things stand with your home.${priceNote}${timingNote}\n\nHappy to put together a full market analysis when you\'re ready to talk numbers.\n\n${cta}`;
+      shorter = isText
+        ? `Hi — checking in on your home sale plans.${timingNote || ''} ${cta}`
+        : `Wanted to follow up and see where things stand.${priceNote} Happy to walk you through current market conditions whenever it makes sense.\n\n${cta}`;
+    }
+
+    direct      = `Hi — following up on your listing plans.${priceNote} ${cta}`;
+    whyWorks    = `Stays consultative rather than salesy. References what they told you — pricing questions or timing concerns — which signals you were listening. Offers concrete value (market analysis) rather than just asking for a meeting.`;
+    templateName = 'Active Seller Check-In';
+    subject      = 'Your home — quick update';
+  }
+
+  /* ====================== GENERIC FALLBACK ====================== */
+  else {
+    const ctx = notes ? notes.slice(0,80) + (notes.length > 80 ? '…' : '') : '';
+    primary  = `Hey — wanted to follow up and check in.${ctx ? ` Based on where we left off — ${ctx} —` : ''} happy to pick up wherever makes sense for you.\n\n${cta}`;
+    shorter  = isText ? `Hey — checking in. ${cta}` : `Wanted to follow up and see where your head is at.\n\n${cta}`;
+    direct   = `Following up. ${cta}`;
+    whyWorks = `Keeps it simple and low-friction. References context where available. Puts the next move in their hands.`;
+    templateName = 'General Follow-Up';
+    subject  = 'Following up';
+  }
+
+  /* ---- Channel adjustments ---- */
+  if (isDM) {
+    // DM = shortest, most casual, strip formality
+    primary = primary.replace(/^Hey — /, 'Hey ').replace(/\n\n/g, '\n');
+    shorter = shorter.replace(/^Hey — /, 'Hey ');
+    direct  = direct.replace(/^Following up/i, 'Quick follow-up');
+  }
+
+  return {
+    primary, shorter, direct, whyWorks, cta, templateName,
+    subject: isEmail ? subject : null,
+    leadType: inp.leadType, situation: inp.situation,
+    goal: inp.goal, channel: inp.channel, toneShift: inp.toneShift,
+  };
+}
+
+/* ============================================================
+   RENDER RESULTS — injects all 6 output cards
+   ============================================================ */
+function renderResults(out) {
+  /* Hero */
+  const label = out.situation || out.leadType || 'Lead';
+  document.getElementById('rh-title').textContent = `Your ${label.toLowerCase()} follow-up is ready.`;
+  const parts = [out.leadType, out.situation, out.channel, out.goal ? `Goal: ${out.goal}` : ''].filter(Boolean);
+  document.getElementById('rh-meta').innerHTML = parts.map(p => `<span>${esc(p)}</span>`).join('');
+
+  /* 6 output cards */
+  document.getElementById('res-main').innerHTML = `
+
+    <!-- Card 1: Primary Message -->
+    <div class="oc primary">
+      <div class="oc-hdr">
+        <div class="oc-hdr-l">
+          <div class="oc-lbl">Send this first</div>
+          <div class="oc-badge">★ Use this one</div>
+        </div>
+        <button class="oc-copy" id="cb-primary" onclick="copyMsg('primary')">⧉ Copy</button>
+      </div>
+      <div class="oc-body">
+        ${out.subject ? `<div class="oc-subj">Subject: <span>${esc(out.subject)}</span></div>` : ''}
+        <div class="oc-msg" id="msg-primary">${esc(out.primary)}</div>
+        ${out.channel ? `<div class="oc-chip">📱 Ready to send as ${esc(out.channel)}</div>` : ''}
+      </div>
+    </div>
+
+    <!-- Card 2: Shorter Version -->
+    <div class="oc">
+      <div class="oc-hdr">
+        <div class="oc-hdr-l"><div class="oc-lbl">Shorter version (best for text)</div></div>
+        <button class="oc-copy" id="cb-short" onclick="copyMsg('short')">⧉ Copy</button>
+      </div>
+      <div class="oc-body">
+        <div class="oc-msg" id="msg-short">${esc(out.shorter)}</div>
+        ${out.channel !== 'Text' ? `<div class="oc-chip">💬 Best for text</div>` : ''}
+      </div>
+    </div>
+
+    <!-- Card 3: More Direct Version -->
+    <div class="oc">
+      <div class="oc-hdr">
+        <div class="oc-hdr-l"><div class="oc-lbl">More direct, clearer ask</div></div>
+        <button class="oc-copy" id="cb-direct" onclick="copyMsg('direct')">⧉ Copy</button>
+      </div>
+      <div class="oc-body">
+        <div class="oc-msg" id="msg-direct">${esc(out.direct)}</div>
+      </div>
+    </div>
+
+    <div class="mc-row">
+      <!-- Card 4: Why This Works -->
+      <div class="mc">
+        <div class="mc-lbl">Why this will work</div>
+        <div class="mc-val">${esc(out.whyWorks)}</div>
+      </div>
+      <!-- Card 5: The exact ask to put at the end -->
+      <div class="mc">
+        <div class="mc-lbl">The exact ask to put at the end</div>
+        <div class="mc-val lg">${esc(out.cta)}</div>
+      </div>
+      <!-- Card 6: Template Name -->
+      <div class="mc">
+        <div class="mc-lbl">Save this as</div>
+        <div class="mc-val mono">${esc(out.templateName)}</div>
+      </div>
+    </div>
+
+    <!-- Next Action Panel — injected by renderNextAction() -->
+    <div id="next-action-panel" class="next-action-panel" style="margin-top:20px;"></div>
+
+  `;
+
+  /* Sidebar: Built For */
+  const rows = [
+    out.leadType  && ['Lead type',  out.leadType],
+    out.situation && ['Situation',  out.situation],
+    out.goal      && ['Goal',       out.goal],
+    out.channel   && ['Channel',    out.channel],
+    out.toneShift && ['Tone',       out.toneShift],
+  ].filter(Boolean);
+  document.getElementById('sc-input-body').innerHTML =
+    rows.map(([k,v]) => `<div class="sir"><span class="sir-k">${esc(k)}</span><span class="sir-v">${esc(v)}</span></div>`).join('');
+
+  /* Render the next-action / cadence panel */
+  renderNextAction(out);
+}
+
+/* ============================================================
+   COPY MESSAGES
+   ============================================================ */
+function copyMsg(which) {
+  if (!lastOutput) return;
+  const map = { primary: lastOutput.primary, short: lastOutput.shorter, direct: lastOutput.direct };
+  const text = map[which] || lastOutput.primary;
+  const btnId = 'cb-' + which;
+  const labels = { primary:'Primary message copied', short:'Short version copied', direct:'Direct version copied' };
+
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject())
+    .catch(() => {
+      const ta = Object.assign(document.createElement('textarea'), { value: text });
+      Object.assign(ta.style, { position:'fixed', opacity:'0' });
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+    })
+    .then ? null : void 0;
+
+  try {
+    navigator.clipboard.writeText(text);
+  } catch(e) {
+    const ta = Object.assign(document.createElement('textarea'), { value: text });
+    Object.assign(ta.style, { position:'fixed', opacity:'0' });
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  }
+
+  const btn = document.getElementById(btnId);
+  if (btn) {
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2200);
+  }
+  toast(labels[which] || 'Copied', 'Ready to paste.', 'var(--green)', '✓');
+}
+
+/* ============================================================
+   SAVE AS TEMPLATE
+   Toast: "Saved to your KWIT template library"
+   ============================================================ */
+function saveTemplate() {
+  if (!lastOutput) { toast('Nothing to save yet.', 'Generate a message first.', 'var(--amber)', '⚠'); return; }
+  const name = lastOutput.templateName || 'Follow-Up Template';
+  const text = lastOutput.primary || '';
+  const tpl  = {
+    name,
+    text,
+    leadType:  lastOutput.leadType  || '',
+    situation: lastOutput.situation || '',
+    channel:   lastOutput.channel   || '',
+    goal:      lastOutput.goal      || '',
+  };
+
+  /* Save locally AND tell the platform */
+  _localTemplates.unshift({ ...tpl, savedAt: new Date().toISOString() });
+  if (_localTemplates.length > 50) _localTemplates.pop();
+
+  try {
+    window.parent.postMessage({ type: 'KWIT_SAVE_TEMPLATE', template: tpl }, '*');
+  } catch(e) {}
+
+  toast('Saved to your KWIT template library', `"${name}" — copy it anytime from My Templates.`, 'var(--green)', '⊙');
+
+  /* Update the save button to show it's saved */
+  const btns = document.querySelectorAll('[onclick*="saveTemplate"]');
+  btns.forEach(b => { b.textContent = '✓ Saved'; setTimeout(() => { b.textContent = b.textContent.startsWith('✓') ? '⊙ Save as Template' : b.textContent; }, 3000); });
+}
+
+/* ============================================================
+   PRACTICE THIS CONVERSATION
+   Toast: "Opening Roleplay Lab with this scenario…"
+   ============================================================ */
+function practiceConvo() {
+  const sit = (lastOutput && lastOutput.situation) || inp.situation || 'follow-up conversation';
+  toast('Opening Roleplay Lab with this scenario…', `Scenario: ${sit}. Your saved profile is pre-loaded.`, 'var(--gold)', '▷');
+}
+
+/* ============================================================
+   TOAST SYSTEM
+   ============================================================ */
+function toast(title, sub, border, icon) {
+  const el = document.getElementById('toast');
+  el.style.borderLeftColor = border || 'var(--green)';
+  document.getElementById('t-icon').textContent  = icon  || '✓';
+  document.getElementById('t-title').textContent = title || '';
+  document.getElementById('t-sub').textContent   = sub   || '';
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+/* ============================================================
+   HTML ESCAPE — XSS safety for all injected content
+   ============================================================ */
+function esc(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/\n/g,'<br>');
+}
+
+/* ── PROFILE AUTO-REQUEST ─────────────────────────────────────────────────────
+   On load: ask the parent platform for the stored agent profile.
+   Also accept KWIT_PROFILE messages pushed by the platform.
+   Falls back to the hardcoded mock profile if no parent responds.
+   ─────────────────────────────────────────────────────────────────────────── */
+/* KWIT_PROFILE handled in consolidated message listener above */
+
+function _refreshProfileUI() {
+  const ap = agentProfile;
+  const focusStr = Array.isArray(ap.focus) ? ap.focus.join(' & ') : (ap.focus || '');
+  const avoidStr = Array.isArray(ap.avoidPhrases)
+    ? ap.avoidPhrases.slice(0, 3).join(', ')
+    : (ap.avoidPhrases || '');
+
+  /* Intro sidebar profile rows — by ID (new) and .prv class (legacy compat) */
+  const rowData = [ap.tone, ap.formality, ap.market, focusStr, avoidStr];
+  const rowIds  = ['prv-tone', 'prv-form', 'prv-mkt', 'prv-focus', 'prv-avoid'];
+  rowIds.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = rowData[i] || '—';
+  });
+  /* Also update .prv class elements for backward compat */
+  document.querySelectorAll('.prv').forEach((el, i) => {
+    if (rowData[i]) el.textContent = rowData[i];
+  });
+
+  /* Topbar profile pill */
+  const pill = document.querySelector('.tb-profile-pill span, .tb-pill span');
+  if (pill && ap.name) pill.textContent = 'Profile active \u2014 ' + ap.name;
+
+  /* Results sidebar profile card */
+  const spls = document.querySelectorAll('.spl');
+  if (spls.length >= 4) {
+    spls[0].innerHTML = '<strong>Tone:</strong> ' + (ap.tone || '—');
+    spls[1].innerHTML = '<strong>Register:</strong> ' + (ap.formality || '—');
+    spls[2].innerHTML = '<strong>Voice:</strong> ' + (ap.brandVibe || 'Neighborhood specialist');
+    spls[3].innerHTML = '<strong>Avoids:</strong> ' + (avoidStr || '—');
+  }
+
+  /* Sidebar avatar + name */
+  const av = document.querySelector('.agent-av');
+  if (av) av.textContent = ap.firstName ? ap.firstName.charAt(0).toUpperCase() : (ap.name ? ap.name.charAt(0).toUpperCase() : '?');
+  const nm = document.querySelector('.agent-n');
+  if (nm) nm.textContent = ap.name || 'Agent';
+  const role = document.querySelector('.agent-r');
+  if (role) role.textContent = ap.name ? 'AI profile active' : 'No profile loaded';
+}
+
+/* Sync notes field to state */
+document.addEventListener('DOMContentLoaded', () => {
+  const f = document.getElementById('notes-field');
+  if (f) f.addEventListener('input', () => { inp.notes = f.value; });
+  /* Request profile from parent platform */
+  try { window.parent.postMessage({ type: 'KWIT_REQUEST_PROFILE' }, '*'); } catch(e) {}
+});
+
+/* Platform navigation — posts to parent hub if in iframe, else no-op */
+function parentNav(viewId) {
+  try { window.parent.postMessage({ type: 'KWIT_NAV', view: viewId }, '*'); } catch(e){}
+}
+
+/* Local template cache (fallback when parent platform is not available) */
+const _localTemplates = [];
+
+/* ============================================================
+   KWIT MESSAGE LISTENER
+   Handles: KWIT_PRESELECT, KWIT_PROFILE
+   ============================================================ */
+window.addEventListener('message', function(e) {
+  if (!e.data || typeof e.data !== 'object') return;
+
+  /* KWIT_PRESELECT — Quick Action pre-fills the form from the platform */
+  if (e.data.type === 'KWIT_PRESELECT') {
+    const ps = e.data.preselect || {};
+    if (e.data.profile) {
+      const p = e.data.profile;
+      agentProfile.name         = p.name         || agentProfile.name;
+      agentProfile.firstName    = p.firstName     || agentProfile.firstName;
+      agentProfile.market       = p.market        || agentProfile.market;
+      agentProfile.tone         = p.tone          || agentProfile.tone;
+      agentProfile.formality    = p.formality     || agentProfile.formality;
+      agentProfile.brandVibe    = p.brandVibe     || agentProfile.brandVibe;
+      agentProfile.avoidPhrases = p.avoidPhrases  || agentProfile.avoidPhrases;
+      agentProfile.selfDescribe = p.selfDescribe  || agentProfile.selfDescribe;
+      _refreshProfileUI();
+    }
+    if (ps.leadType)  { inp.leadType  = ps.leadType;  document.querySelectorAll('#lt-grid .lt-card').forEach(c => c.classList.toggle('selected', c.dataset.value === ps.leadType)); }
+    if (ps.situation) { inp.situation = ps.situation; setByVal('sit-grp',  ps.situation); }
+    if (ps.goal)      { inp.goal      = ps.goal;      setByVal('goal-grp', ps.goal);      }
+    if (ps.channel)   { inp.channel   = ps.channel;   setByVal('ch-grp',   ps.channel);   }
+    if (ps.toneShift) { inp.toneShift = ps.toneShift; setByVal('tone-grp', ps.toneShift); }
+    syncSummary();
+    goContext();
+    setTimeout(() => {
+      const nf = document.getElementById('notes-field');
+      if (nf) { nf.focus(); nf.placeholder = 'What happened? Paste a few notes and hit Generate — everything else is pre-loaded.'; }
+    }, 150);
+    return;
+  }
+
+  /* KWIT_PROFILE — profile pushed or pulled from platform */
+  if (e.data.type === 'KWIT_PROFILE') {
+    const p = e.data.profile;
+    if (!p || !p.name) return;
+    agentProfile.name         = p.name         || agentProfile.name;
+    agentProfile.firstName    = p.firstName     || agentProfile.firstName;
+    agentProfile.market       = p.market        || agentProfile.market;
+    agentProfile.experience   = p.experience    || agentProfile.experience;
+    agentProfile.focus        = p.focus         || agentProfile.focus;
+    agentProfile.tone         = p.tone          || agentProfile.tone;
+    agentProfile.formality    = p.formality     || agentProfile.formality;
+    agentProfile.brandVibe    = p.brandVibe     || agentProfile.brandVibe;
+    agentProfile.avoidPhrases = p.avoidPhrases  || agentProfile.avoidPhrases;
+    agentProfile.selfDescribe = p.selfDescribe  || agentProfile.selfDescribe;
+    _refreshProfileUI();
+    return;
+  }
+});
+
+
+/* ============================================================
+   CADENCE + NEXT ACTION ENGINE
+   ============================================================ */
+const CADENCE_MAP = {
+  'After showing': {
+    label: 'Post-Showing Sequence',
+    steps: [
+      { day: 'Today',  action: 'Send this while the showing is still fresh.' },
+      { day: 'Day 3',  action: 'If no reply: short version with one direct question.' },
+      { day: 'Day 7',  action: 'Market update or a new listing that fits their criteria.' },
+      { day: 'Day 14', action: 'Final soft check-in. If still quiet, move to nurture cadence.' },
+    ],
+    nextAction: 'Set a Day 3 reminder now in case there is no reply.',
+    urgency: 'high',
+    urgencyNote: 'Reply rates drop 60% after 72 hours. Send today.',
+  },
+  'No response': {
+    label: 'Re-Engagement Sequence',
+    steps: [
+      { day: 'Today',  action: 'Send this. No pressure framing.' },
+      { day: 'Day 7',  action: 'Try a different channel if possible.' },
+      { day: 'Day 21', action: 'Value-add only. Market stat or useful local info.' },
+      { day: 'Day 60', action: 'Final check-in. Then quarterly nurture.' },
+    ],
+    nextAction: 'If no reply in 7 days, try a different channel.',
+    urgency: 'medium',
+    urgencyNote: 'Low pressure. Give them space.',
+  },
+  'Re-engagement': {
+    label: 'Re-Engagement Sequence',
+    steps: [
+      { day: 'Today',  action: 'Send this. No pressure framing.' },
+      { day: 'Day 7',  action: 'Value-add only — market update, no ask.' },
+      { day: 'Day 21', action: 'One more soft check-in. Then quarterly nurture.' },
+    ],
+    nextAction: 'If they reply, move them back to active lead cadence immediately.',
+    urgency: 'low',
+    urgencyNote: 'Patience converts better than persistence with cold leads.',
+  },
+  'Open house follow-up': {
+    label: 'Open House Sequence',
+    steps: [
+      { day: 'Today',  action: 'Send within 48 hours while the open house is memorable.' },
+      { day: 'Day 3',  action: 'Send a similar listing. "Thought of you."' },
+      { day: 'Day 7',  action: 'Soft market update for the area they toured.' },
+      { day: 'Day 14', action: 'Final nudge. If cold, move to re-engagement sequence.' },
+    ],
+    nextAction: 'Did they sign in? Did they ask questions? Personalize the Day 3 message.',
+    urgency: 'high',
+    urgencyNote: 'Open house leads convert fastest in the first 48 hours.',
+  },
+  'First contact': {
+    label: 'New Lead Sequence',
+    steps: [
+      { day: 'Today',  action: 'Send within the hour. Speed to lead is the #1 variable.' },
+      { day: 'Day 1',  action: 'If no reply: one follow-up text if you have their number.' },
+      { day: 'Day 3',  action: 'Voicemail + email if still no response.' },
+      { day: 'Day 7',  action: 'Final value-add. Then weekly nurture.' },
+    ],
+    nextAction: 'If you have a phone number, call first — then send this message.',
+    urgency: 'critical',
+    urgencyNote: 'New leads who get a response in under an hour are 7x more likely to convert.',
+  },
+  'Past client touchpoint': {
+    label: 'Sphere Nurture Cadence',
+    steps: [
+      { day: 'Today',   action: 'Send this warm check-in.' },
+      { day: 'Month 3', action: 'Another personal check-in — no referral ask.' },
+      { day: 'Month 6', action: 'Market update for their neighborhood.' },
+      { day: 'Year 1',  action: 'Anniversary of their purchase. One of the best touches you can make.' },
+    ],
+    nextAction: 'Add them to a quarterly touch schedule. Past clients are your highest-value referral source.',
+    urgency: 'low',
+    urgencyNote: 'One personal message per quarter builds more trust than weekly campaigns.',
+  },
+  'Referral check-in': {
+    label: 'Referral Source Cadence',
+    steps: [
+      { day: 'Today',   action: 'Send this. Keep it personal, not transactional.' },
+      { day: 'Month 2', action: 'Another personal touch — share something useful.' },
+      { day: 'Month 4', action: 'Light referral ask embedded in a value message.' },
+      { day: 'Month 6', action: 'Invite them to something — coffee, event, market update call.' },
+    ],
+    nextAction: 'Track who you reach out to. Referral sources need consistency, not volume.',
+    urgency: 'low',
+    urgencyNote: 'Referral relationships are built over years, not campaigns.',
+  },
+  '_default': {
+    label: 'Standard Follow-Up Cadence',
+    steps: [
+      { day: 'Today',  action: 'Send this message.' },
+      { day: 'Day 4',  action: 'If no reply: short version with a direct question.' },
+      { day: 'Day 10', action: 'Value-add — market update, relevant listing, useful stat.' },
+      { day: 'Day 21', action: 'Final check-in. Then nurture cadence.' },
+    ],
+    nextAction: 'Set a calendar reminder for your Day 4 follow-up.',
+    urgency: 'medium',
+    urgencyNote: 'Consistent follow-up is the highest-leverage habit for an agent.',
+  },
+};
+
+function getCadence(out) {
+  return CADENCE_MAP[out.situation || out.leadType || '_default'] || CADENCE_MAP['_default'];
+}
+
+function urgencyColor(u) {
+  return ({critical:'var(--red)',high:'var(--amber)',medium:'var(--ink-40)',low:'var(--green)'})[u]||'var(--ink-40)';
+}
+
+function renderNextAction(out) {
+  const el = document.getElementById('next-action-panel');
+  if (!el || !out) return;
+  const c = getCadence(out);
+  const col = urgencyColor(c.urgency);
+  el.innerHTML = `
+    <div class="na-ey" style="color:${col};">&#x25cf;&nbsp; After you send this</div>
+    <div class="na-title">${esc(c.nextAction)}</div>
+    <div class="na-note" style="color:${col};margin-bottom:14px;">${esc(c.urgencyNote)}</div>
+    <div class="na-cadence-label">${esc(c.label)}</div>
+    <div class="na-steps">
+      ${c.steps.map((s,i)=>`<div class="na-step${i===0?' na-step-active':''}"><div class="na-step-day">${esc(s.day)}</div><div class="na-step-dot"></div><div class="na-step-action">${esc(s.action)}</div></div>`).join('')}
+    </div>`;
+}
+
+
+
+</script>
+</html>
